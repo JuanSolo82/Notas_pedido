@@ -1,0 +1,297 @@
+@import url('https://fonts.googleapis.com/css?family=Questrial');
+a {
+    cursor: pointer;
+}
+.fila_completa {
+	font-family: 'Questrial', sans-serif;
+	position: relative;
+	width: 96%;
+	float: left;
+}
+.fila_vacia {
+	width: 100%;
+	float: left;
+	height: 30px;
+}
+.bordear {
+	border-bottom: 1px solid silver;
+}
+.col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9 {
+	position: relative;
+	float: left;
+	width: 100%;
+	padding: 1%;
+}
+.col-1{
+	-ms-flex: 0 0 8%;
+	flex: 0 0 8%;
+	max-width: 8%;
+}
+.col-2{
+	-ms-flex: 0 0 18%;
+	flex: 0 0 18%;
+	max-width: 18%;
+}
+.col-3{
+	-ms-flex: 0 0 28%;
+	flex: 0 0 28%;
+	max-width: 28%;
+}
+.col-4{
+	-ms-flex: 0 0 38%;
+	flex: 0 0 38%;
+	max-width: 38%;
+}
+.col-5{
+	-ms-flex: 0 0 48%;
+	flex: 0 0 48%;
+	max-width: 48%;
+}
+.col-6{
+	-ms-flex: 0 0 58%;
+	flex: 0 0 58%;
+	max-width: 58%;
+}
+.col-7{
+	-ms-flex: 0 0 68%;
+	flex: 0 0 68%;
+	max-width: 68%;
+}
+.col-8{
+	-ms-flex: 0 0 78%;
+	flex: 0 0 78%;
+	max-width: 78%;
+}
+.col-9{
+	-ms-flex: 0 0 88%;
+	flex: 0 0 88%;
+	max-width: 88%;
+}
+
+.centrar {
+	display: flex;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    float: left;
+}
+.boton {
+	position: relative;
+	font-family: 'Questrial', sans-serif;
+	cursor: pointer;
+	float: left;
+	width: 120px;
+	height: 100px;
+	background: url(/portal/templates/justbusiness-fjt/images/mainmenu.png) no-repeat;
+	background-size: 100%;
+	text-align: center;
+	color: white;
+	margin: 10px;
+	padding: 10px;
+	border-radius: 10%;
+}
+.encabezado_tabla {
+	background: #eee;
+	padding: 5px;
+	font-size: 12px;
+	font-weight: bold;
+}
+/*.titulo_item{
+	color: white; 
+	font-weight: bold;
+	font-size: 12px;
+}*/
+.barra_nombre {
+	font-family: 'Questrial', sans-serif;
+    position: relative;
+    background: #eee;
+    color: #343434;
+    font-weight: bold;
+    font-size: 16px;
+    height: auto;
+    float: left;
+    padding: 11px;
+    margin: 5px;
+    border-radius: 5px;
+    border: 1px solid grey;
+}
+.titulo_item {
+	font-weight: bold;
+    font-size: 12px;
+	color: #343434;
+}
+.entrada {
+    padding: 2px 2px;
+	border: 1px solid silver;
+    border-radius: 0px;
+	margin: 2px;
+}
+.barra_avance {
+	position: relative;
+	float: left;
+	width: 100px;
+	padding: 3px;
+	border: 1px solid silver;
+	font-size: 10px;
+	text-align: center;
+}
+.paso_aprobado{
+	background: lime;
+}
+.paso_rechazado{
+	background: red;
+	color: white;
+}
+
+.tabla_listado {
+    font-family: 'Questrial', sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.tabla_listado td, .tabla_listado th {
+    padding: 8px;
+}
+.tabla_listado tr:nth-child(even){background-color: #f2f2f2;}
+.tabla_listado tr:hover {background-color: #ddd;}
+.tabla_listado th {
+    background: url(/portal/templates/justbusiness-fjt/images/mainmenu.png) no-repeat;
+	background-size: 100%;
+	padding: 5px;
+	font-size: 14px;
+	font-weight: bold;
+	color: white;
+}
+.encabezados_oc {
+	width: 50%;
+	justify-content: center; 
+	float: left; 
+	text-align: center;
+}
+.superior {
+	color: darkslategray;
+	padding: 5px;
+	text-align: center;
+	font-family: 'Questrial', sans-serif;
+	font-weight: bold;
+	font-size: 20px;
+}
+.inferior {
+	text-align: center;
+	font-family: 'Questrial', sans-serif;
+	font-weight: bold;
+	size: 15px;
+}
+.items_oc{
+	font-family: 'Questrial', sans-serif;
+	border-collapse: collapse;
+	border: 1px solid black;
+	font-size: 8pt;
+	margin-top: 25px;
+}
+.numero_oc {
+	width: 5px;
+	border-collapse: collapse;
+	border: 1px solid black;
+}
+.cantidad_oc {
+	width: 15px;
+	border-collapse: collapse;
+	border: 1px solid black;
+}
+.descripcion_oc {
+	width: 290px;
+	border-collapse: collapse;
+	border: 1px solid black;
+}
+.contenido {
+	border: 2px solid silver;
+	margin: 10px;
+	padding: 10px;
+	border-radius: 10px;
+}
+.beneficio{
+	width: 100%;
+    float: left;
+    font-style: italic;
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    border: solid black 1px;
+    padding: 10px;
+}
+.oc_completa {
+	padding: 50px;
+}
+
+.cuadro_input {
+	position: relative;
+    float: left;
+    background: #005D9C;
+    font-family: 'Questrial', sans-serif;
+	color: white;
+	font-size: 20px;
+    width: 100%;
+    padding: 10px;
+    margin: 5px;
+}
+
+.input-transparente {
+    font-family: 'Questrial', sans-serif;
+    font-size: 20px;
+    border: 2px solid white;
+    border-radius: 0px;
+    background: transparent;
+    height: 30px;
+    color: white
+}
+
+.boton_mediano {
+	position: relative;
+	font-family: 'Questrial', sans-serif;
+	cursor: pointer;
+	float: left;
+	height: Auto;
+	background: silver;
+	text-align: center;
+	margin: 10px;
+	padding: 10px;
+	border: 2px solid grey;
+	border-radius: 10%;
+	color: black;
+	font-weight: bold;
+}
+
+.notificacion{
+	position: absolute;
+	z-index: 5;
+    right: 10px;
+    width: 25px;
+    height: 25px;
+    border-radius: 15px;
+	background: red;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-weight: bold;
+	font-size: 15px;
+	color: white;
+}
+
+.prev_next{
+	cursor: pointer;
+	position: relative;
+	float: left;
+	border: 2px solid grey; 
+	background: #555555; 
+	color: white; 
+	border-radius: 5px; 
+	display: flex; 
+	justify-content: center; 
+	align-items: center; 
+	width: 100px; 
+	margin: 5px; 
+	padding: 5px;
+}

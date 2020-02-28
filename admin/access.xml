@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<access component="com_nota">
+	<section name="component">
+		<action name="core.admin" title="JACTION_ADMIN" description="JACTION_ADMIN_COMPONENT_DESC" />
+		<action name="core.manage" title="JACTION_MANAGE" description="JACTION_MANAGE_COMPONENT_DESC" />
+		<action name="empleado.depto" title="Empleado de departamento" description="Permite crear y revisar notas de pedido" />
+		<action name="jefe.depto" title="Revisión jefe" description="Permite aprobar, modificar o rechazar notas del propio departamento" />
+		<action name="tripulante" title="Tripulaciones" description="Permite a un tripulante de nave crean notas" />
+		<action name="capitan.sin_jefe" title="Revisión de notas naves sin jefe de instalacion" description="Permite gestionar notas de la naves sin una instalación" />
+		<action name="capitan.jefe" title="Revisión de notas naves" description="Permite gestionar notas de la tripulacion de Punta Delgada o Puerto Natales" />
+		<action name="jefe.delgada" title="Revisión de notas naves e instalación Delgada" description="Permite gestionar notas de la naves de Punta Delgada y la oficina" />
+		<action name="jefe.natales" title="Revisión de notas naves e instalación Natales" description="Permite gestionar notas de la naves de Puerto Natales y la oficina" />
+		<action name="jefe.porvenir" title="Revisión de notas en instalaciones Porvenir" description="Permite gestionar notas provenientes de la oficina Porvenir" />
+		<action name="jefe.punta_arenas" title="Revisión de notas naves Punta Arenas" description="Permite gestionar notas de la naves de Punta Arenas" />
+		<action name="adquisiciones.jefe" title="Revisión de notas para emisión OC" description="Permite gestionar notas listas para OC" />
+		<action name="facturacion" title="Ingreso de facturas y búsqueda por OC" description="Permite buscar OC, ingresar facturas para cada OC" />
+		<action name="procedimientos" title="Menú de reportes" description="Permite ingresar a menú de reportes de procedimientos" />
+		<action name="tripulante.maquina" title="Destino notas Mantenimiento" description="Restringe departamento de destino Operaciones" />
+	</section>
+</access>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="2.5.0" method="upgrade">
+    <name>Nota</name>
+    <creationDate>15-jun-2018 17:57:09</creationDate>
+    <author>Maestrísimo</author>
+    <authorEmail>jmarinan@</authorEmail>
+    <copyright></copyright>
+    <license></license>
+    <version>0.2</version>
+    <description>Nota Component</description>
+
+    <install>
+        <sql>
+            <file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+        </sql>
+    </install>
+    <uninstall>
+        <sql>
+            <file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
+        </sql>
+    </uninstall>
+    <update>
+        <schemas>
+            <schemapath type="mysql">sql/updates/mysql</schemapath>
+        </schemas>
+    </update>
+
+    <files folder="site">
+        <filename>index.html</filename>
+        <filename>nota.php</filename>
+        <filename>controller.php</filename>
+        <folder>views</folder>
+		<folder>controllers</folder>
+		<folder>assets</folder>
+        <folder>models</folder>
+        <folder>language</folder>
+    </files>
+
+    <administration>
+        <menu>Nota</menu>
+        <files folder="admin">
+            <filename>config.xml</filename>
+            <filename>index.html</filename>
+            <filename>access.xml</filename>
+            <filename>nota.php</filename>
+            <filename>controller.php</filename>
+            <folder>sql</folder>
+            <folder>tables</folder>
+            <folder>models</folder>
+            <folder>views</folder>
+            <folder>language</folder>
+            <folder>controllers</folder>
+            <folder>helpers</folder>
+        </files>
+    </administration>
+</extension>
