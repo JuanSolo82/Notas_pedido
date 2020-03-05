@@ -11,6 +11,7 @@ JHTML::script('nota.js', 'components/com_nota/assets/js/');
 JHTML::script('bootstrap.js', 'components/com_nota/assets/bootstrap/js/');
 JHTML::script('datepicker-es.js', 'components/com_nota/assets/js/');
 JHTML::_('behavior.modal');
+
 ?>
 <br>
 <div class='centrar' style="margin-bottom: 30px;">
@@ -21,16 +22,23 @@ JHTML::_('behavior.modal');
 	<div class='centrar' style="margin-bottom: 20px;">
 		<div class='fila_completa bordear centrar' style='width: 90%;'>
 			<div class="col-4 titulo_item" style="border-right: 1px solid silver;">
-				<div class="col-4">Desde</div><div class="col-4"><input autocomplete="off" type="text" id="desde" name="desde"></div>
-				<div class="col-4">Hasta</div><div class="col-4"><input autocomplete="off" type="text" id="hasta" name="hasta" disabled style="background: silver;"></div>
+				<div class="col-4">Desde</div><div class="col-4"><input autocomplete="off" type="text" id="desde" name="desde" value=""></div>
+				<div class="col-4">Hasta</div><div class="col-4"><input autocomplete="off" type="text" id="hasta" name="hasta" value="" disabled style="background: silver;"></div>
 				
 				<div class="col-4">Origen</div>
 				<div class="col-4">
 					<select style="width: 170px;" id='depto_origen' name='depto_origen'>
-						<option value='0'>Todos los deparamentos</option>
+						<option value='0'>Todos los departamentos</option>
 					<?php foreach ($this->lista_deptos as $d){ ?>
 						<option value="<?php echo $d['id'] ?>"><?php echo $d['nombre'] ?></option>
 					<?php } ?>
+					</select>
+				</div>
+				<div class="col-4">Estado</div>
+				<div class="col-4">
+					<select id='estado' name='estado'>
+						<option value='0'>Todas</option>
+						<option value='2'>Eliminadas</option>
 					</select>
 				</div>
 			</div>

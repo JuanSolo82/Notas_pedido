@@ -37,16 +37,19 @@ class NotaControllerReportes extends JControllerForm
 		$nota_pedido 	= $jinput->get("nota_pedido", 0, "int");
 		$orden_compra 	= $jinput->get("orden_compra", 0, "int");
 		$depto_origen	= $jinput->get("depto_origen", 0, "int");
+		$estado			= $jinput->get("estado", 0, "int");
 		$lista_deptos	= $model->getCentros_costo();
 		$notas = array();
 		if ($hasta=="" && ($nota_pedido+$orden_compra)==0){
 			if ($inicio)
 				JError::raiseNotice( 100, 'Ingrese los campos requeridos ');
 		}elseif ($inicio){
-			$notas = $model->getNotas($desde, $hasta, $nota_pedido, $orden_compra, $depto_origen);
+			$notas = $model->getNotas($desde, $hasta, $nota_pedido, $orden_compra, $depto_origen, $estado);
 		}
 		$jinput->set("notas", $notas);
 		$jinput->set("lista_deptos", $lista_deptos);
+		$jinput->set("desde", $desde);
+		$jinput->set("hasta", $hasta);
 		parent::display();
 	}
 	public function detalle_nota(){

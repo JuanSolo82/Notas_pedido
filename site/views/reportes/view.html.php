@@ -13,6 +13,8 @@ class NotaViewReportes extends JView{
 			case "default": 
 				$this->notas 		= $jinput->get("notas", array(), "array");
 				$this->lista_deptos = $jinput->get("lista_deptos", array(), "array");
+				$this->desde		= $jinput->get("desde", "", "string");
+				$this->hasta		= $jinput->get("hasta", "", "string");
 				break;
 			case "detalle_nota":
 				$this->id_remitente = $jinput->get("id_remitente", 0, "int");

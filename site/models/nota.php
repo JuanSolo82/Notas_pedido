@@ -75,7 +75,7 @@ class NotaModelNota extends JModelItem{
 		if ($user->authorise('core.admin', 'com_nota')){
 			if ($user->authorise('empleado.depto', 'com_nota'))
 				$valores = "1,0,0,0,0";
-			elseif ($user->authorise('jefe.depto', 'com_nota'))
+			if ($user->authorise('jefe.depto', 'com_nota'))
 				$valores = "1,1,1,0,0";
 		}
 		else{
@@ -220,45 +220,7 @@ class NotaModelNota extends JModelItem{
 	function notas_jefe($datos_user, $pagina=0){
 		$db = JFactory::getDbo();
 		$user = JFactory::getUser();
-		/*$query = "select nr.id as id_remitente, nr.fecha, od.nombre as depto_origen, u.name, nrev.enviado_empleado as empleado, 
-					nrev.autorizado_capitan as capitan, nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto, nrev.aprobado_adquisiciones as adquisiciones 
-				from nota_remitente nr 
-				join nota_user nu on nu.id_user=nr.id_user 
-				join jml_users u on u.id=nu.id_user ";
-		$query .= "join oti_departamento od on od.id=nu.id_depto and (";
-		if ($user->authorise('jefe.depto', 'com_nota') && !$datos_user['generico'] && !$user->authorise('jefe.delgada', 'com_nota') && !$user->authorise('jefe.natales', 'com_nota')){
-			$query .= "od.id=".$datos_user['id_depto']." and nr.id_user!=".$datos_user['id'].") "; 
-		}
-		if ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota')){
-			$deptos = array(69 => "8,33", 
-							70 => "37,19",
-							71 => "18,26", // crux 
-							72 => '9,29', 
-							90 => "40", 
-							75 => "34,10", 
-							76 => "30,22",
-							77 => "41",
-							106 => "107"); // anan
-			$query .= "od.id in ( ".$deptos[$datos_user['id_depto']].")) ";
-		}
-		if ($user->authorise('jefe.depto', 'com_nota')){
-			$query .= " od.id=".$datos_user['id_depto']." ) ";
-		}
-		$query .= "join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 ";
-		if ($user->authorise('jefe.depto', 'com_nota')){
-			$query .= " and nrev.autorizado_jefe=0 ";
-		}
-		//$query .= " order by nr.id desc, nrev.enviado_empleado ";
-		if ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota'))
-			$query .= "order by nrev.id desc, nrev.autorizado_jefe, nrev.autorizado_capitan ";
-		if ($user->authorise('jefe.delgada', 'com_nota'))
-			$query .= "order by nr.fecha desc, nr.id desc, nrev.enviado_empleado, nrev.autorizado_capitan, nrev.autorizado_jefe, nrev.autorizado_depto ";
-		if ($user->authorise('jefe.depto', 'com_nota') && !$user->authorise('jefe.delgada', 'com_nota'))
-			$query .= "order by nrev.autorizado_jefe ,nr.id desc, nr.fecha desc, nrev.enviado_empleado, nrev.autorizado_depto ";
-		if ($user->authorise('jefe.depto', 'com_nota')){
-			$query .= " order by nr.id desc, nrev.autorizado_jefe ";	
-		}*/
-		
+
 		$deptos = array(69 => "8,33", 
 			70 => "37,19",
 			71 => "18,26", // crux 
@@ -403,7 +365,7 @@ class NotaModelNota extends JModelItem{
 		$db->query();
 	}
 
-	function getNotas($fecha1, $fecha2, $nota_pedido, $orden_compra, $depto_origen=0){
+	function getNotas($fecha1, $fecha2, $nota_pedido, $orden_compra, $depto_origen=0, $estado=0){
 		$fecha1 = NotaHelper::fechamysql($fecha1,2);
 		$fecha2 = NotaHelper::fechamysql($fecha2,2);
 		$db = JFactory::getDbo();
@@ -415,11 +377,15 @@ class NotaModelNota extends JModelItem{
 				join nota_user nu on nu.id_user=nr.id_user 
 				left join nota_tramitada nt on nt.id_remitente=nr.id 
 				left join nota_anotacion na on na.id_remitente=nr.id ";
+		$query .= " join oti_departamento od on od.id=nu.id_depto ";
 		if ($depto_origen)
 			$query .= " and nu.id_depto=".$depto_origen;
-		$query .= " join oti_departamento od on od.id=nu.id_depto 
-				left join nota_nombreRemitente nrn on nrn.id_remitente=nr.id 
+		$query .= " left join nota_nombreRemitente nrn on nrn.id_remitente=nr.id 
 				join nota_revision nrev on nrev.id_nota_remitente=nr.id ";
+		if ($estado){
+			if ($estado == 2)
+				$query .= " and (nrev.enviado_empleado=2 || nrev.autorizado_capitan=2 || nrev.autorizado_jefe=2 || nrev.autorizado_depto=2 || nrev.aprobado_adquisiciones=2) ";
+		}
 		if ($fecha2!='')
 			$query .= " where nr.fecha between '".$fecha1."' and '".$fecha2."' ";
 		elseif ($nota_pedido!="")
