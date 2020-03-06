@@ -234,7 +234,13 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$jinput->set( 'layout', 'default' );
 		parent::display(); 
 	}
-	
+	public function actualiza_ley_navarino(){
+		$jinput = JFactory::getApplication()->input;
+		$model = $this->getModel('adquisiciones');
+		$id_remitente	= $jinput->get('id_remitente', 0, 'int');
+		$ley_navarino	= $jinput->get('ley_navarino', 0, 'int');
+		$model->actualizarLeyNavarino($id_remitente, $ley_navarino);
+	}
 	public function generarOrden(){
 		$jinput = JFactory::getApplication()->input;
 		$id_remitente	= $jinput->get('id_remitente', 0, 'int');

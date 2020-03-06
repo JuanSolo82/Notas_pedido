@@ -444,13 +444,21 @@ function lanzar_alarma(obj){
     });
 }
 
+function actualizar_ln(id_remitente){
+    var ley_navarino = $("#ley_navarino").prop('checked') ? 1 : 0;
+    $.ajax({
+        url: 'index.php?option=com_nota&task=adquisiciones.actualiza_ley_navarino',
+        type: 'post',
+        data: {id_remitente: id_remitente, ley_navarino: ley_navarino}
+    });
+}
 function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
     var proveedor = $('#proveedor'+opcion).val();
     var items_orden = $("#items_orden"+opcion).val();
-    
     for (var i=1;i<=items_orden;i++){
         $.ajax({
             url: 'index.php?option=com_nota&task=editar_item',
+            timeout: 1000,
             type: 'post',
             data: {id_item: $("#id_item"+opcion+"_"+i).val(), 
                     cantidad_original: $("#cantidad_original"+opcion+"_"+i).val(),
@@ -464,7 +472,7 @@ function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
 
     $.ajax({
         url: 'index.php?option=com_nota&task=adquisiciones.generarOrden',
-        timeout: 2000,
+        timeout: 1500,
         method: 'post',
         data: {id_remitente: id_remitente, orden_compra: orden_compra, opcion: opcion, proveedor: proveedor, opciones: opciones},
         success: function(){

@@ -41,19 +41,21 @@ $f = explode('-', $this->detalle_nota['fecha']);
 <div class='centrar'>
 	<div class='fila_completa bordear centrar' style='width: 90%;'>
 		<div class="col-3 titulo_item">Departamento destino</div>
-		<div class="<?php echo $user->authorise('jefe.depto', 'com_nota') ? 'col-6' : 'col-7' ?>" id='destino_actual'><?php echo $this->detalle_nota['depto_destino'] ?></div>
+		<div class="<?php echo ($user->authorise('jefe.depto', 'com_nota') && $this->detalle_nota['aprobado_adquisiciones']==0) ? 'col-6' : 'col-7' ?>" id='destino_actual'><?php echo $this->detalle_nota['depto_destino'] ?></div>
 		<?php if ($user->authorise('jefe.depto', 'com_nota')){ ?>
-			<div class="col-6" style="display: none" id='nuevo_destino'>
+			<div class="col-7" style="display: none" id='nuevo_destino'>
 				<select id='depto_destino'>
 				<?php foreach ($this->lista_deptos as $d){ ?>
 					<option value='<?php echo $d['id'] ?>' <?php echo $this->detalle_nota['id_adepto']==$d['id'] ? 'selected' : '' ?>><?php echo $d['nombre'] ?></option>
 				<?php } ?>
 				</select>
 			</div>
+			<?php if ($this->detalle_nota['aprobado_adquisiciones']==0){ ?>
 			<div class="col-1">
 				<a onclick="editar_destino()" id='editar_destino'><img src="/portal/administrator/templates/hathor/images/menu/icon-16-edit.png"></a>
 				<a onclick="cambiar_destino(<?php echo $this->id_remitente ?>,'<?php echo $this->detalle_nota['nombre_remitente'] ? $this->detalle_nota['nombre_remitente'] : '' ?>')" id='cambiar_destino' style="display: none"><img src="/portal/administrator/templates/hathor/images/menu/icon-16-save.png"></a>
 			</div>
+			<?php } ?>
 		<?php } ?>
 		
 	</div>
@@ -207,7 +209,7 @@ if ($this->id_user==$this->detalle_nota['id_user'] && $this->datos_nota['aprobad
 	</div>
 <?php } ?>
 
-<?php if (($user->authorise('jefe.delgada','com_nota') || $user->authorise('jefe.natales', 'com_nota')) && !$user->authorise('core.admin', 'com_nota')){ ?>
+<?php if (($user->authorise('jefe.delgada','com_nota') || $user->authorise('jefe.natales', 'com_nota')) && !$user->authorise('core.admin', 'com_nota') && $this->detalle_nota['autorizado_jefe']==0){ ?>
 <div id='boton_guardar'>
 	<a onclick="aprobar_naves(<?php echo $this->id_remitente ?>, <?php echo $j ?>)">
 		<div class='boton' style="height: auto;"><img src='/portal/administrator/templates/hathor/images/header/icon-48-save.png' /><br>Guardar y enviar</div>
