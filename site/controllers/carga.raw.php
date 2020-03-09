@@ -75,6 +75,21 @@ class NotaControllerCarga extends JControllerForm
 		$pagina		= $jinput->get("pagina", 1,"int");
 		$notas 		= $model->notas_propias($user->id, $pagina);
 		$datos_user = $model->getDatos_user($user->id);
+		$i=0;
+		foreach ($notas as $n){
+			$aprobacion = $model->getAnotacion($n['id']);
+			if (sizeof($aprobacion)){
+				$notas[$i]['aprobado']			= $aprobacion['aprobado'];
+				$notas[$i]['anotacion'] 		= $aprobacion['anotacion'];
+				$notas[$i]['fecha_aprobacion'] 	= $aprobacion['fecha'];
+			}else{
+				$notas[$i]['aprobado']			= 0;
+				$notas[$i]['anotacion'] 		= '';
+				$notas[$i]['fecha_aprobacion'] 	= '';
+			}
+			
+			$i++;
+		}
 		$jinput->set("notas", $notas);
 		$jinput->set("pagina", $pagina);
 		$jinput->set("datos_user", $datos_user);

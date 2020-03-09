@@ -54,6 +54,15 @@ class NotaController extends JController{
 		$model = $this->getModel('nota');
 		$user = JFactory::getUser();
 		$notas = $model->notas_propias($user->id);
+		$i=0;
+		$i=0;
+		foreach ($notas as $n){
+			$aprobacion = $model->getAnotacion($n['id']);
+			$notas[$i]['aprobado']			= $aprobacion['aprobado'];
+			$notas[$i]['anotacion'] 		= $aprobacion['anotacion'];
+			$notas[$i]['fecha_aprobacion'] 	= $aprobacion['fecha'];
+			$i++;
+		}
 		$datos_user = $model->getDatos_user($user->id);
 		$jinput->set("notas", $notas);
 		$jinput->set("datos_user", $datos_user);
