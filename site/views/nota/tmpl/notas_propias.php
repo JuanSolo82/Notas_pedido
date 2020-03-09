@@ -67,7 +67,7 @@ $num_filas=0;
 					<div class='barra_avance <?php echo ($n['jefe']==1 ? "paso_aprobado" : "").($n['jefe']==2 ? "paso_rechazado" : "") ?>'>Autorizado jefe</div>
 					<div class='barra_avance <?php echo ($n['depto']==1 ? "paso_aprobado" : "").($n['depto']==2 ? "paso_rechazado" : "") ?>'>Autorizado depto.</div>
 					<div class='barra_avance <?php echo ($n['adquisiciones']==1 ? "paso_aprobado" : "").($n['adquisiciones']==2 ? "paso_rechazado" : "") ?>'>OC generada</div>
-					<div class='barra_avance <?php echo ($n['aprobado']==1 ? "paso_aprobado" : "").($n['adquisiciones']==2 ? "paso_rechazado" : "") ?>'>Calificación</div>
+					<div class='barra_avance <?php echo ($n['aprobado']==1 ? "paso_aprobado" : "").($n['aprobado']==2 ? "paso_rechazado" : "") ?>'>Calificación</div>
 				</div>
 			</td>
 			<td align='center'>

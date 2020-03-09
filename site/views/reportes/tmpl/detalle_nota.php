@@ -98,6 +98,14 @@ Símbolo <img style='' src='/portal/administrator/templates/hathor/images/menu/i
 		<td><?php echo $e['motivo'] ?></td>
 	</tr>
 <?php } ?>
+<?php foreach ($this->anotaciones as $a){ ?>
+	<tr>
+		<td><?php echo NotaHelper::fechamysql($e['fecha']) ?></td>
+		<td>usuario</td>
+		<td>Recepción <?php echo $e['aprobado']==2 ? "Rechazada" : "Aprobada" ?></td>
+		<td><?php echo $e['anotacion'] ?></td>
+	</tr>
+<?php } ?>
 </table>
 
 

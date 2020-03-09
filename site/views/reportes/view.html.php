@@ -22,6 +22,7 @@ class NotaViewReportes extends JView{
 				$this->items 		= $jinput->get("items", array(), "array");
 				$this->datos_user	= $jinput->get("datos_user", array(), "array");
 				$this->etapas		= $jinput->get("etapas", array(), "array");
+				$this->anotaciones	= $jinput->get("anotaciones", array(), "array");
 				break;
 			case "facturados": 
 				$this->lista_notas 		= $jinput->get("lista_notas", array(), "array");

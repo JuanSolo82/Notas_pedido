@@ -157,7 +157,15 @@ class NotaModelNota extends JModelItem{
 			return $db->loadAssoc();
 		return array();
 	}
-	
+	function getAnotaciones($id_remitente){
+		$db = JFactory::getDbo();
+		$query = "select id, id_remitente, aprobado, anotacion, fecha from nota_anotacion where id_remitente=".$id_remitente;
+		$db->setQuery($query);
+		$db->query();
+		if ($db->getNumRows())
+			return $db->loadAssocList();
+		return array();
+	}
 	function getDetalle_nota($id_remitente){
 		$db = JFactory::getDbo();
 		$query = "select nr.id as id_remitente, nr.id_tipo_pedido, nr.ley_navarino, u.name as nombre_usuario, u.email,
@@ -719,5 +727,20 @@ class NotaModelNota extends JModelItem{
 		$db->setQuery($query);
 		$db->query();
 		return $query;
+	}
+	function pendientes_revision(){
+		$db = JFactory::getDbo();
+		$u = JFactory::getUser();
+		$query = "select nr.id, nr.fecha as fecha_creacion, na.aprobado, noc.id as orden, 
+					timestampdiff(day, noc.fecha, now()) as dias_orden, timestampdiff(day, na.fecha, now()) as dias_anotacion 
+				from nota_remitente nr 
+				left join nota_anotacion na on na.id_remitente=nr.id 
+				left join nota_ordenDeCompra noc on noc.id_remitente=nr.id 
+				where nr.fecha>'2020-02-01' and nr.id_user=".$u->id." and (timestampdiff(day, na.fecha, now())>7 or timestampdiff(day, noc.fecha, now())>7)";
+		$db->setQuery($query);
+		$db->query();
+		if ($db->getNumRows())
+			return $db->loadAssocList();
+		return array();
 	}
 }

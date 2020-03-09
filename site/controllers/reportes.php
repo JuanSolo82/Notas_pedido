@@ -62,11 +62,13 @@ class NotaControllerReportes extends JControllerForm
 		$datos_user 	= $model->getDatos_user($detalle_nota['id_user']);
 		$items			= $model->getItems($id_remitente);
 		$etapas			= $model->getEtapas($id_remitente);
+		$anotaciones	= $model->getAnotaciones($id_remitente);
 		$jinput->set('id_remitente', $id_remitente);
 		$jinput->set('detalle_nota', $detalle_nota);
 		$jinput->set('items', $items);
 		$jinput->set("datos_user", $datos_user);
 		$jinput->set("etapas", $etapas);
+		$jinput->set("anotaciones", $anotaciones);
 		parent::display();
 	}
 	public function facturar_orden(){
