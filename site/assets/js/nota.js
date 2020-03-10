@@ -260,19 +260,22 @@ function anular_nota_depto(id_remitente){
 
 function guardar_calificacion(num_items){
     var terminado = 1;
+    var id_tipoModificacion = 0;
     for (var i=1;i<=num_items;i++){
         var autorizado = parseFloat($("#cantidad_autorizado"+i).val());
         var faltante = parseFloat($("#cantidad_faltante"+i).val());
         var id_item = parseInt($("#id_item"+i).val());
         faltante = autorizado-faltante;
+        if (faltante!=autorizado){
+            terminado=2;
+            id_tipoModificacion = 5;
+        }
         $.ajax({
             url: 'index.php?option=com_nota&task=editar_item',
             type: 'post',
-            data: { id_item: id_item, cantidad_original: autorizado, nueva_cantidad: faltante },
+            data: { id_item: id_item, cantidad_original: autorizado, nueva_cantidad: faltante, id_tipoModificacion: id_tipoModificacion },
             success: function(){}
         });
-        if (faltante!=autorizado)
-            terminado=0;
     }
     var id_remitente = $("#id_remitente").val();
     var comentario = $("#comentario").val();
@@ -281,13 +284,12 @@ function guardar_calificacion(num_items){
         type: 'post',
         data: {terminado: terminado, id_remitente: id_remitente, motivo: comentario}
     });
-    if (terminado){
-        $.ajax({
-            url: 'index.php?option=com_nota&task=nota_anotacion',
-            type: 'post',
-            data: {id_remitente: id_remitente, aprobado: terminado, anotacion: comentario}
-        });
-    }
+    $.ajax({
+        url: 'index.php?option=com_nota&task=nota_anotacion',
+        type: 'post',
+        timeout: 2000,
+        data: {id_remitente: id_remitente, aprobado: terminado, anotacion: comentario}
+    });
     window.parent.location.reload();
 }
 

@@ -168,6 +168,9 @@ if ($this->id_user==$this->detalle_nota['id_user'] && $this->detalle_nota['aprob
 
 if ($this->id_user==$this->detalle_nota['id_user'] && $this->datos_nota['aprobado_adquisiciones']){ ?>
 	<div style="width: 50%;">
+	<table>
+		<tr><td style="padding: 8px; background-color: #F0B27A; color: white;">Ítems no completados</td></tr>
+	</table>
 		<div class='fila_completa centrar'><h2>Calificación</h2></div>
 		<table class="tabla_listado">
 		<tr>

@@ -71,17 +71,17 @@ $num_filas=0;
 				</div>
 			</td>
 			<td align='center'>
-				<?php if ($n['empleado']!=2 && $n['capitan']!=2 && $n['jefe']!=2 && $n['depto']!=2 && $n['adquisiciones']!=2 && !$n['aprobado']){ ?> 
+				<?php if ($n['empleado']!=2 && $n['capitan']!=2 && $n['jefe']!=2 && $n['depto']!=2 && $n['adquisiciones']!=2 && (!$n['aprobado'] || $n['aprobado']==2)){ ?> 
 					<a onclick="SqueezeBox.fromElement(this, 
 								{handler:'iframe', 
-								size: {x: 900, y: 550}, 
+								size: {x: 1100, y: 550}, 
 								url:'<?php echo JRoute::_('index.php?option=com_nota&view=com_nota&task=detalle_nota&id_nota='.$n['id'].'&tmpl=component'); ?>',
 								onClose:function(){window.location.reload();} })">
 					<img src='/portal/administrator/templates/hathor/images/menu/icon-16-edit.png' /></a>
 				<?php }else{ ?>
 					<a onclick="SqueezeBox.fromElement(this, 
 								{handler:'iframe', 
-								size: {x: 900, y: 550}, 
+								size: {x: 1100, y: 550}, 
 								url:'<?php echo JRoute::_('index.php?option=com_nota&view=com_nota&task=reportes.detalle_nota&id_nota='.$n['id'].'&tmpl=component'); ?>',
 								onClose:function(){window.location.reload();} })">
 					<img src='/portal/administrator/templates/hathor/images/menu/icon-16-article.png' /></a>

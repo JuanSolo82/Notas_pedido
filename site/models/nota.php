@@ -172,7 +172,7 @@ class NotaModelNota extends JModelItem{
 					od.nombre as depto_origen, nr.fecha, nr.proveedor, nr.id_depto_costo, 
 					nnr.nombre as nombre_remitente, nu.id_depto as id_depto_origen, nr.id_user,
 					nr.id_adepto, nrev.autorizado_jefe, nrev.autorizado_capitan, nrev.autorizado_depto, nrev.aprobado_adquisiciones, 
-					np.descripcion as prioridad, dc.depto_compra 
+					np.descripcion as prioridad, dc.depto_compra, na.aprobado, na.anotacion 
 				from nota_remitente nr join jml_users u on u.id=nr.id_user 
 					join nota_user nu on nu.id_user=u.id 
 					join oti_departamento od on od.id=nu.id_depto 
@@ -183,6 +183,11 @@ class NotaModelNota extends JModelItem{
 						(select od.nombre as depto_compra, nr.id 
 							from oti_departamento od 
 							join nota_remitente nr on nr.id_depto_compra=od.id and nr.id=".$id_remitente.") dc on dc.id=nr.id
+					left join 
+						(select na.id_remitente, na.aprobado, na.anotacion 
+							from nota_anotacion na, nota_remitente nrem 
+							where na.id_remitente=nrem.id and nrem.id=".$id_remitente." 
+							order by na.id desc limit 1) na on na.id_remitente=nr.id 
 				where nr.id=".$id_remitente;
 		$db->setQuery($query);
 		$db->query();
@@ -275,7 +280,7 @@ class NotaModelNota extends JModelItem{
 	function editar_item($id_item, $cantidad_original, $nueva_cantidad, $descripcion, $motivo, $id_tipo_modificacion){
 		$db = JFactory::getDbo();
 		if ($descripcion!="" || $motivo!=''){
-			$query = "update nota_item set item='".$descripcion."', motivo='".$motivo."' where id=".$id_item;
+			$query = "update nota_item set item='".$descripcion."', motivo='".$motivo."', id_tipoModificacion=".$id_tipoModificacion." where id=".$id_item;
 			$db->setQuery($query);
 			$db->query();
 		}
