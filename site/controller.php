@@ -136,7 +136,7 @@ class NotaController extends JController{
 		$id_prioridad 		= $jinput->get("prioridad", 0, "int");
 		$nombre_tripulante	= $jinput->get("nombre_tripulante", "", "string");
 		$id_depto_compra	= 4; // para revisar
-		$id_tipo_pedido 	= 1; // 1 producto, 2 servicio
+		$id_tipo_pedido 	= $jinput->get("tipo_pedido", 1, "int"); // 1 producto, 2 servicio
 		$proveedor 			= $jinput->get("proveedor", "", "string");
 		$proveedor 			= NotaHelper::msquote($proveedor);
 		$proveedor 			= htmlentities($proveedor);

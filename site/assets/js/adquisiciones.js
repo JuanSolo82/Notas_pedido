@@ -94,8 +94,12 @@ function previa_oc(opcion, num_items){
 	html += "</table>";
 	
 	$("#contenido_tabla"+opcion).html(html);
+	var tipo_pedido = parseInt($("#id_tipo_pedido").val());
 	if ($("#ley_navarino").is(":checked")){
-		html = "Facturar con documento especial de venta (ley 18.392) a Transbordadora Austral Broom S.A., rut 82.074.900-6, dirección Manuel Señoret #831, Porvenir, exento de IVA";
+		if (tipo_pedido==1)
+			html = "Facturar con documento especial de venta (ley 18.392) a Transbordadora Austral Broom S.A., rut 82.074.900-6, dirección Manuel Señoret #831, Porvenir, exento de IVA";
+		else if (tipo_pedido==2)
+			html = "Facturar con documento a Transbordadora Austral Broom S.A., rut 82.074.900-6, dirección Manuel Señoret #831, Porvenir, afecto a IVA"
 	}else{
 		html = "Facturar a Transbordadora Austral Broom S.A., rut 82.074.900-6, dirección Juan Williams #06450, Punta Arenas, afecto a IVA";
 	}

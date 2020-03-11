@@ -375,8 +375,11 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$html .= '</table>';
 		$html .= '<br><br>
 			<div class="beneficio">';
-			if ($datos['ley_navarino'] && $datos['id_tipo_pedido']==1){
-				$html .= 'Facturar con documento especial de venta (ley 18.392) a Transbordadora Austral Broom S.A., rut 82.074.900-6, direcci'.htmlentities('ó').'n Manuel Se'.htmlentities('ñ').'oret #831, Porvenir, exento de IVA';
+			if ($datos['ley_navarino']){
+				if ($datos['id_tipo_pedido']==1)
+					$html .= 'Facturar con documento especial de venta (ley 18.392) a Transbordadora Austral Broom S.A., rut 82.074.900-6, direcci'.htmlentities('ó').'n Manuel Se'.htmlentities('ñ').'oret #831, Porvenir, exento de IVA';
+				elseif ($datos['id_tipo_pedido']==2)
+					$html .= 'Facturar con documento a Transbordadora Austral Broom S.A., rut 82.074.900-6, direcci'.htmlentities('ó').'n Manuel Se'.htmlentities('ñ').'oret #831, Porvenir, afecto a IVA';
 			}else{
 				$html .= 'Facturar a Transbordadora Austral Broom S.A., rut 82.074.900-6, direcci'.htmlentities('ó').'n Juan Williams #06450, Punta Arenas, afecto a IVA';
 			}

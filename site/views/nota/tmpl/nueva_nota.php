@@ -75,6 +75,23 @@ $user = JFactory::getUser();
 			</div>
 		</div>
 	</div>
+	<?php if ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota') || $user->authorise('jefe.depto', 'com_nota') 
+				|| $user->authorise('jefe.delgada', 'com_nota') || $user->authorise('jefe.natales', 'com_nota') || $user->authorise('jefe.porvenir', 'com_nota')
+				|| $user->authorise('jefe.punta_arenas', 'com_nota') || $user->authorise('adquisiciones.jefe', 'com_nota') || $user->authorise('procedimientos', 'com_nota') 
+				|| ($user->authorise('empleado.depto', 'com_nota') && !$user->authorise('tripulante', 'com_nota'))){ ?>
+		<div class='centrar'>
+			<div class='fila_completa bordear' style='width: 90%;'>
+				<div class="col-3 titulo_item">Tipo de pedido</div>
+				<div class="col-7">
+					<select name="tipo_pedido" id="tipo_pedido">
+						<option value='1'>Producto</option>
+						<option value='2'>Servicio</option>
+					</select>
+				</div>
+			</div>
+		</div>
+	<?php } ?>
+	
 	<div class='fila_vacia'></div>
 
 	<table class='adminlist'>
