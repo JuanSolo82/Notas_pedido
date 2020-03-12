@@ -145,7 +145,6 @@ class NotaModelNota extends JModelItem{
 		$query .= " order by nr.id desc limit ".(10*$pagina).", 10";
 		$db->setQuery($query);
 		$db->query();
-		//print_r($query);
 		if ($db->getNumRows())
 			return $db->loadAssocList();
 		return array();
@@ -174,7 +173,7 @@ class NotaModelNota extends JModelItem{
 					od.nombre as depto_origen, nr.fecha, nr.proveedor, nr.id_depto_costo, 
 					nnr.nombre as nombre_remitente, nu.id_depto as id_depto_origen, nr.id_user,
 					nr.id_adepto, nrev.autorizado_jefe, nrev.autorizado_capitan, nrev.autorizado_depto, nrev.aprobado_adquisiciones, 
-					np.descripcion as prioridad, dc.depto_compra, na.aprobado, na.anotacion 
+					np.descripcion as prioridad, dc.depto_compra, na.aprobado, na.anotacion, na.fecha_anotacion 
 				from nota_remitente nr join jml_users u on u.id=nr.id_user 
 					join nota_user nu on nu.id_user=u.id 
 					join oti_departamento od on od.id=nu.id_depto 
@@ -186,7 +185,7 @@ class NotaModelNota extends JModelItem{
 							from oti_departamento od 
 							join nota_remitente nr on nr.id_depto_compra=od.id and nr.id=".$id_remitente.") dc on dc.id=nr.id
 					left join 
-						(select na.id_remitente, na.aprobado, na.anotacion 
+						(select na.fecha as fecha_anotacion, na.id_remitente, na.aprobado, na.anotacion 
 							from nota_anotacion na, nota_remitente nrem 
 							where na.id_remitente=nrem.id and nrem.id=".$id_remitente." 
 							order by na.id desc limit 1) na on na.id_remitente=nr.id 
@@ -392,13 +391,10 @@ class NotaModelNota extends JModelItem{
 		$fecha2 = NotaHelper::fechamysql($fecha2,2);
 		$db = JFactory::getDbo();
 		$query = "select nr.id, nr.fecha, u.name as nombre_creador, nrn.nombre as tripulante, nrev.enviado_empleado as empleado, od.nombre as depto_origen,
-						nrev.autorizado_capitan as capitan, nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto, nrev.aprobado_adquisiciones as adquisiciones, 
-						nt.terminado, na.aprobado, na.anotacion 
+						nrev.autorizado_capitan as capitan, nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto, nrev.aprobado_adquisiciones as adquisiciones 
 				from nota_remitente nr
 				join jml_users u on u.id=nr.id_user 
-				join nota_user nu on nu.id_user=nr.id_user 
-				left join nota_tramitada nt on nt.id_remitente=nr.id 
-				left join nota_anotacion na on na.id_remitente=nr.id ";
+				join nota_user nu on nu.id_user=nr.id_user ";
 		$query .= " join oti_departamento od on od.id=nu.id_depto ";
 		if ($depto_origen)
 			$query .= " and nu.id_depto=".$depto_origen;
@@ -414,7 +410,6 @@ class NotaModelNota extends JModelItem{
 			$query .= " where nr.id=".$nota_pedido;
 		elseif ($orden_compra!="")
 			$query .= " join nota_ordenDeCompra nor on nor.id=".$orden_compra." and nor.id_remitente=nr.id ";
-		
 		$query .= " order by nr.id desc";
 		$db->setQuery($query);
 		$db->query();
@@ -619,7 +614,6 @@ class NotaModelNota extends JModelItem{
 		if ($centro_costo)
 			$query .= " and nr.id_depto_costo=".$centro_costo;
 		$query .= " order by nr.id desc";
-		
 		$db->setQuery($query);
 		$db->query();
 		if ($db->getNumRows())

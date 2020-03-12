@@ -50,9 +50,11 @@ $f = explode('-', $this->detalle_nota['fecha']);
 	</div>
 </div>
 <div class='fila_vacia'></div>
-Símbolo <img style='' src='/portal/administrator/templates/hathor/images/menu/icon-16-deny.png' /> indica ítem 'Eliminado'<br>
-<div class='centrar' style="margin-bottom: 25px;">
 
+<table style="width: 50%">
+	<tr><td style="padding: 8px;">Símbolo <img style='' src='/portal/administrator/templates/hathor/images/menu/icon-16-deny.png' /> indica ítem 'Eliminado'</td></tr>
+</table>
+<div class='centrar' style="margin-bottom: 25px; margin-top: 10px">
 	<table class='tabla_listado'>
 		<tr>
 			<th width='15%'>Cantidad pedida</th>
@@ -61,10 +63,10 @@ Símbolo <img style='' src='/portal/administrator/templates/hathor/images/menu/i
 			<th width='15%'>Adjunto</th>
 		</tr>
 	<?php foreach ($this->items as $i){ 
-		$cantidad = ($i['id_nueva_cantidad'] && $i['id_tipoModificacion']!=4) ? $i['nueva_cantidad'] : $i['cantidad'];
+		$cantidad = ($i['id_nueva_cantidad'] && $i['id_tipoModificacion']<4) ? $i['nueva_cantidad'] : $i['cantidad'];
 		?>
 		<tr>
-			<td align='center'><?php echo $cantidad ? $cantidad : "<img style='float:left' src='/portal/administrator/templates/hathor/images/menu/icon-16-deny.png' />".$cantidad.', '.$i['id'] ?></td>
+			<td align='center'><?php echo $cantidad ? $cantidad : "<img style='float:left' src='/portal/administrator/templates/hathor/images/menu/icon-16-deny.png' />".$cantidad ?></td>
 			<td><?php echo $i['item'] ?></td>
 			<td><?php echo $i['motivo'] ?></td>
 			<td align='center'>
@@ -80,7 +82,8 @@ Símbolo <img style='' src='/portal/administrator/templates/hathor/images/menu/i
 	</table>
 </div><br><br>
 
-<table class="tabla_listado" style="width: 50%; margin: 50px;">
+<div class='col-5'>
+<table class="tabla_listado" style="margin: 5px;">
 	<tr>
 		<th colspan='4'>Etapas</th>
 	</tr>
@@ -94,11 +97,11 @@ Símbolo <img style='' src='/portal/administrator/templates/hathor/images/menu/i
 	<tr>
 		<td><?php echo NotaHelper::fechamysql($e['fecha']) ?></td>
 		<td><?php echo $e['nombre_tramitador'] ? $e['nombre_tramitador'] : $e['nombre_usuario'] ?></td>
-		<td><?php echo $e['terminado']==2 ? "Cancelado" : "Aprobado" ?></td>
+		<td><?php echo $e['terminado']==2 ? "Pedido incompleto" : "Aprobado" ?></td>
 		<td><?php echo $e['motivo'] ?></td>
 	</tr>
 <?php } ?>
-<?php foreach ($this->anotaciones as $a){ 
+<?php /*foreach ($this->anotaciones as $a){ 
 	$f = explode(' ', $a['fecha']);
 	?>
 	<tr>
@@ -107,6 +110,33 @@ Símbolo <img style='' src='/portal/administrator/templates/hathor/images/menu/i
 		<td><?php echo $a['aprobado']==0 ? "Rechazada" : "Aprobada" ?></td>
 		<td><?php echo $a['anotacion'] ?></td>
 	</tr>
-<?php } ?>
+<?php }*/ ?>
 </table>
+</div>
+
+<div class='col-5'>
+<h3>Calificaciones</h3>
+<table class="tabla_listado" style="margin: 5px;">
+	<tr>
+		<th>Fecha</th>
+		<th>Elementos faltantes</th>
+	</tr>
+	<?php foreach ($this->anotaciones as $a){ 
+		$f = explode(' ', $a['fecha']);
+		?>
+	<tr>
+		<td><?php echo NotaHelper::fechamysql($f[0]) ?></td>
+		<td>
+			<ul>
+		<?php foreach ($this->items as $i){ 
+			if ($i['id_tipoModificacion']==5){ ?>
+				<li><?php echo $i['item'] ?></li>
+			<?php } 
+			} ?>
+			</ul>
+		</td>
+	</tr>
+	<?php } ?>
+</table>
+</div>
 

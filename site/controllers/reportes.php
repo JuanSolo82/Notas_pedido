@@ -45,6 +45,19 @@ class NotaControllerReportes extends JControllerForm
 				JError::raiseNotice( 100, 'Ingrese los campos requeridos ');
 		}elseif ($inicio){
 			$notas = $model->getNotas($desde, $hasta, $nota_pedido, $orden_compra, $depto_origen, $estado);
+			$i=0;
+			foreach ($notas as $n){
+				$notas[$i]['aprobado'] = 0;
+				$notas[$i]['anotacion'] = '';
+				$notas[$i]['fecha_anotacion'] = '';
+				$anotacion = $model->getAnotacion($n['id']);
+				if (sizeof($anotacion)){
+					$notas[$i]['aprobado'] 			= $anotacion['aprobado'];
+					$notas[$i]['anotacion'] 		= $anotacion['anotacion'];
+					$notas[$i]['fecha_anotacion'] 	= $anotacion['fecha'];
+				}
+				$i++;
+			}
 		}
 		$jinput->set("notas", $notas);
 		$jinput->set("lista_deptos", $lista_deptos);

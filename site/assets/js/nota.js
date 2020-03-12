@@ -273,7 +273,7 @@ function guardar_calificacion(num_items){
         $.ajax({
             url: 'index.php?option=com_nota&task=editar_item',
             type: 'post',
-            data: { id_item: id_item, cantidad_original: autorizado, nueva_cantidad: faltante, id_tipoModificacion: id_tipoModificacion },
+            data: { id_item: id_item, cantidad_original: autorizado, nueva_cantidad: faltante, id_tipo_modificacion: id_tipoModificacion },
             success: function(){}
         });
     }
