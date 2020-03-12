@@ -118,6 +118,7 @@ class NotaModelNota extends JModelItem{
 			return $db->loadResult();
 		return 0;
 	}
+
 	// para subir archivos
 	public function upload($archivo, $id_remitente){
 		$db = JFactory::getDbo();
@@ -126,7 +127,8 @@ class NotaModelNota extends JModelItem{
 		$nombre_archivo = JFile::makeSafe($archivo['name']);
 		$ruta_tmp = $archivo['tmp_name'];
 		$ruta = "/portal/media/notas_pedido/adjuntos/".$id_remitente;
-		$ruta_definitiva = "/var/www/portal/media/notas_pedido/adjuntos/".$id_remitente.'/'.$nombre_archivo;
+		//$ruta_definitiva = "/var/www/portal/media/notas_pedido/adjuntos/".$id_remitente.'/'.$nombre_archivo;
+		$ruta_definitiva = "/var/www/clients/client2/web4/web/portal/media/notas_pedido/adjuntos/".$id_remitente.'/'.$nombre_archivo;
 		if (JFILE::upload($ruta_tmp, $ruta_definitiva)) {
 			file_put_contents($ruta . '/index.html', '<HTML></HTML>' );
 			return true;
