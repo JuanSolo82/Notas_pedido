@@ -180,17 +180,24 @@ if ($this->id_user==$this->detalle_nota['id_user'] && $this->datos_nota['aprobad
 		</tr>
 		<?php $num_items=0; ?>
 		<?php foreach ($this->items as $i){ 
-			$num_items++; ?>
+			$num_items++; 
+			?>
 		<tr>
-			<td <?php echo $i['id_tipoModificacion']==5 ? 'style="padding: 8px; background-color: #F0B27A; color: white;"' : '' ?>> 
+			<td <?php echo sizeof($i['modificacion']) ? 'style="padding: 8px; background-color: #F0B27A; color: white;"' : '' ?>> 
 				<?php echo $i['item'] ?>
 			</td>
-			<td <?php echo $i['id_tipoModificacion']==5 ? 'style="padding: 8px; background-color: #F0B27A; color: white;"' : '' ?>>
-				<?php echo ($i['nueva_cantidad'] && $i['id_tipoModificacion']==1) ? $i['nueva_cantidad'] : $i['cantidad'] ?><input type="hidden" id="cantidad_autorizado<?php echo $num_items ?>" value="<?php echo ($i['nueva_cantidad'] && $i['id_tipoModificacion']==1) ? $i['nueva_cantidad'] : $i['cantidad'] ?>">
+			<td <?php echo sizeof($i['modificacion']) ? 'style="padding: 8px; background-color: #F0B27A; color: white;"' : '' ?>>
+				<?php echo ($i['nueva_cantidad'] && $i['id_tipoModificacion']==1) ? $i['nueva_cantidad'] : $i['cantidad'] ?>
+				<input type="hidden" id="cantidad_autorizado<?php echo $num_items ?>" value="<?php echo ($i['nueva_cantidad'] && $i['id_tipoModificacion']==1) ? $i['nueva_cantidad'] : $i['cantidad'] ?>">
 			</td>
-			<td <?php echo $i['id_tipoModificacion']==5 ? 'style="padding: 8px; background-color: #F0B27A; color: white;"' : '' ?> align='center'>
+			<td <?php echo sizeof($i['modificacion']) ? 'style="padding: 8px; background-color: #F0B27A; color: white;"' : '' ?> align='center'>
 				<input type="hidden" value="<?php echo $i['id'] ?>" id='id_item<?php echo $num_items ?>'>
-				<input type="number" style="width: 55%" required type="number" min="0" step=".1" id='cantidad_faltante<?php echo $num_items ?>' value="0">
+				<?php if (($this->detalle_nota['aprobado']==2 && sizeof($i['modificacion'])) || !$this->detalle_nota['aprobado']){ ?>
+					<input type="number" style="width: 55%" required type="number" min="0" step=".1" id='cantidad_faltante<?php echo $num_items ?>' value="0"> 
+				<?php }else{ ?>
+					<input type='hidden' id='cantidad_faltante<?php echo $num_items ?>' value='0'>0
+				<?php } ?>
+				
 			</td>
 		</tr>
 		<?php } ?>

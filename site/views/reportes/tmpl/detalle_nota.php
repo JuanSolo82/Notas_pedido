@@ -101,16 +101,6 @@ $f = explode('-', $this->detalle_nota['fecha']);
 		<td><?php echo $e['motivo'] ?></td>
 	</tr>
 <?php } ?>
-<?php /*foreach ($this->anotaciones as $a){ 
-	$f = explode(' ', $a['fecha']);
-	?>
-	<tr>
-		<td><?php echo NotaHelper::fechamysql($f[0]) ?></td>
-		<td>Adquisiciones</td>
-		<td><?php echo $a['aprobado']==0 ? "Rechazada" : "Aprobada" ?></td>
-		<td><?php echo $a['anotacion'] ?></td>
-	</tr>
-<?php }*/ ?>
 </table>
 </div>
 
@@ -121,19 +111,27 @@ $f = explode('-', $this->detalle_nota['fecha']);
 		<th>Fecha</th>
 		<th>Elementos faltantes</th>
 	</tr>
-	<?php foreach ($this->anotaciones as $a){ 
+	<?php 
+		$faltantes=0;
+		foreach ($this->anotaciones as $a){ 
 		$f = explode(' ', $a['fecha']);
 		?>
 	<tr>
 		<td><?php echo NotaHelper::fechamysql($f[0]) ?></td>
 		<td>
 			<ul>
-		<?php foreach ($this->items as $i){ 
-			if ($i['id_tipoModificacion']==5){ ?>
-				<li><?php echo $i['item'] ?></li>
+		<?php foreach ($this->items as $i){
+			if (sizeof($i['modificacion'])){ 
+				$faltantes++;
+				foreach ($i['modificacion'] as $m){ 
+					if ($m['fecha_modificacion']==$f[0]){ ?>
+						<li><?php echo $i['item']; ?></li>
+					<?php } ?>
+				<?php } ?>
 			<?php } 
 			} ?>
 			</ul>
+			<?php echo !$faltantes ? "Recibido ok" : "" ?>
 		</td>
 	</tr>
 	<?php } ?>

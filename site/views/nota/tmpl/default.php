@@ -9,7 +9,7 @@ JHTML::script('nota.js', 'components/com_nota/assets/js/');
 JHTML::script('bootstrap.js', 'components/com_nota/assets/bootstrap/js/');
 if (NotaHelper::isTestSite()){
 	echo "prueba de api clima<br>";
-	$data = json_decode( file_get_contents('https://samples.openweathermap.org/data/2.5/uvi?lat=-53.11&lon=-70.87&appid=a2d3e70172051b1e36cbe378b2aa811a'), true );
+	$data = json_decode( file_get_contents('http://api.openweathermap.org/data/2.5/uvi?appid=a2d3e70172051b1e36cbe378b2aa811a&lat=-53.156723&lon=-70.908422'), true );
 	print_r($data);
 }
 

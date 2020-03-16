@@ -212,7 +212,20 @@ class NotaModelNota extends JModelItem{
 								where ni.id=nm.id_item order by nm.id desc limit 1) nm on nm.id_item=ni.id";
 		$db->setQuery($query);
 		$db->query();
-		return $db->loadAssocList();
+		$lista = $db->loadAssocList();
+		if (sizeof($lista)){
+			$i=0;
+			$lista[$i]['modificacion'] = array();
+			foreach ($lista as $l){
+				$lista[$i]['modificacion'] = $this->getEliminados($l['id']);
+				$i++;
+			}
+			return $lista;
+		}
+		return array();
+	}
+	function items_faltantes(){
+		$db = JFactory::getDbo();
 	}
 	function anular_nota($id_remitente){
 		$db = JFactory::getDbo();
@@ -738,6 +751,15 @@ class NotaModelNota extends JModelItem{
 				left join nota_anotacion na on na.id_remitente=nr.id 
 				left join nota_ordenDeCompra noc on noc.id_remitente=nr.id 
 				where nr.fecha>'2020-02-01' and nr.id_user=".$u->id." and (timestampdiff(day, na.fecha, now())>7 or timestampdiff(day, noc.fecha, now())>7)";
+		$db->setQuery($query);
+		$db->query();
+		if ($db->getNumRows())
+			return $db->loadAssocList();
+		return array();
+	}
+	function getEliminados($id_item){
+		$db = JFactory::getDbo();
+		$query = "select cantidad_original, nueva_cantidad, fecha as fecha_modificacion, id_tipoModificacion from nota_modificada where id_item=".$id_item;
 		$db->setQuery($query);
 		$db->query();
 		if ($db->getNumRows())

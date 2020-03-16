@@ -86,6 +86,7 @@ class NotaController extends JController{
 		$detalle_nota 	= $model->getDetalle_nota($id_remitente);
 		$datos_user 	= $model->getDatos_user($detalle_nota['id_user']);
 		$items			= $model->getItems($id_remitente);
+		
 		$datos_nota 	= $model->getDetalle_nota($id_remitente);
 		$jinput->set('id_remitente', $id_remitente);
 		$jinput->set('detalle_nota', $detalle_nota);

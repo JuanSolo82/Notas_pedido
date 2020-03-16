@@ -266,16 +266,17 @@ function guardar_calificacion(num_items){
         var faltante = parseFloat($("#cantidad_faltante"+i).val());
         var id_item = parseInt($("#id_item"+i).val());
         faltante = autorizado-faltante;
+        
         if (faltante!=autorizado){
             terminado=2;
             id_tipoModificacion = 5;
+            $.ajax({
+                url: 'index.php?option=com_nota&task=editar_item',
+                type: 'post',
+                data: { id_item: id_item, cantidad_original: autorizado, nueva_cantidad: faltante, id_tipo_modificacion: id_tipoModificacion },
+                success: function(){}
+            });
         }
-        $.ajax({
-            url: 'index.php?option=com_nota&task=editar_item',
-            type: 'post',
-            data: { id_item: id_item, cantidad_original: autorizado, nueva_cantidad: faltante, id_tipo_modificacion: id_tipoModificacion },
-            success: function(){}
-        });
     }
     var id_remitente = $("#id_remitente").val();
     var comentario = $("#comentario").val();
