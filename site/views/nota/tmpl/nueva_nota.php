@@ -90,6 +90,16 @@ $user = JFactory::getUser();
 				</div>
 			</div>
 		</div>
+		<?php if (NotaHelper::isTestSite()){ ?>
+		<div class='centrar'>
+			<div class='fila_completa bordear' style='width: 90%;'>
+				<div class="col-3 titulo_item">Proveedor</div>
+				<div class="col-7">
+					<input type='text' id='proveedor'>
+				</div>
+			</div>
+		</div>
+		<?php } ?>
 	<?php } ?>
 	
 	<div class='fila_vacia'></div>
