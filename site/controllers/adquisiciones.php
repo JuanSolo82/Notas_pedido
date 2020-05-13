@@ -347,7 +347,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 					Por cuenta de Transbordadora Austral Broom S.A.<br>
 					Centro de costo: '.htmlentities($datos['depto_costo']).'<br>
 					Solicitado por: '.htmlentities($datos['depto_origen']).'<br>
-					'.($proveedor ? "Proveedor: ".htmlentities($proveedor) : "" ).'
+					'.($proveedor ? "Proveedor: ".htmlentities(ucwords(strtolower($proveedor))) : "" ).'
 				</div>';
 		
 		$html .= '<table class="tabla_items" border=1 cellspacing=0 cellpadding=2>

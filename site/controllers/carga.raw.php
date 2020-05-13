@@ -122,7 +122,6 @@ class NotaControllerCarga extends JControllerForm
 		$model = $this->getModel('nota');
 		$orden_compra = $jinput->get("orden_compra", 0, "int");
 		$datos_orden = $model->datos_orden($orden_compra);
-		//print_r($datos_orden);
 		echo json_encode($datos_orden);
 	}
 	function rango_naves(){
@@ -135,5 +134,27 @@ class NotaControllerCarga extends JControllerForm
 		$jinput->set('rango_naves', $rango_naves);
 		$jinput->set('pagina', $pagina);
 		$view->rango_naves();
+	}
+	function getProveedor(){
+		$jinput = JFactory::getApplication()->input;
+		$model = $this->getModel('nota');
+		$str = $jinput->get('str', '', 'string');
+		$ind = $jinput->get('ind', 0, 'int');
+		$proveedor = $model->getProveedor($str);
+		
+		if ($ind)
+			$html = "<ul id='lista_proveedores".$ind."' onchange='escoger_proveedor(\"\", 0)' class='lista_proveedores'>";
+		else
+			$html = "<ul id='lista_proveedores' onchange='escoger_proveedor(\"\", 0)' class='lista_proveedores'>";
+		if (sizeof($proveedor)){
+			foreach ($proveedor as $p){
+				$html .= "<li id='".$p['RazonSocial']."' onclick='escoger_proveedor(\"".ucwords(strtolower($p['RazonSocial']))."\", ".$ind.")'>".$p['RazonSocial']."</li>";
+			}
+		}else{
+			$html .= "<li id='0'>Sin coincidencias</li>";
+		}
+		$html .= "</ul>";
+		echo $html;
+		//echo json_encode($proveedor);
 	}
 }

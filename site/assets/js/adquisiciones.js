@@ -73,8 +73,8 @@ function guardar_cambios(cont){
 }
 
 function previa_oc(opcion, num_items){
-	if ($.trim($("#proveedor"+opcion).val())!='')
-		$("#proveedor_oc"+opcion).html("Proveedor: "+$("#proveedor"+opcion).val());
+	if ($.trim($("#proveedor_escogido"+opcion).val())!='')
+		$("#proveedor_oc"+opcion).html("Proveedor: "+$("#proveedor_escogido"+opcion).val());
 	else
 		$("#proveedor_oc"+opcion).html("");
 	var html = "<table class='items_oc'><tr>";

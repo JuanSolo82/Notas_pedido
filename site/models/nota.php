@@ -749,7 +749,7 @@ class NotaModelNota extends JModelItem{
 					timestampdiff(day, noc.fecha, now()) as dias_orden, timestampdiff(day, na.fecha, now()) as dias_anotacion 
 				from nota_remitente nr 
 				left join nota_anotacion na on na.id_remitente=nr.id 
-				left join nota_ordenDeCompra noc on noc.id_remitente=nr.id 
+				left join nota_ordenDeCompra noc on noc.id_remitente=nr.id 	
 				where nr.fecha>'2020-02-01' and nr.id_user=".$u->id." and (timestampdiff(day, na.fecha, now())>7 or timestampdiff(day, noc.fecha, now())>7)";
 		$db->setQuery($query);
 		$db->query();
@@ -765,5 +765,29 @@ class NotaModelNota extends JModelItem{
 		if ($db->getNumRows())
 			return $db->loadAssocList();
 		return array();
+	}
+	function getProveedor($str){
+		$handle = mssql_connect("flexline.tabsa.lan","sa","Tabsa123") or die("Cannot connect to server");
+		$db = mssql_select_db('BDFlexline', $handle) or die("Cannot select database");
+		$query = "select CtaCte, CodLegal as rut, RazonSocial 
+					from flexline.CtaCte 
+					where tipo='proveedor' and empresa='demo' and RazonSocial like '%".$str."%' or CodLegal like '%".$str."%' 
+					order by RazonSocial";
+		$result = mssql_query($query);
+		$ar = array();
+		$i=0;
+		if (!mssql_num_rows($result)){
+			return array();
+		}else{
+			while($row = mssql_fetch_assoc($result)){
+				$ar[$i] = $row;
+				$i++;
+			}
+		}
+		return $ar;
+		/*$rows = mssql_fetch_assoc($result);
+		mssql_free_result($result);
+		mssql_close($handle);
+		return $rows;*/
 	}
 }

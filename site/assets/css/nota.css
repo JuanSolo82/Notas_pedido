@@ -295,3 +295,14 @@ a {
 	margin: 5px; 
 	padding: 5px;
 }
+
+.lista_proveedores{
+	width: 350px;
+	position: absolute;
+	list-style-type: '';
+	background: #AED6F1;
+}
+.lista_proveedores li{
+	margin: 10px;
+	cursor: pointer;
+}

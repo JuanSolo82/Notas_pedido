@@ -6,6 +6,7 @@ JHTML::stylesheet('jquery-ui.css', 'components/com_nota/assets/css/');
 JHTML::script('jquery.min.js', 'components/com_nota/assets/js/');
 JHTML::script('jquery-ui.min.js', 'components/com_nota/assets/js/');
 JHTML::script('nota.js', 'components/com_nota/assets/js/');
+JHTML::script('jquery.typeahead.min.js', 'components/com_nota/assets/js/');
 
 //echo JRequest::checkToken('get')."?";
 $user = JFactory::getUser();
@@ -93,9 +94,10 @@ $user = JFactory::getUser();
 		<?php if (NotaHelper::isTestSite()){ ?>
 		<div class='centrar'>
 			<div class='fila_completa bordear' style='width: 90%;'>
-				<div class="col-3 titulo_item">Proveedor</div>
+				<div class="col-3 titulo_item">Proveedor (opcional)</div>
 				<div class="col-7">
-					<input type='text' id='proveedor'>
+					<input type='text' id='proveedor_escogido' name='proveedor_escogido' size='50' onkeypress="cargar_proveedor(this.value)">
+					<div id='proveedor'></div>
 				</div>
 			</div>
 		</div>

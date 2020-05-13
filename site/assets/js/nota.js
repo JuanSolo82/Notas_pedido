@@ -54,7 +54,13 @@ $(document).ready(function() {
             maxDate: '0'
         }).focus();
     });
-    
+    $("#proveedor_escogido").blur(function(){
+        $("#lista_proveedores").fadeOut();
+        console.log("");
+    });
+    $("#cantidad1").focus(function(){
+        $("#lista_proveedores").fadeOut();
+    });
 });
 
 function anterior_previo(direccion){
@@ -456,7 +462,7 @@ function actualizar_ln(id_remitente){
     });
 }
 function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
-    var proveedor = $('#proveedor'+opcion).val();
+    var proveedor = $('#proveedor_escogido'+opcion).val();
     var items_orden = $("#items_orden"+opcion).val();
     for (var i=1;i<=items_orden;i++){
         $.ajax({
@@ -633,4 +639,62 @@ function cambiar_destino(id_remitente, nombre_remitente){
     $("#nuevo_destino").hide();
     $('#editar_destino').show();
     $('#cambiar_destino').hide();
+}
+
+function cargar_proveedor(str, ind=0){
+    if (!ind) $("#proveedor").empty();
+    else $("#proveedor"+ind).empty();
+    if (str.length>1){
+        $.ajax({
+            url: 'index.php?option=com_nota&task=carga.getProveedor&format=raw',
+            type: 'post',
+            data: { str: str, ind: ind },
+            success: function(data){
+                if (!ind)
+                    $("#proveedor").append(data);
+                else
+                    $("#proveedor"+ind).append(data);
+            }
+        });
+    }
+    /*var availableTags = [
+        "ActionScript",
+        "AppleScript",
+        "Asp",
+        "BASIC",
+        "C",
+        "C++",
+        "Clojure",
+        "COBOL",
+        "ColdFusion",
+        "Erlang",
+        "Fortran",
+        "Groovy",
+        "Haskell",
+        "Java",
+        "JavaScript",
+        "Lisp",
+        "Perl",
+        "PHP",
+        "Python",
+        "Ruby",
+        "Scala",
+        "Scheme"
+    ];
+    $("#proveedor").autocomplete({
+        source: availableTags
+    });*/
+}
+
+function escoger_proveedor(valor, ind=0){
+    if (!ind){
+        $("#proveedor_escogido").val(valor);
+        $("#lista_proveedores").fadeOut();
+        $("#proveedor").empty();
+    }else{
+        $("#proveedor_escogido"+ind).val(valor);
+        $("#lista_proveedores"+ind).fadeOut();
+        $("#proveedor"+ind).empty();
+    }
+    $("#lista_proveedores").fadeOut();
 }
