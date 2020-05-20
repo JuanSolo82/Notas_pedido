@@ -83,9 +83,9 @@ class NotaModelNota extends JModelItem{
 				$valores = "1,0,0,0,0";
 			if ($user->authorise('capitan.jefe', 'com_nota'))
 				$valores = "1,1,0,0,0";
-			if ($user->authorise('jefe.depto', 'com_nota'))
+			if ($user->authorise('jefe.depto', 'com_nota') && !$user->authorise('empleado.depto', 'com_nota'))
 				$valores = "1,1,1,0,0";
-			if ($user->authorise('adquisiciones.jefe', 'com_nota'))
+			if ($user->authorise('adquisiciones.jefe', 'com_nota') && !$user->authorise('empleado.depto', 'com_nota'))
 				$valores = "1,1,1,1,0";
 		}
 		

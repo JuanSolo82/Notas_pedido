@@ -65,7 +65,7 @@ $user = JFactory::getUser();
 	</div>
 	</a>
 	
-	<?php if ($user->authorise('adquisiciones.jefe', 'com_nota')){ ?>
+	<?php if ($user->authorise('adquisiciones.jefe', 'com_nota') && !$user->authorise('empleado.depto', 'com_nota')){ ?>
 		<a href="<?php echo JRoute::_('index.php?option=com_nota&view=adquisiciones&task=adquisiciones.lista_notas'); ?>">
 			<div class="centrar">
 				<div class='boton'><img src='/portal/administrator/templates/hathor/images/header/icon-48-article.png' /><br>Obtener OC</div>

@@ -5,6 +5,7 @@ defined('_JEXEC') or die;
 // Include dependancy of the main controllerform class
 jimport('joomla.application.component.controllerform');
 require_once(JPATH_COMPONENT_SITE.'/assets/helper.php');
+require_once(JPATH_COMPONENT_SITE.'/assets/phpqrcode.php');
 
 class NotaControllerAdquisiciones extends JControllerForm
 {
@@ -260,7 +261,6 @@ class NotaControllerAdquisiciones extends JControllerForm
 		}
 		$items = $model2->items($id_remitente);
 		$datos_oc = $model2->getDetalle_orden($id_remitente, $opcion);
-
         $document = JFactory::getDocument();
 		$meses = array('01' => 'enero', '02' => 'febrero', '03' => 'marzo', '04' => 'abril', '05' => 'mayo',
 				'06' => 'junio', '07' => 'julio', '08' => 'agosto', '09' => 'septiembre', '10' => 'octubre', '11' => 'noviembre', '12' => 'diciembre');
@@ -268,10 +268,22 @@ class NotaControllerAdquisiciones extends JControllerForm
 		if ( NotaHelper::isTestSite() ){
 			$url = "/var/www/portal/media/notas_pedido/Orden_compra.pdf";
 			$archivo = "/var/www/portal/libraries/joomla/document/pdf/pdf.php";
+			$filename = "/var/www/portal/media/notas_pedido/qr_ordenes/qr_". $id_remitente."-".$opcion.".png";
 		}else{
 			$url = "/var/www/clients/client2/web4/web/portal/media/notas_pedido/Orden_compra.pdf";
 			$archivo = "/var/www/clients/client2/web4/web/portal/libraries/joomla/document/pdf/pdf.php";
-        }
+			$filename = "/var/www/clients/client2/web4/web/portal/media/notas_pedido/qr_ordenes/qr_". $id_remitente."-".$opcion.".png";
+		}
+		/**
+		 * Generador QR
+		 */
+		$matrixPointSize = 3;
+		$errorCorrectionLevel = 'L';
+		$tqr = "Test de QR para nota ".$id_remitente;
+		if (NotaHelper::isTestSite())
+			QRcode::png("texto para recordar", $filename, $errorCorrectionLevel, $matrixPointSize, 2);
+
+		
 		require_once($archivo);
 		$html = $this->orden_html($datos_nota, $items, $opcion, $proveedor, $datos_oc);
 		$pdf = new JDocumentpdf();
@@ -329,27 +341,50 @@ class NotaControllerAdquisiciones extends JControllerForm
 					</font>
 				</td>
 				<td class="encabezados_oc" width="50%" style="padding-left: 50px;">';
+		$url_firma = '';
+		$filename = '/portal/media/notas_pedido/qr_ordenes/qr_32105-1.png';
 		if (NotaHelper::isTestSite()){
 			$html .= '<img src="/var/www/portal/images/logo.png">';
+			$url_firma = '/var/www/portal/components/com_nota/assets/img/firma.jpg';
 		}else{
 			$html .= '<img src="/var/www/clients/client2/web4/web/portal/images/logo.png">';
+			$url_firma = '/var/www/clients/client2/web4/web/portal/components/com_nota/assets/img/firma.jpg';
 		}
 		$html .= '</td>
 			</tr>
 		</table><br>';
-		$html .= '<div class="superior">
-				ORDEN DE COMPRA '.$datos_oc['id'].'
-			</div>
-			<div class="inferior">
-				Nota de pedido n'.htmlentities('°').' '.$datos['id_remitente'].'
-			</div>';
-		$html .= '<div class="datos_entrega">
-					Por cuenta de Transbordadora Austral Broom S.A.<br>
-					Centro de costo: '.htmlentities($datos['depto_costo']).'<br>
-					Solicitado por: '.htmlentities($datos['depto_origen']).'<br>
-					'.($proveedor ? "Proveedor: ".htmlentities(ucwords(strtolower($proveedor))) : "" ).'
-				</div>';
 		
+		$html .= '<div class="superior">
+					ORDEN DE COMPRA '.$datos_oc['id'].'
+				</div>
+				<div class="inferior">
+					Nota de pedido n'.htmlentities('°').' '.$datos['id_remitente'].'
+				</div>';
+		$html .= '<table><tr>';
+		$html .= '	<td width="75%">
+						<div class="datos_entrega">
+						Por cuenta de Transbordadora Austral Broom S.A.<br>
+						Centro de costo: '.htmlentities($datos['depto_costo']).'<br>
+						Solicitado por: '.htmlentities($datos['depto_origen']).'<br>
+						'.($proveedor ? "Proveedor: ".htmlentities(ucwords(strtolower($proveedor))) : "" );
+		$html .= '		</div>
+					</td>';
+		if (NotaHelper::isTestSite()){
+			$html .= '	<td align="right" width="25%">
+						<div style="border: 1px solid silver; 
+								height: 88px; 
+								width: 88px;
+								position: relative;
+								left: 200px;
+								background-image: url(/portal/media/notas_pedido/qr_ordenes/qr_32105-1.png);
+								background-size: 100%;
+								z-index: 5;">
+						</div>';
+			$html .= '	</td>';
+		}
+		
+		$html .= '</tr>
+				</table>';
 		$html .= '<table class="tabla_items" border=1 cellspacing=0 cellpadding=2>
 			<tr>
 				<td width="5%"><b>#</b></td>
@@ -383,10 +418,17 @@ class NotaControllerAdquisiciones extends JControllerForm
 			}else{
 				$html .= 'Facturar a Transbordadora Austral Broom S.A., rut 82.074.900-6, direcci'.htmlentities('ó').'n Juan Williams #06450, Punta Arenas, afecto a IVA';
 			}
+
+			/**
+			 * Probablemente se necesite corregir la ruta absoluta
+			 * de la imagen de la firma para el servidor de producción
+			 */
 			$html .= '
 			</div>
-			<div style="position: absolute; bottom: 60px; width: 40%; left: 400px; z-index: 5; font-size: 13px;">
-				<hr/>
+			<div style="position: absolute; bottom: 60px; width: 40%; left: 400px; z-index: 5; font-size: 13px;">';
+			if (NotaHelper::isTestSite())
+				$html .= '<div style="text-align: center;"><img src="'.$url_firma.'" width="150" height="110"></div>';
+			$html .= '<hr/>
 				<p style="position: relative; left: 5px; text-align: center; line-height: 1.2;">
 					p.p. Transbordadora Austral Broom<br>
 					Punta Arenas, '.$fecha_creacion.'
@@ -454,37 +496,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 		}
 		$html .= '</table>';
 		$html .= "</div>";
-		/*$html .= "
-			<table>
-				<tr>
-					<td class='encabezado' width='35%'><b>Departamento que recibe: </b></td>
-					<td class='encabezado'></td>
-				</tr>
-				<tr>
-					<td class='encabezado' width='35%'><b>Generado por: </b></td>
-					<td class='encabezado'></td>
-				</tr>
-				<tr>
-					<td class='encabezado' width='35%'><b>Departamento que envia: </b></td>
-					<td class='encabezado'></td>
-				</tr>
-				<tr>
-					<td class='encabezado' width='35%'><b>Caracter: </b></td>
-					<td class='encabezado'></td>
-				</tr>
-				<tr>
-					<td class='encabezado' width='35%'><b>Fecha de envio: </b></td>
-					<td class='encabezado'></td>
-				</tr>
-				<tr>
-					<td class='encabezado' width='35%'><b>Centro de costo:</b></td>
-					<td class='encabezado'></td>
-				</tr>
-				<tr>
-					<td class='encabezado'>Departamento que solicita:</td>
-					<td class='encabezado'></td>
-				</tr>
-			</table>";*/
+
 		return $html;
 	}
 	function estilos(){
@@ -505,6 +517,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 			text-align: center;
 		}
 		.datos_entrega {
+			position: relative;
 			width: 100%;
 			float: left;
 			margin: 10px;
