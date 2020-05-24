@@ -281,7 +281,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$errorCorrectionLevel = 'L';
 		$tqr = "www.tabsa.cl";
 		if (NotaHelper::isTestSite())
-			QRcode::png("texto para recordar", $filename, $errorCorrectionLevel, $matrixPointSize, 2);
+			QRcode::png($tqr, $filename, $errorCorrectionLevel, $matrixPointSize, 2);
 
 		
 		require_once($archivo);
@@ -297,9 +297,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$model2 = $this->getModel('adquisiciones');
 		$datos_nota = $model->getDetalle_nota($id_remitente);
 		$items = $model->getItems($id_remitente);
-		//print_r($items);
 		$html = $this->nota_html($datos_nota, $items);
-		echo $html;
 		if ( NotaHelper::isTestSite() ){
 			$url = "/var/www/portal/media/notas_pedido/nota_pedido.pdf";
 			$archivo = "/var/www/portal/libraries/joomla/document/pdf/pdf.php";
@@ -307,7 +305,6 @@ class NotaControllerAdquisiciones extends JControllerForm
 			$url = "/var/www/clients/client2/web4/web/portal/media/notas_pedido/nota_pedido.pdf";
 			$archivo = "/var/www/clients/client2/web4/web/portal/libraries/joomla/document/pdf/pdf.php";
 		}
-		echo $url;
 		require_once($archivo);
 		$pdf = new JDocumentpdf();
 		$pdf->guardar_oc($url, $html);
@@ -419,10 +416,6 @@ class NotaControllerAdquisiciones extends JControllerForm
 				$html .= 'Facturar a Transbordadora Austral Broom S.A., rut 82.074.900-6, direcci'.htmlentities('ó').'n Juan Williams #06450, Punta Arenas, afecto a IVA';
 			}
 
-			/**
-			 * Probablemente se necesite corregir la ruta absoluta
-			 * de la imagen de la firma para el servidor de producción
-			 */
 			$html .= '
 			</div>
 			<div style="position: absolute; bottom: 60px; width: 40%; left: 400px; z-index: 5; font-size: 13px;">';
