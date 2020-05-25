@@ -418,10 +418,6 @@ class NotaControllerAdquisiciones extends JControllerForm
 			}else{
 				$html .= 'Facturar a Transbordadora Austral Broom S.A., rut 82.074.900-6, direcci'.htmlentities('ó').'n Juan Williams #06450, Punta Arenas, afecto a IVA';
 			}
-			/**
-			 * Probablemente se necesite corregir la ruta absoluta
-			 * de la imagen de la firma para el servidor de producción
-			 */
 			$html .= '
 			</div>
 			<div style="position: absolute; bottom: 60px; width: 40%; left: 400px; z-index: 5; font-size: 13px;">';
