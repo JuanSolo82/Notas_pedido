@@ -125,6 +125,8 @@ a {
 	border: 1px solid silver;
     border-radius: 0px;
 	margin: 2px;
+	height: 15px;
+	font-size: 12px;
 }
 .barra_avance {
 	position: relative;

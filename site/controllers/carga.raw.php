@@ -143,12 +143,12 @@ class NotaControllerCarga extends JControllerForm
 		$proveedor = $model->getProveedor($str);
 		
 		if ($ind)
-			$html = "<ul id='lista_proveedores".$ind."' onchange='escoger_proveedor(\"\", 0)' class='lista_proveedores'>";
+			$html = "<ul id='lista_proveedores".$ind."' onchange='escoger_proveedor(\"\",\"0\", 0)' class='lista_proveedores'>";
 		else
-			$html = "<ul id='lista_proveedores' onchange='escoger_proveedor(\"\", 0)' class='lista_proveedores'>";
+			$html = "<ul id='lista_proveedores' onchange='escoger_proveedor(\"\",\"0\", 0)' class='lista_proveedores'>";
 		if (sizeof($proveedor)){
 			foreach ($proveedor as $p){
-				$html .= "<li id='".$p['RazonSocial']."' onclick='escoger_proveedor(\"".ucwords(strtolower($p['RazonSocial']))."\", ".$ind.")'>".$p['RazonSocial']."</li>";
+				$html .= "<li id='".$p['RazonSocial']."' onclick='escoger_proveedor(\"".ucwords(strtolower($p['RazonSocial']))."\", \"".$p['rut']."\", ".$ind.")'>".$p['RazonSocial']."</li>";
 			}
 		}else{
 			$html .= "<li id='0'>Sin coincidencias</li>";

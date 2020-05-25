@@ -268,22 +268,20 @@ class NotaControllerAdquisiciones extends JControllerForm
 		if ( NotaHelper::isTestSite() ){
 			$url = "/var/www/portal/media/notas_pedido/Orden_compra.pdf";
 			$archivo = "/var/www/portal/libraries/joomla/document/pdf/pdf.php";
-			$filename = "/var/www/portal/media/notas_pedido/qr_ordenes/qr_". $id_remitente."-".$opcion.".png";
 		}else{
 			$url = "/var/www/clients/client2/web4/web/portal/media/notas_pedido/Orden_compra.pdf";
 			$archivo = "/var/www/clients/client2/web4/web/portal/libraries/joomla/document/pdf/pdf.php";
-			$filename = "/var/www/clients/client2/web4/web/portal/media/notas_pedido/qr_ordenes/qr_". $id_remitente."-".$opcion.".png";
 		}
 		/**
 		 * Generador QR
 		 */
+		$filename = JPATH_SITE.'/media/notas_pedido/qr_ordenes/qr_'.$datos_oc['id'].'.png';
 		$matrixPointSize = 3;
 		$errorCorrectionLevel = 'L';
 		$tqr = "www.tabsa.cl";
 		if (NotaHelper::isTestSite())
 			QRcode::png($tqr, $filename, $errorCorrectionLevel, $matrixPointSize, 2);
 
-		
 		require_once($archivo);
 		$html = $this->orden_html($datos_nota, $items, $opcion, $proveedor, $datos_oc);
 		$pdf = new JDocumentpdf();
@@ -298,16 +296,9 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$datos_nota = $model->getDetalle_nota($id_remitente);
 		$items = $model->getItems($id_remitente);
 		$html = $this->nota_html($datos_nota, $items);
-		if ( NotaHelper::isTestSite() ){
-			$url = "/var/www/portal/media/notas_pedido/nota_pedido.pdf";
-			$archivo = "/var/www/portal/libraries/joomla/document/pdf/pdf.php";
-		}else{
-			$url = "/var/www/clients/client2/web4/web/portal/media/notas_pedido/nota_pedido.pdf";
-			$archivo = "/var/www/clients/client2/web4/web/portal/libraries/joomla/document/pdf/pdf.php";
-		}
-		require_once($archivo);
+		require_once(JPATH_LIBRARIES.'/joomla/document/pdf/pdf.php');
 		$pdf = new JDocumentpdf();
-		$pdf->guardar_oc($url, $html);
+		$pdf->guardar_oc(JPATH_SITE.'/media/notas_pedido/nota_pedido.pdf', $html);
 	}
 	function orden_html($datos, $items, $opcion, $proveedor, $datos_oc){
 		$meses = array('01' => 'enero', '02' => 'febrero', '03' => 'marzo', '04' => 'abril', '05' => 'mayo',
@@ -339,14 +330,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 				</td>
 				<td class="encabezados_oc" width="50%" style="padding-left: 50px;">';
 		$url_firma = '';
-		$filename = '/portal/media/notas_pedido/qr_ordenes/qr_32105-1.png';
-		if (NotaHelper::isTestSite()){
-			$html .= '<img src="/var/www/portal/images/logo.png">';
-			$url_firma = '/var/www/portal/components/com_nota/assets/img/firma.jpg';
-		}else{
-			$html .= '<img src="/var/www/clients/client2/web4/web/portal/images/logo.png">';
-			$url_firma = '/var/www/clients/client2/web4/web/portal/components/com_nota/assets/img/firma.jpg';
-		}
+		$html .= '<img src="'.JPATH_SITE.'/images/logo.png">';
 		$html .= '</td>
 			</tr>
 		</table><br>';
@@ -373,8 +357,8 @@ class NotaControllerAdquisiciones extends JControllerForm
 								width: 88px;
 								position: relative;
 								left: 200px;
-								background-image: url(/portal/media/notas_pedido/qr_ordenes/qr_'.$datos['id_remitente'].'-1.png);
-								background-size: 100%;
+								background: url(/portal/media/notas_pedido/qr_ordenes/qr_'.$datos_oc['id'].'.png) no-repeat center;
+								background-size: cover;
 								z-index: 5;">
 						</div>';
 			$html .= '	</td>';
@@ -420,7 +404,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 			<div style="position: absolute; bottom: 60px; width: 40%; left: 400px; z-index: 5; font-size: 13px;">';
 			if (NotaHelper::isTestSite()){
 				$html .= '<div style="text-align: center; position: relative;">
-							<img src="'.$url_firma.'" width="180" height="130">
+							<img src="'.JPATH_SITE.'/components/com_nota/assets/img/firma.jpg" width="180" height="130">
 							<div style="position: absolute; margin-left: 37%; margin-top: 8.6%;">'.$f[2].'-'.$f[1].'-'.$f[0].'</div>
 						</div>';
 			}
