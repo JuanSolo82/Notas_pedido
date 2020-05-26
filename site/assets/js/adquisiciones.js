@@ -82,13 +82,27 @@ function previa_oc(opcion, num_items){
 	html += "<td class='cantidad_oc'><b>Cantidad</b></td>";
 	html += "<td class='descripcion_oc'><b>Item</b></td>";
 	html += "<td class='descripcion_oc'><b>Observaciones</b></td>";
+	html += "<td class='descripcion_oc'><b>Valor unitario</b></td>";
+	html += "<td class='descripcion_oc'><b>Subtotal</b></td>";
 	html += "</tr>";
+	valor = 0;
+	valor_unitario = 0;
 	for (var i=1;i<=num_items;i++){
+		
+		if (parseInt($("#valor"+opcion+"_"+i).val())>0){
+			valor_unitario = parseInt($("#valor"+opcion+"_"+i).val());
+			valor = parseFloat($("#cantidad"+opcion+"_"+i).val())*parseInt($("#valor"+opcion+"_"+i).val());
+		}else{
+			valor_unitario = '-';
+			valor = '-';
+		} 
 		html += "<tr>";
 		html += "<td style='border: solid black 1px;'>"+i+"</td>";
 		html += "<td style='border: solid black 1px;'>"+$("#cantidad"+opcion+"_"+i).val()+"</td>";
 		html += "<td style='border: solid black 1px;'>"+$("#descripcion_item"+opcion+"_"+i).val()+"</td>";
 		html += "<td style='border: solid black 1px;'>"+$("#motivo"+opcion+"_"+i).val()+"</td>";
+		html += "<td style='border: solid black 1px;'>"+valor_unitario+"</td>";
+		html += "<td style='border: solid black 1px;'>"+valor+"</td>";
 		html += "</tr>";
 	}
 	html += "</table>";

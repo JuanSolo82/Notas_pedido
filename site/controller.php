@@ -15,7 +15,7 @@ class NotaController extends JController{
 		$model = $this->getModel('nota');
 		$user = JFactory::getUser();
 		$datos_user = $model->getDatos_user($user->id);
-		$notas_sin_revisar = $model->pendientes_revision();
+		//$notas_sin_revisar = $model->pendientes_revision();
 		//print_r(sizeof($notas_sin_revisar));
 		$notas_pendientes=0;
 
@@ -161,6 +161,7 @@ class NotaController extends JController{
 		$fecha2 = new DateTime('2016-11-30 11:55:06');//fecha de cierre
 		$intervalo = $fecha1->diff($fecha2);
 		print_r($intervalo->format('%Y años %m meses %d days %H horas %i minutos %s segundos')); */
+		$valor = 0;
 		if (!$id_remitente){
 			$id_remitente = $model->insertar_nota($id_adepto, $id_user, $fecha, $hora, $id_prioridad, $id_depto_compra, $id_depto_costo, $proveedor, $datos_depto['ley_navarino'], $id_tipo_pedido);
 			for ($i=1;$i<=15;$i++){
@@ -170,12 +171,13 @@ class NotaController extends JController{
 				$item 		= utf8_encode(NotaHelper::msquote($jinput->get("descripcion".$i, '', 'string')));
 				$motivo		= utf8_encode(NotaHelper::msquote($jinput->get("motivo".$i, '', 'string')));
 				$opcion_oc	= $jinput->get("opcion".$i, 0, 'string');
+				$valor		= $jinput->get("valor".$i, 0, "int");
 				$file 		= $jinput->files->get('archivo'.$i);
 				if ($file['name']){
 					$nombre_archivo = $file['name'];
 					$model->upload($file, $id_remitente);
 				}
-				$model->setItems($id_remitente, $cantidad, $item, $motivo, $opcion_oc, $nombre_archivo);
+				$model->setItems($id_remitente, $cantidad, $item, $motivo, $opcion_oc, $valor, $nombre_archivo);
 			}
 		}
 		if (trim($nombre_tripulante)){

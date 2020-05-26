@@ -688,13 +688,16 @@ function cargar_proveedor(str, ind=0){
     });*/
 }
 
-function escoger_proveedor(valor, ind=0){
+function escoger_proveedor(valor, rut=0, ind=0){
     if (!ind){
         $("#proveedor_escogido").val(valor);
+        $("#rut_proveedor").append(rut);
         $("#lista_proveedores").fadeOut();
         $("#proveedor").empty();
     }else{
         $("#proveedor_escogido"+ind).val(valor);
+        $("#rut_proveedor"+ind).val(rut);
+        $("#rut_proveedor"+ind).append(rut);
         $("#lista_proveedores"+ind).fadeOut();
         $("#proveedor"+ind).empty();
     }

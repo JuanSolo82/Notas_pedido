@@ -10,8 +10,6 @@ JHTML::script('nota.js', 'components/com_nota/assets/js/');
 JHTML::script('bootstrap.js', 'components/com_nota/assets/bootstrap/js/');
 JHtml::_('behavior.modal');
 require_once(JPATH_COMPONENT_SITE.'/assets/phpqrcode.php');
-QRcode::png("texto para recordar todo",'/web/portal/media/notas_pedido/orson.png', 'L', 4, 2);
-//QRcode::png("texto para recordar",'orson.png');
 $cont=0;
 ?>
 <br>

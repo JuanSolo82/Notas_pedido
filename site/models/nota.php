@@ -79,14 +79,22 @@ class NotaModelNota extends JModelItem{
 				$valores = "1,1,1,0,0";
 		}
 		else{
-			if ($user->authorise('tripulante', 'com_nota') || $user->authorise('empleado.depto', 'com_nota'))
+			if ($user->authorise('tripulante', 'com_nota') || $user->authorise('empleado.depto', 'com_nota')){
 				$valores = "1,0,0,0,0";
-			if ($user->authorise('capitan.jefe', 'com_nota'))
+				//print_r('tripulante - empleado');
+			}	
+			if ($user->authorise('capitan.jefe', 'com_nota')){
 				$valores = "1,1,0,0,0";
-			if ($user->authorise('jefe.depto', 'com_nota') && !$user->authorise('empleado.depto', 'com_nota'))
+				//print_r('capitan');
+			}
+			if ($user->authorise('jefe.depto', 'com_nota') && !$user->authorise('empleado.depto', 'com_nota')){
 				$valores = "1,1,1,0,0";
-			if ($user->authorise('adquisiciones.jefe', 'com_nota') && !$user->authorise('empleado.depto', 'com_nota'))
+				//print_r('jefe - no empleado');
+			}
+			if ($user->authorise('adquisiciones.jefe', 'com_nota') && !$user->authorise('empleado.depto', 'com_nota')){
 				$valores = "1,1,1,1,0";
+				//print_r('adquisiones');
+			}
 		}
 		
 				
@@ -94,14 +102,12 @@ class NotaModelNota extends JModelItem{
 				values(".$id_remitente.",".$valores.")";
 		$db->setQuery($query);
 		$db->query();
-		//print_r($query);
-
 		return $id_remitente;
 	}
-	public function setItems($id_remitente, $cantidad, $item, $motivo, $opcion_oc, $adjunto){
+	public function setItems($id_remitente, $cantidad, $item, $motivo, $opcion_oc, $valor, $adjunto){
 		$db = JFactory::getDbo();
-		$query = "insert into nota_item(id_remitente, cantidad, item, motivo, aprobado, opcion_oc, adjunto) 
-					values(".$id_remitente.",".$cantidad.",".$item.",".$motivo.", 0, ".$opcion_oc.",'".$adjunto."')";
+		$query = "insert into nota_item(id_remitente, cantidad, item, motivo, aprobado, opcion_oc, valor, adjunto) 
+					values(".$id_remitente.",".$cantidad.",".$item.",".$motivo.", 0, ".$opcion_oc.", ".$valor.",'".$adjunto."')";
 		$db->setQuery($query);
 		$db->query();
 	}
@@ -204,7 +210,7 @@ class NotaModelNota extends JModelItem{
 	function getItems($id_remitente){
 		$db = JFactory::getDbo();
 		//$query = "select id, cantidad, item, motivo, opcion_oc, adjunto from nota_item where id_remitente=".$id_remitente;
-		$query = "select ni.id, ni.cantidad, ni.item, ni.motivo, ni.opcion_oc, ni.adjunto, nm.nueva_cantidad, nm.id_nueva_cantidad, nm.id_tipoModificacion 
+		$query = "select ni.id, ni.cantidad, ni.item, ni.motivo, ni.opcion_oc, ni.valor, ni.adjunto, nm.nueva_cantidad, nm.id_nueva_cantidad, nm.id_tipoModificacion 
 					from nota_item ni 
 					join nota_remitente nr on nr.id=ni.id_remitente and nr.id=".$id_remitente." 
 					left join (select nm.id as id_nueva_cantidad, nm.id_item,nm.nueva_cantidad, nm.id_tipoModificacion 

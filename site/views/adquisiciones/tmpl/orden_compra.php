@@ -55,7 +55,7 @@ foreach ($opciones as $opcion){ ?>
 	?>
 		<input type="hidden" id="id_item<?php echo $opcion.'_'.$j ?>" value="<?php echo $i['id'] ?>">
 		<input type="hidden" id="cantidad_original<?php echo $opcion.'_'.$j ?>" value="<?php echo $i['nueva_cantidad'] ? $i['nueva_cantidad'] : $i['cantidad'] ?>">
-		
+		<input type="hidden" id="valor<?php echo $opcion.'_'.$j ?>" value='<?php echo $i['valor'] ?>'>
 		<tr>
 			<td><input type="number" autocomplete="off" id="cantidad<?php echo $opcion.'_'.$j ?>" name="cantidad<?php echo $opcion.'_'.$j ?>" style="width: 50px;" step='0.1' value="<?php echo $i['nueva_cantidad'] ? $i['nueva_cantidad'] : $i['cantidad'] ?>"></td>
 			<td>
