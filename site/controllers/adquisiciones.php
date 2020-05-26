@@ -404,6 +404,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 				}
 			}
 		}
+		
 		$html .= '</table>';
 		$html .= '<br><br>
 			<div class="beneficio">';
