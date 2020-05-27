@@ -259,7 +259,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 		if (!$solo_imprimir){
 			$model2->setOrden($id_remitente, $opcion, $proveedor, $num_opciones);
 		}
-		$items = $model2->items($id_remitente);
+		//$items = $model2->items($id_remitente);
 		$datos_oc = $model2->getDetalle_orden($id_remitente, $opcion);
         $document = JFactory::getDocument();
 		$meses = array('01' => 'enero', '02' => 'febrero', '03' => 'marzo', '04' => 'abril', '05' => 'mayo',
@@ -370,10 +370,15 @@ class NotaControllerAdquisiciones extends JControllerForm
 			<tr>
 				<td width="5%"><b>#</b></td>
 				<td width="5%"><b>Cantidad</b></td>
-				<td width="40%"><b>Item</b></td>
-				<td width="40%"><b>Observaciones</b></td>
-			</tr>';
-			$j=1;
+				<td width="30%"><b>Item</b></td>
+				<td width="30%"><b>Observaciones</b></td>';
+		if (NotaHelper::isTestSite()){
+			$html .= '<td width="10%"><b>Valor unitario</b></td>';
+			$html .= '<td width="10%"><b>Subtotal</b></td>';
+		}
+		$html .= '</tr>';
+		$j=1;
+		$total = 0;
 		foreach ($items as $i){
 			if ($i['opcion_oc']==$opcion){
 				$cantidad = $i['cantidad'] ? $i['cantidad'] : $i['nueva_cantidad'];
@@ -383,10 +388,21 @@ class NotaControllerAdquisiciones extends JControllerForm
 						<td>'.$j++.'</td>
 						<td>'.$i['cantidad'].'</td>
 						<td>'.htmlentities($i['item']).'</td>
-						<td>'.htmlentities($i['motivo']).'</td>
-					</tr>';
+						<td>'.htmlentities($i['motivo']).'</td>';
+				if (NotaHelper::isTestSite()){
+					$html .= '<td>'.number_format($i['valor'],0,'','.').'</td>';
+					$html .= '<td>'.number_format($i['valor']*$cantidad,0,'','.').'</td>';
+					$total += $i['valor']*$cantidad;
+				}
+				$html .= '</tr>';
 				}
 			}
+		}
+		if (NotaHelper::isTestSite()){
+			$html .= "<tr>";
+			$html .= "<td align='right' colspan='5'>Total</td>";
+			$html .= "<td>".number_format($total,0,'','.')."</td>";
+			$html .= "</tr>";
 		}
 		
 		$html .= '</table>';

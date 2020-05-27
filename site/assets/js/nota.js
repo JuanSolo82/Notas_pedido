@@ -444,7 +444,6 @@ function buscar_facturar(){
         console.log("ingrese valor");
         return;
     }
-    console.log("ok");
 }
 
 function lanzar_alarma(obj){
@@ -464,7 +463,6 @@ function actualizar_ln(id_remitente){
 function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
     var proveedor = $('#proveedor_escogido'+opcion).val();
     var items_orden = $("#items_orden"+opcion).val();
-    console.log('cargar 1');
     for (var i=1;i<=items_orden;i++){
         $.ajax({
             url: 'index.php?option=com_nota&task=editar_item',
@@ -490,7 +488,6 @@ function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
             window.open('/portal/media/notas_pedido/Orden_compra.pdf');
         }
     });
-    console.log(' cargar 2');
 }
 
 function exportar_nota(id_remitente){
