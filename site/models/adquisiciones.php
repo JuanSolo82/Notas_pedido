@@ -61,7 +61,7 @@ class NotaModelAdquisiciones extends JModelItem{
 		$db->setQuery($query);
 		$db->query();
 	}
-	public function setOrden($id_remitente, $opcion, $proveedor, $num_opciones){
+	public function setOrden($id_remitente, $opcion, $num_opciones, $proveedor='', $rut_proveedor='', $giro_proveedor=''){
 		$datos_oc = $this->getDetalle_orden($id_remitente, $opcion);
 		$db = JFactory::getDbo();
 		$fecha = date("Y-m-d");

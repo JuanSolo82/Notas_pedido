@@ -444,7 +444,6 @@ function buscar_facturar(){
         console.log("ingrese valor");
         return;
     }
-    console.log("ok");
 }
 
 function lanzar_alarma(obj){
@@ -462,9 +461,10 @@ function actualizar_ln(id_remitente){
     });
 }
 function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
-    var proveedor = $('#proveedor_escogido'+opcion).val();
+    var proveedor       = $('#proveedor_escogido'+opcion).val();
+    var rut_proveedor   = $("#rut_proveedor"+opcion).val();
+    var giro_proveedor  = $("#giro_proveedor"+opcion).val();
     var items_orden = $("#items_orden"+opcion).val();
-    console.log('cargar 1');
     for (var i=1;i<=items_orden;i++){
         $.ajax({
             url: 'index.php?option=com_nota&task=editar_item',
@@ -484,13 +484,18 @@ function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
         url: 'index.php?option=com_nota&task=adquisiciones.generarOrden',
         timeout: 1500,
         method: 'post',
-        data: {id_remitente: id_remitente, orden_compra: orden_compra, opcion: opcion, proveedor: proveedor, opciones: opciones},
+        data: {id_remitente: id_remitente, 
+                orden_compra: orden_compra, 
+                opcion: opcion, 
+                proveedor: proveedor, 
+                rut_proveedor: rut_proveedor,
+                giro_proveedor: giro_proveedor,
+                opciones: opciones},
         success: function(){
             $("#generada_oc"+opcion).css("display", "block");
             window.open('/portal/media/notas_pedido/Orden_compra.pdf');
         }
     });
-    console.log(' cargar 2');
 }
 
 function exportar_nota(id_remitente){
@@ -691,7 +696,8 @@ function cargar_proveedor(str, ind=0){
 function escoger_proveedor(valor, rut=0, ind=0){
     if (!ind){
         $("#proveedor_escogido").val(valor);
-        $("#rut_proveedor").append(rut);
+        $("#rut_proveedor").val(rut);
+        $("#rut_texto").append(rut);
         $("#lista_proveedores").fadeOut();
         $("#proveedor").empty();
     }else{

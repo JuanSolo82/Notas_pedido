@@ -1,7 +1,7 @@
 <?php
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-JHTML::script('adquisiciones.js', 'components/com_nota/assets/js/');
+//JHTML::script('adquisiciones.js', 'components/com_nota/assets/js/');
 JHTML::stylesheet('nota.css', 'components/com_nota/assets/css/');
 JHTML::script('jquery.min.js', 'components/com_nota/assets/js/');
 JHTML::script('jquery-ui.min.js', 'components/com_nota/assets/js/');
@@ -12,10 +12,11 @@ $opciones = array();
 foreach ($this->items as $i)
 	$opciones[$i['opcion_oc']] = $i['opcion_oc'];
 ?>
-<script type="text/javascript" src="/portal/components/com_r2/assets/js/nota.js?pec=123"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?vr=123"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/adquisiciones.js?vr=123"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <br>
-
+<input type="hidden" id="sitio_pruebas" value="<?php echo NotaHelper::isTestSite() ?>">
 <div class='centrar'>
 <div class='barra_nombre' style='width: 95%;'>Ordenes de compras para nota <?php echo $this->id_remitente ?></div>
 </div>
@@ -35,8 +36,13 @@ foreach ($this->items as $i)
 foreach ($opciones as $opcion){ ?>
 <fieldset class="contenido"><legend style="font-size: 13px; width: auto">Nota <?php echo $opcion; ?></legend>
 <div style="border: 1px solid grey; height: auto; width: 400px; margin-bottom: 20px; padding: 10px;">
-	<b>Proveedor</b><input type="text" autocomplete="off" onkeypress="cargar_proveedor(this.value, <?php echo $opcion ?>)" size='50' id="proveedor_escogido<?php echo $opcion ?>" value="<?php echo $this->datos_nota['proveedor'] ? ucwords(strtolower($this->datos_nota['proveedor'])) : "" ?>">
+<?php
+$proveedor = explode('_',$this->datos_nota['proveedor']);
+?>
+	<b>Proveedor</b><input type="text" autocomplete="off" onkeypress="cargar_proveedor(this.value, <?php echo $opcion ?>)" size='50' id="proveedor_escogido<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? ucwords(strtolower($this->proveedor['RazonSocial'])) : "" ?>">
 	<div id='proveedor<?php echo $opcion ?>'></div>
+	<input type="hidden" id="rut_proveedor<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? $this->proveedor['rut'] : "" ?>">
+	<input type="hidden" id="giro_proveedor<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? ucwords(strtolower($this->proveedor['giro'])) : "" ?>">
 </div>
 <div style="width: 80%; float: left;">
 	<table class='tabla_listado' style="width: 97%;">
@@ -46,16 +52,24 @@ foreach ($opciones as $opcion){ ?>
 			<th align="center" width='20%'>Motivo</th>
 			<th align="center">Motivo modificación</th>
 			<th align="center">Adjunto</th>
+		<?php if (NotaHelper::isTestSite()){ ?>
+			<th align="center">Valor unitario</th>
+			<th align="center">Subtotal</th>
+		<?php } ?>
 		</tr>
 	<?php 
 		$j=0;
+		$total = 0;
 		foreach ($this->items as $i){
 		if (($i['nueva_cantidad']==null || $i['nueva_cantidad']>0) && $i['opcion_oc']==$opcion){
 			$j++;
+		if ($i['valor'])
+			$total += $i['cantidad']*$i['valor'];
 	?>
 		<input type="hidden" id="id_item<?php echo $opcion.'_'.$j ?>" value="<?php echo $i['id'] ?>">
 		<input type="hidden" id="cantidad_original<?php echo $opcion.'_'.$j ?>" value="<?php echo $i['nueva_cantidad'] ? $i['nueva_cantidad'] : $i['cantidad'] ?>">
-		<input type="hidden" id="valor<?php echo $opcion.'_'.$j ?>" value='<?php echo $i['valor'] ?>'>
+		<input type="hidden" id="valor<?php echo $opcion.'_'.$j ?>" value='<?php echo number_format($i['valor'],0,'','.') ?>'>
+		<input type="hidden" id="subtotal<?php echo $opcion.'_'.$j ?>" value='<?php echo number_format($i['cantidad']*$i['valor'],0,'','.') ?>'>
 		<tr>
 			<td><input type="number" autocomplete="off" id="cantidad<?php echo $opcion.'_'.$j ?>" name="cantidad<?php echo $opcion.'_'.$j ?>" style="width: 50px;" step='0.1' value="<?php echo $i['nueva_cantidad'] ? $i['nueva_cantidad'] : $i['cantidad'] ?>"></td>
 			<td>
@@ -75,8 +89,22 @@ foreach ($opciones as $opcion){ ?>
 				</a>
 			<?php } ?>
 			</td>
+			<?php if (NotaHelper::isTestSite()){ ?>
+				<td><?php echo number_format($i['valor'],0,'','.') ?></td>
+				<td><?php echo number_format($i['cantidad']*$i['valor'],0,'','.') ?></td>
+			<?php } ?>
 		</tr>
 		<?php } ?>
+	<?php } ?>
+	<?php if (NotaHelper::isTestSite()){ ?>
+		<?php if ($total){ ?>
+			<tr>
+				<td align='right' colspan='6'><b>Total</b></td>
+				<td><b><?php echo number_format($total,0,'','.') ?></b></td>
+			</tr>
+		<?php } ?>
+			<input type="hidden" id="total<?php echo $opcion ?>" value="<?php echo number_format($total,0,'','.') ?>">
+			<input type="hidden" id="total_numerico<?php echo $opcion ?>" value="<?php echo $total ?>">
 	<?php } ?>
 	</table>
 	<input type="hidden" id="items_orden<?php echo $opcion ?>" value="<?php echo $j ?>">

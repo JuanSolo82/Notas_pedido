@@ -5,12 +5,13 @@ JHTML::stylesheet('nota.css', 'components/com_nota/assets/css/');
 JHTML::stylesheet('jquery-ui.css', 'components/com_nota/assets/css/');
 JHTML::script('jquery.min.js', 'components/com_nota/assets/js/');
 JHTML::script('jquery-ui.min.js', 'components/com_nota/assets/js/');
-JHTML::script('nota.js', 'components/com_nota/assets/js/');
+//JHTML::script('nota.js', 'components/com_nota/assets/js/');
 JHTML::script('jquery.typeahead.min.js', 'components/com_nota/assets/js/');
 
 //echo JRequest::checkToken('get')."?";
 $user = JFactory::getUser();
 ?>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?car=46"></script>
 <div class='fila_completa centrar' style='margin-bottom: 20px;'>
 	<div class='barra_nombre' style='width: 90%;'>Nueva nota</div>
 </div>
@@ -99,7 +100,8 @@ $user = JFactory::getUser();
 					<input type='text' id='proveedor_escogido' name='proveedor_escogido' size='40' onkeypress="cargar_proveedor(this.value)">
 					<div id='proveedor'></div>
 				</div>
-				<div class="col-3" id='rut_proveedor'></div>
+				<div class="col-3" id='rut_texto'></div>
+				<input type="hidden" name="rut_proveedor" id="rut_proveedor">
 			</div>
 		</div>
 		<?php } ?>

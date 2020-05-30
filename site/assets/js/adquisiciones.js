@@ -73,8 +73,14 @@ function guardar_cambios(cont){
 }
 
 function previa_oc(opcion, num_items){
-	if ($.trim($("#proveedor_escogido"+opcion).val())!='')
-		$("#proveedor_oc"+opcion).html("Proveedor: "+$("#proveedor_escogido"+opcion).val());
+	var sitio_prueba = parseInt($("#sitio_pruebas").val());
+	var html = "";
+	if ($.trim($("#proveedor_escogido"+opcion).val())!=''){
+		html = "Proveedor: "+$("#proveedor_escogido"+opcion).val()+"<br>";
+		html += "Rut: "+$("#rut_proveedor"+opcion).val()+"<br>";
+		html += "Giro: "+$("#giro_proveedor"+opcion).val();
+		$("#proveedor_oc"+opcion).html(html);
+	}
 	else
 		$("#proveedor_oc"+opcion).html("");
 	var html = "<table class='items_oc'><tr>";
@@ -82,29 +88,33 @@ function previa_oc(opcion, num_items){
 	html += "<td class='cantidad_oc'><b>Cantidad</b></td>";
 	html += "<td class='descripcion_oc'><b>Item</b></td>";
 	html += "<td class='descripcion_oc'><b>Observaciones</b></td>";
-	html += "<td class='descripcion_oc'><b>Valor unitario</b></td>";
-	html += "<td class='descripcion_oc'><b>Subtotal</b></td>";
+	if (sitio_pruebas){
+		html += "<td class='descripcion_oc'><b>Valor unitario</b></td>";
+		html += "<td class='descripcion_oc'><b>Subtotal</b></td>";
+	}
 	html += "</tr>";
 	valor = 0;
 	valor_unitario = 0;
 	for (var i=1;i<=num_items;i++){
-		
-		if (parseInt($("#valor"+opcion+"_"+i).val())>0){
-			valor_unitario = parseInt($("#valor"+opcion+"_"+i).val());
-			valor = parseFloat($("#cantidad"+opcion+"_"+i).val())*parseInt($("#valor"+opcion+"_"+i).val());
-		}else{
-			valor_unitario = '-';
-			valor = '-';
-		} 
 		html += "<tr>";
 		html += "<td style='border: solid black 1px;'>"+i+"</td>";
 		html += "<td style='border: solid black 1px;'>"+$("#cantidad"+opcion+"_"+i).val()+"</td>";
 		html += "<td style='border: solid black 1px;'>"+$("#descripcion_item"+opcion+"_"+i).val()+"</td>";
 		html += "<td style='border: solid black 1px;'>"+$("#motivo"+opcion+"_"+i).val()+"</td>";
-		html += "<td style='border: solid black 1px;'>"+valor_unitario+"</td>";
-		html += "<td style='border: solid black 1px;'>"+valor+"</td>";
+		if (sitio_pruebas){
+			html += "<td style='border: solid black 1px;'>"+$("#valor"+opcion+"_"+i).val()+"</td>";
+			html += "<td style='border: solid black 1px;'>"+$("#subtotal"+opcion+"_"+i).val()+"</td>";
+		}
 		html += "</tr>";
 	}
+	if (sitio_pruebas)
+		if (parseInt($("#total_numerico"+opcion).val())){
+			html += "<tr>";
+			html += "<td style='border: solid black 1px;' colspan='5' align='right'><b>Total</b></td>";
+			html += "<td style='border: solid black 1px;' align='right'><b>"+$("#total"+opcion).val()+"</b></td>";
+			html += "</tr>";
+		}
+	
 	html += "</table>";
 	
 	$("#contenido_tabla"+opcion).html(html);
