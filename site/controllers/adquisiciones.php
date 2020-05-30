@@ -163,6 +163,13 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$model2 = $this->getModel("nota");
 		$id_remitente = $jinput->get('id_remitente', 0, 'int');
 		$datos_nota = $model2->getDetalle_nota($id_remitente);
+		$proveedor = array();
+		if ($datos_nota['proveedor']){
+			$proveedor = explode('_', $datos_nota['proveedor']);
+			$proveedor = $model2->getProveedor('',$proveedor[1]);
+			/*print_r($proveedor);
+			if (sizeof($proveedor)) $proveedor = $proveedor[0];*/
+		}
 		$items = $model2->getItems($id_remitente);
 		$opciones = array();
 		foreach ($items as $i){
@@ -181,6 +188,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$jinput->set('id_remitente',$id_remitente);
 		$jinput->set("datos_nota", $datos_nota);
 		$jinput->set("orden", $orden);
+		$jinput->set("proveedor", $proveedor);
 		$model = $this->getModel('adquisiciones');
 		parent::display();
 	}
@@ -248,6 +256,8 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$orden_compra	= $jinput->get('orden_compra', 0, 'int');
 		$opcion 		= $jinput->get('opcion', 1, 'int');
 		$proveedor 		= $jinput->get('proveedor', '', 'string');
+		$rut_proveedor	= $jinput->get('rut_proveedor', '', 'string');
+		$giro_proveedor	= $jinput->get('giro_proveedor', '', 'string');
 		$num_opciones	= $jinput->get('opciones', 1, 'int');
 		$solo_imprimir	= $jinput->get('solo_imprimir', 0, 'int');
 		$model	= $this->getModel('nota');
@@ -257,21 +267,20 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$datos_oc = $model2->getDetalle_orden($id_remitente, $opcion);
 		if (sizeof($datos_oc)) $solo_imprimir = 1;
 		if (!$solo_imprimir){
-			$model2->setOrden($id_remitente, $opcion, $proveedor, $num_opciones);
+			$model2->setOrden($id_remitente, $opcion, $num_opciones, $proveedor);
 		}
 		//$items = $model2->items($id_remitente);
 		$datos_oc = $model2->getDetalle_orden($id_remitente, $opcion);
         $document = JFactory::getDocument();
 		$meses = array('01' => 'enero', '02' => 'febrero', '03' => 'marzo', '04' => 'abril', '05' => 'mayo',
 				'06' => 'junio', '07' => 'julio', '08' => 'agosto', '09' => 'septiembre', '10' => 'octubre', '11' => 'noviembre', '12' => 'diciembre');
-
+/*
 		if ( NotaHelper::isTestSite() ){
-			$url = "/var/www/portal/media/notas_pedido/Orden_compra.pdf";
 			$archivo = "/var/www/portal/libraries/joomla/document/pdf/pdf.php";
 		}else{
-			$url = "/var/www/clients/client2/web4/web/portal/media/notas_pedido/Orden_compra.pdf";
 			$archivo = "/var/www/clients/client2/web4/web/portal/libraries/joomla/document/pdf/pdf.php";
-		}
+		}*/
+		$url = JPATH_SITE.'/media/notas_pedido/Orden_compra.pdf';
 		/**
 		 * Generador QR
 		 */
@@ -282,11 +291,12 @@ class NotaControllerAdquisiciones extends JControllerForm
 		if (NotaHelper::isTestSite())
 			QRcode::png($tqr, $filename, $errorCorrectionLevel, $matrixPointSize, 2);
 
-		require_once($archivo);
-		$html = $this->orden_html($datos_nota, $items, $opcion, $proveedor, $datos_oc);
+		require_once(JPATH_LIBRARIES.'/joomla/document/pdf/pdf.php');
+		$html = $this->orden_html($datos_nota, $items, $opcion, $datos_oc, $proveedor, $rut_proveedor, $giro_proveedor);
 		$pdf = new JDocumentpdf();
-		$pdf->guardar_oc($url, $html);
-		//$pdf->carga_html($html);
+		//$pdf->guardar_oc($url, $html);
+		// envío de correo con adjunto
+		//$this->enviarOrdenCorreo($id_remitente, JPATH_SITE.'/media/notas_pedido/Orden_compra.pdf');
 	}
 	public function generar_nota(){
 		$jinput = JFactory::getApplication()->input;
@@ -300,7 +310,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$pdf = new JDocumentpdf();
 		$pdf->guardar_oc(JPATH_SITE.'/media/notas_pedido/nota_pedido.pdf', $html);
 	}
-	function orden_html($datos, $items, $opcion, $proveedor, $datos_oc){
+	function orden_html($datos, $items, $opcion, $datos_oc, $proveedor, $rut_proveedor, $giro_proveedor){
 		$meses = array('01' => 'enero', '02' => 'febrero', '03' => 'marzo', '04' => 'abril', '05' => 'mayo',
 				'06' => 'junio', '07' => 'julio', '08' => 'agosto', '09' => 'septiembre', '10' => 'octubre', '11' => 'noviembre', '12' => 'diciembre');
 
@@ -342,12 +352,16 @@ class NotaControllerAdquisiciones extends JControllerForm
 					Nota de pedido n'.htmlentities('°').' '.$datos['id_remitente'].'
 				</div>';
 		$html .= '<table><tr>';
-		$html .= '	<td width="75%">
+		$html .= '	<td width="75%" style="font-size: 12px;">
 						<div class="datos_entrega">
 						Por cuenta de Transbordadora Austral Broom S.A.<br>
 						Centro de costo: '.htmlentities($datos['depto_costo']).'<br>
-						Solicitado por: '.htmlentities($datos['depto_origen']).'<br>
-						'.($proveedor ? "Proveedor: ".htmlentities(ucwords(strtolower($proveedor))) : "" );
+						Solicitado por: '.htmlentities($datos['depto_origen']).'<br>';
+		if ($proveedor){
+			$html .= 'Proveedor: '.htmlentities(ucwords(strtolower($proveedor))).'<br>';
+			$html .= 'Rut: '.$rut_proveedor.'<br>';
+			$html .= 'Giro: '.$giro_proveedor;
+		}
 		$html .= '		</div>
 					</td>';
 		if (NotaHelper::isTestSite()){
@@ -390,8 +404,8 @@ class NotaControllerAdquisiciones extends JControllerForm
 						<td>'.htmlentities($i['item']).'</td>
 						<td>'.htmlentities($i['motivo']).'</td>';
 				if (NotaHelper::isTestSite()){
-					$html .= '<td>'.number_format($i['valor'],0,'','.').'</td>';
-					$html .= '<td>'.number_format($i['valor']*$cantidad,0,'','.').'</td>';
+					$html .= '<td align="right">'.number_format($i['valor'],0,'','.').'</td>';
+					$html .= '<td align="right">'.number_format($i['valor']*$cantidad,0,'','.').'</td>';
 					$total += $i['valor']*$cantidad;
 				}
 				$html .= '</tr>';
@@ -401,7 +415,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 		if (NotaHelper::isTestSite()){
 			$html .= "<tr>";
 			$html .= "<td align='right' colspan='5'>Total</td>";
-			$html .= "<td>".number_format($total,0,'','.')."</td>";
+			$html .= "<td align='right'>".number_format($total,0,'','.')."</td>";
 			$html .= "</tr>";
 		}
 		
@@ -563,6 +577,27 @@ class NotaControllerAdquisiciones extends JControllerForm
 		return $style;
 	}
 
+	private function enviarOrdenCorreo($id_remitente, $adjunto) {
+		$subject = '[TABSA] Orden de compra';
+		$body = '<link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">';
+		$body .= "
+		<style>
+		.borde{
+			border-radius: 25px;
+			border: 2px solid #4AA5FF;
+			padding: 20px; 
+			font-family: 'Open Sans', sans-serif;
+			width: 50%;
+			margin: 20px;
+		}
+		</style>
+		<div class='borde'>";
+		$body .= "<h3>Se ha generado su orden de compra</h3><br>";
+		$body .= "<p>Se adjunta la copia de orden de compra generada a partir de la nota 
+					de pedido nº ".$id_remitente."</p>";
+		$body .= "</div>";
+		NotaHelper::mailAdjunto($subject, $body, 'jmarinan@tabsa.cl', $adjunto);
+	}
 /* ===================================================== */
 /* ======================= EMAILS ====================== */
 	private function enviarEmailReservaExitosa($destinatario, $datos_reserva) {

@@ -12,8 +12,8 @@ $opciones = array();
 foreach ($this->items as $i)
 	$opciones[$i['opcion_oc']] = $i['opcion_oc'];
 ?>
-<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?pec=123"></script>
-<script type="text/javascript" src="/portal/components/com_nota/assets/js/adquisiciones.js?pec=123"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?vr=123"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/adquisiciones.js?vr=123"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <br>
 <input type="hidden" id="sitio_pruebas" value="<?php echo NotaHelper::isTestSite() ?>">
@@ -36,8 +36,13 @@ foreach ($this->items as $i)
 foreach ($opciones as $opcion){ ?>
 <fieldset class="contenido"><legend style="font-size: 13px; width: auto">Nota <?php echo $opcion; ?></legend>
 <div style="border: 1px solid grey; height: auto; width: 400px; margin-bottom: 20px; padding: 10px;">
-	<b>Proveedor</b><input type="text" autocomplete="off" onkeypress="cargar_proveedor(this.value, <?php echo $opcion ?>)" size='50' id="proveedor_escogido<?php echo $opcion ?>" value="<?php echo $this->datos_nota['proveedor'] ? ucwords(strtolower($this->datos_nota['proveedor'])) : "" ?>">
+<?php
+$proveedor = explode('_',$this->datos_nota['proveedor']);
+?>
+	<b>Proveedor</b><input type="text" autocomplete="off" onkeypress="cargar_proveedor(this.value, <?php echo $opcion ?>)" size='50' id="proveedor_escogido<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? ucwords(strtolower($this->proveedor['RazonSocial'])) : "" ?>">
 	<div id='proveedor<?php echo $opcion ?>'></div>
+	<input type="hidden" id="rut_proveedor<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? $this->proveedor['rut'] : "" ?>">
+	<input type="hidden" id="giro_proveedor<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? ucwords(strtolower($this->proveedor['giro'])) : "" ?>">
 </div>
 <div style="width: 80%; float: left;">
 	<table class='tabla_listado' style="width: 97%;">
@@ -98,7 +103,7 @@ foreach ($opciones as $opcion){ ?>
 				<td><b><?php echo number_format($total,0,'','.') ?></b></td>
 			</tr>
 		<?php } ?>
-			<input type="hidden" id="total<?php echo $opcion.'_'.$j ?>" value="<?php echo number_format($total,0,'','.') ?>">
+			<input type="hidden" id="total<?php echo $opcion ?>" value="<?php echo number_format($total,0,'','.') ?>">
 			<input type="hidden" id="total_numerico<?php echo $opcion ?>" value="<?php echo $total ?>">
 	<?php } ?>
 	</table>

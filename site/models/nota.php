@@ -772,12 +772,21 @@ class NotaModelNota extends JModelItem{
 			return $db->loadAssocList();
 		return array();
 	}
-	function getProveedor($str){
+	function getProveedor($str, $rut=""){
 		$handle = mssql_connect("flexline.tabsa.lan","sa","Tabsa123") or die("Cannot connect to server");
 		$db = mssql_select_db('BDFlexline', $handle) or die("Cannot select database");
-		$query = "select CtaCte, CodLegal as rut, RazonSocial 
+		$query = "select CtaCte, CodLegal as rut, RazonSocial, giro 
 					from flexline.CtaCte 
-					where tipo='proveedor' and empresa='demo' and RazonSocial like '%".$str."%' or CodLegal like '%".$str."%' 
+					where tipo='proveedor' and empresa='demo'";
+		if ($rut!=""){
+			$query .= " and CodLegal='".$rut."'";
+			$result = mssql_query($query);
+			if (!mssql_num_rows($result)){
+				return array();
+			}
+			return mssql_fetch_array($result);
+		}else
+			$query .= " and RazonSocial like '%".$str."%' or CodLegal like '%".$str."%' 
 					order by RazonSocial";
 		$result = mssql_query($query);
 		$ar = array();
@@ -791,9 +800,5 @@ class NotaModelNota extends JModelItem{
 			}
 		}
 		return $ar;
-		/*$rows = mssql_fetch_assoc($result);
-		mssql_free_result($result);
-		mssql_close($handle);
-		return $rows;*/
 	}
 }

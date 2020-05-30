@@ -74,8 +74,13 @@ function guardar_cambios(cont){
 
 function previa_oc(opcion, num_items){
 	var sitio_prueba = parseInt($("#sitio_pruebas").val());
-	if ($.trim($("#proveedor_escogido"+opcion).val())!='')
-		$("#proveedor_oc"+opcion).html("Proveedor: "+$("#proveedor_escogido"+opcion).val());
+	var html = "";
+	if ($.trim($("#proveedor_escogido"+opcion).val())!=''){
+		html = "Proveedor: "+$("#proveedor_escogido"+opcion).val()+"<br>";
+		html += "Rut: "+$("#rut_proveedor"+opcion).val()+"<br>";
+		html += "Giro: "+$("#giro_proveedor"+opcion).val();
+		$("#proveedor_oc"+opcion).html(html);
+	}
 	else
 		$("#proveedor_oc"+opcion).html("");
 	var html = "<table class='items_oc'><tr>";
@@ -106,7 +111,7 @@ function previa_oc(opcion, num_items){
 		if (parseInt($("#total_numerico"+opcion).val())){
 			html += "<tr>";
 			html += "<td style='border: solid black 1px;' colspan='5' align='right'><b>Total</b></td>";
-			html += "<td style='border: solid black 1px;'><b>"+$("#total_numerico"+opcion).val()+"</b></td>";
+			html += "<td style='border: solid black 1px;' align='right'><b>"+$("#total"+opcion).val()+"</b></td>";
 			html += "</tr>";
 		}
 	

@@ -55,10 +55,6 @@ class NotaHelper {
 		$mailer->setSender($sender);
 		$recipient = array('jmarinan@tabsa.cl');
 		if (NotaHelper::isTestSite()){
-			/*$body .= "Destinatarios reales: ";
-			foreach ($email as $e)
-				$body .= $e['email'].', ';
-			$body = substr($body,0,strlen($body)-1);*/
 			$body .= "<br><br>^ Correo de prueba ^<br>";
 			$body .= "destinatarios reales: ";
 			$body .= "[";
@@ -78,6 +74,26 @@ class NotaHelper {
 		$mailer->setSubject($subject);
 		$mailer->isHTML(true);
 		$mailer->setBody($body);
+		$mailer->Send();
+	}
+
+	public function mailAdjunto($subject, $body, $email, $adjunto=''){
+		$mailer = JFactory::getMailer();
+		$config = JFactory::getConfig();
+		$sender = array( 
+			$config->getValue( 'config.mailfrom' ),
+			$config->getValue( 'config.fromname' )
+		);
+		$mailer->setSender($sender);
+		$recipient = array('jmarinan@tabsa.cl');
+		$mailer->addRecipient($recipient);
+		$mailer->setSubject($subject);
+		$mailer->isHTML(true);
+		$mailer->setBody($body);
+		if ($adjunto=='')
+			$body .= "<br><br><i>(Sin adjuntos)</i>";
+		else
+			$mailer->addAttachment($adjunto);
 		$mailer->Send();
 	}
 }

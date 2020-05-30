@@ -26,6 +26,7 @@ class NotaViewAdquisiciones extends JView{
 				$this->items		= $jinput->get("items", array(), "array");
 				$this->datos_nota	= $jinput->get("datos_nota", array(), "array");
 				$this->orden		= $jinput->get("orden", array(), "array");
+				$this->proveedor	= $jinput->get("proveedor", array(), "array");
 				break;
 			case "opcion_oc":
 				$this->id_remitente = $jinput->get("id_remitente", 0, "int");
