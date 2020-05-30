@@ -73,9 +73,14 @@ function guardar_cambios(cont){
 }
 
 function previa_oc(opcion, num_items){
-	var sitio_prueba = parseInt($("#sitio_pruebas").val());
+	var sitio_pruebas = parseInt($("#sitio_pruebas").val());
+	var proveedor = $.trim($("#proveedor_escogido"+opcion).val());
 	var html = "";
-	if ($.trim($("#proveedor_escogido"+opcion).val())!=''){
+	if (proveedor=="" && sitio_pruebas){
+		alert("Ingrese proveedor");
+		return;
+	}
+	if (proveedor!=''){
 		html = "Proveedor: "+$("#proveedor_escogido"+opcion).val()+"<br>";
 		html += "Rut: "+$("#rut_proveedor"+opcion).val()+"<br>";
 		html += "Giro: "+$("#giro_proveedor"+opcion).val();
@@ -94,16 +99,18 @@ function previa_oc(opcion, num_items){
 	}
 	html += "</tr>";
 	valor = 0;
-	valor_unitario = 0;
+	subtotal = 0;
 	for (var i=1;i<=num_items;i++){
+		valor = parseInt($("#valor_numerico"+opcion+"_"+i).val());
+		subtotal = parseInt($("#subtotal_numerico"+opcion+"_"+i).val());
 		html += "<tr>";
 		html += "<td style='border: solid black 1px;'>"+i+"</td>";
 		html += "<td style='border: solid black 1px;'>"+$("#cantidad"+opcion+"_"+i).val()+"</td>";
 		html += "<td style='border: solid black 1px;'>"+$("#descripcion_item"+opcion+"_"+i).val()+"</td>";
 		html += "<td style='border: solid black 1px;'>"+$("#motivo"+opcion+"_"+i).val()+"</td>";
 		if (sitio_pruebas){
-			html += "<td style='border: solid black 1px;'>"+$("#valor"+opcion+"_"+i).val()+"</td>";
-			html += "<td style='border: solid black 1px;'>"+$("#subtotal"+opcion+"_"+i).val()+"</td>";
+			html += "<td style='border: solid black 1px;'>"+(valor ? $("#valor"+opcion+"_"+i).val() : '')+"</td>";
+			html += "<td style='border: solid black 1px;'>"+(subtotal ? $("#subtotal"+opcion+"_"+i).val() : '')+"</td>";
 		}
 		html += "</tr>";
 	}

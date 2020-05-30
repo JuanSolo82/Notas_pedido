@@ -703,7 +703,7 @@ function escoger_proveedor(valor, rut=0, ind=0){
     }else{
         $("#proveedor_escogido"+ind).val(valor);
         $("#rut_proveedor"+ind).val(rut);
-        $("#rut_proveedor"+ind).append(rut);
+        $("#giro_proveedor"+ind).append(rut);
         $("#lista_proveedores"+ind).fadeOut();
         $("#proveedor"+ind).empty();
     }
