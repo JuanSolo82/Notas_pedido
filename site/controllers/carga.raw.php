@@ -135,12 +135,12 @@ class NotaControllerCarga extends JControllerForm
 		$jinput->set('pagina', $pagina);
 		$view->rango_naves();
 	}
-	function getProveedor(){
+	function getListaProveedor(){
 		$jinput = JFactory::getApplication()->input;
 		$model = $this->getModel('nota');
 		$str = $jinput->get('str', '', 'string');
 		$ind = $jinput->get('ind', 0, 'int');
-		$proveedor = $model->getProveedor($str);
+		$proveedor = $model->getListaProveedor($str);
 		
 		if ($ind)
 			$html = "<ul id='lista_proveedores".$ind."' onchange='escoger_proveedor(\"\",\"0\", 0)' class='lista_proveedores'>";
@@ -156,5 +156,13 @@ class NotaControllerCarga extends JControllerForm
 		$html .= "</ul>";
 		echo $html;
 		//echo json_encode($proveedor);
+	}
+	function getProveedor(){
+		$jinput = JFactory::getApplication()->input;
+		$model = $this->getModel('nota');
+		$str = $jinput->get("proveedor", "", "string");
+		$rut = $jinput->get("rut", "", "string");
+		$proveedor = $model->getProveedor($str, $rut);
+		return $proveedor;
 	}
 }
