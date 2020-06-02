@@ -479,7 +479,6 @@ function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
                 }
         });
     }
-
     $.ajax({
         url: 'index.php?option=com_nota&task=adquisiciones.generarOrden',
         timeout: 1500,
@@ -693,25 +692,29 @@ function cargar_proveedor(str, ind=0){
     });*/
 }
 
-function escoger_proveedor(razon_social, rut=0, ind=0){
+function escoger_proveedor(razon_social, rut="", giro="", ind=0){
     if (!ind){
         $("#proveedor_escogido").val(razon_social);
         $("#rut_proveedor").val(rut);
-        $("#rut_texto").append(rut);
+        $("#giro_proveedor").val(giro);
         $("#lista_proveedores").fadeOut();
         $("#proveedor").empty();
     }else{
         $.ajax({
             url: 'index.php?option=com_nota&task=carga.getProveedor&format=raw',
             type: 'post',
-            data: { str: str, rut: rut },
+            data: { razon_social: razon_social, rut: rut },
             success: function(data){
-                console.log(data);
+                data = JSON.parse(data);
+                console.log(data['giro']);
+                $("#proveedor_escogido"+ind).val(data['RazonSocial']);
+                $("#rut_proveedor"+ind).val(data['rut']);
+                $("#giro_proveedor"+ind).val(data['giro']);
             }
         });
-        $("#proveedor_escogido"+ind).val(razon_social);
-        $("#rut_proveedor"+ind).val(rut);
-        $("#giro_proveedor"+ind).val(rut);
+        //$("#proveedor_escogido"+ind).val(razon_social);
+        //$("#rut_proveedor"+ind).val(rut);
+        //$("#giro_proveedor"+ind).val(rut);
         $("#lista_proveedores"+ind).fadeOut();
         $("#proveedor"+ind).empty();
     }

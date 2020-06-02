@@ -97,11 +97,13 @@ $user = JFactory::getUser();
 			<div class='fila_completa bordear' style='width: 90%;'>
 				<div class="col-3 titulo_item">Proveedor (opcional)</div>
 				<div class="col-4">
-					<input type='text' id='proveedor_escogido' name='proveedor_escogido' size='40' onkeypress="cargar_proveedor(this.value)">
+					<input type='text' id='proveedor_escogido' name='proveedor_escogido' size='40' onkeypress="cargar_proveedor(this.value)" placeholder="Nombre proveedor">
 					<div id='proveedor'></div>
+					<input type="text" name="rut_proveedor" id="rut_proveedor" placeholder="Rut">
+					<input type="text" name="giro_proveedor" id="giro_proveedor" placeholder="Giro">
 				</div>
 				<div class="col-3" id='rut_texto'></div>
-				<input type="hidden" name="rut_proveedor" id="rut_proveedor">
+				
 			</div>
 		</div>
 		<?php } ?>

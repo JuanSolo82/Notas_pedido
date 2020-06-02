@@ -75,9 +75,11 @@ function guardar_cambios(cont){
 function previa_oc(opcion, num_items){
 	var sitio_pruebas = parseInt($("#sitio_pruebas").val());
 	var proveedor = $.trim($("#proveedor_escogido"+opcion).val());
+	var rut = $.trim($("#rut_proveedor"+opcion).val());
+	var giro = $.trim($("#giro_proveedor"+opcion).val());
 	var html = "";
-	if (proveedor=="" && sitio_pruebas){
-		alert("Ingrese proveedor");
+	if ((proveedor=="" || rut=="" || giro=="") && sitio_pruebas){
+		lanzar_alarma("proveedor_vacio");
 		return;
 	}
 	if (proveedor!=''){

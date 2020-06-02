@@ -809,10 +809,11 @@ class NotaModelNota extends JModelItem{
 					where tipo='proveedor' and empresa='demo' 
 					and CodLegal='".$rut."' and RazonSocial='".$str."'";
 		$result = mssql_query($query);
-		if (!mssql_num_rows($result)){
+		$array = mssql_fetch_array($result);
+		mssql_close($handle);
+		if (!sizeof($array)){
 			return array();
-		}
-		return mssql_fetch_array($result);
-		
+		}		
+		return $array;
 	}
 }

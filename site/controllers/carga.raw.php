@@ -145,14 +145,14 @@ class NotaControllerCarga extends JControllerForm
 		if ($ind)
 			$html = "<ul id='lista_proveedores".$ind."' onchange='escoger_proveedor(\"\",\"0\", 0)' class='lista_proveedores'>";
 		else
-			$html = "<ul id='lista_proveedores' onchange='escoger_proveedor(\"\",\"0\", 0)' class='lista_proveedores'>";
+			$html = "<ul id='lista_proveedores' onchange='escoger_proveedor(\"\",\"0\",\"\", 0)' class='lista_proveedores'>";
 		if (sizeof($proveedor)){
 			foreach ($proveedor as $p){
-				$html .= "<li id='".$p['RazonSocial']."' onclick='escoger_proveedor(\"".ucwords(strtolower($p['RazonSocial']))."\", \"".$p['rut']."\", ".$ind.")'>".$p['RazonSocial']."</li>";
+				$html .= "<li id='".$p['RazonSocial']."' onclick='escoger_proveedor(\"".ucwords(strtolower($p['RazonSocial']))."\", \"".$p['rut']."\",\"".ucwords(strtolower($p['giro']))."\", ".$ind.")'>".$p['RazonSocial']."</li>";
 			}
-		}else{
+		}/*else{
 			$html .= "<li id='0'>Sin coincidencias</li>";
-		}
+		}*/
 		$html .= "</ul>";
 		echo $html;
 		//echo json_encode($proveedor);
@@ -160,9 +160,13 @@ class NotaControllerCarga extends JControllerForm
 	function getProveedor(){
 		$jinput = JFactory::getApplication()->input;
 		$model = $this->getModel('nota');
-		$str = $jinput->get("proveedor", "", "string");
-		$rut = $jinput->get("rut", "", "string");
-		$proveedor = $model->getProveedor($str, $rut);
-		return $proveedor;
+		$razon_social 	= $jinput->get("razon_social", "", "string");
+		$rut 			= $jinput->get("rut", "", "string");
+		$proveedor = $model->getProveedor($razon_social, $rut);
+		if (sizeof($proveedor)){
+			if ($proveedor['RazonSocial']) $proveedor['RazonSocial'] = ucwords(strtolower($proveedor['RazonSocial']));
+			if ($proveedor['giro']) $proveedor['giro'] = ucwords(strtolower($proveedor['giro']));
+		}
+		echo json_encode($proveedor);
 	}
 }
