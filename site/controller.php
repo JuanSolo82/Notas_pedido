@@ -140,7 +140,8 @@ class NotaController extends JController{
 		$id_tipo_pedido 	= $jinput->get("tipo_pedido", 1, "int"); // 1 producto, 2 servicio
 		$proveedor 			= $jinput->get("proveedor_escogido", "", "string");
 		$rut_proveedor		= $jinput->get("rut_proveedor", "", "string");
-		$proveedor 			= NotaHelper::msquote($proveedor."_".$rut_proveedor);
+		$giro_proveedor		= $jinput->get("giro_proveedor", "", "string");
+		$proveedor 			= NotaHelper::msquote($proveedor."_".$rut_proveedor."_".$giro_proveedor);
 		$proveedor 			= htmlentities($proveedor);
 		
 		$nombre_tripulante	= NotaHelper::msquote($nombre_tripulante);

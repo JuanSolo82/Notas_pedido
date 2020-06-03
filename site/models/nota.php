@@ -772,7 +772,7 @@ class NotaModelNota extends JModelItem{
 			return $db->loadAssocList();
 		return array();
 	}
-	function getProveedor($str, $rut=""){
+	function getListaProveedor($str, $rut=""){
 		$handle = mssql_connect("flexline.tabsa.lan","sa","Tabsa123") or die("Cannot connect to server");
 		$db = mssql_select_db('BDFlexline', $handle) or die("Cannot select database");
 		$query = "select CtaCte, CodLegal as rut, RazonSocial, giro 
@@ -800,5 +800,20 @@ class NotaModelNota extends JModelItem{
 			}
 		}
 		return $ar;
+	}
+	function getProveedor($str, $rut){
+		$handle = mssql_connect("flexline.tabsa.lan","sa","Tabsa123") or die("Cannot connect to server");
+		$db = mssql_select_db('BDFlexline', $handle) or die("Cannot select database");
+		$query = "select CtaCte, CodLegal as rut, RazonSocial, giro 
+					from flexline.CtaCte 
+					where tipo='proveedor' and empresa='demo' 
+					and CodLegal='".$rut."' and RazonSocial='".$str."'";
+		$result = mssql_query($query);
+		$array = mssql_fetch_array($result);
+		mssql_close($handle);
+		if (!sizeof($array)){
+			return array();
+		}		
+		return $array;
 	}
 }

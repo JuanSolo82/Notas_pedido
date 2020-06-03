@@ -7,7 +7,7 @@ JHTML::script('jquery.min.js', 'components/com_nota/assets/js/');
 JHTML::script('jquery-ui.min.js', 'components/com_nota/assets/js/');
 JHTML::script('nota.js', 'components/com_nota/assets/js/');
 JHtml::_('behavior.modal'); 
-require_once(JPATH_COMPONENT_SITE.'/assets/helper.php'); 
+require_once(JPATH_COMPONENT_SITE.'/assets/helper.php');
 $opciones = array();
 foreach ($this->items as $i)
 	$opciones[$i['opcion_oc']] = $i['opcion_oc'];
@@ -39,10 +39,13 @@ foreach ($opciones as $opcion){ ?>
 <?php
 $proveedor = explode('_',$this->datos_nota['proveedor']);
 ?>
-	<b>Proveedor</b><input type="text" autocomplete="off" onkeypress="cargar_proveedor(this.value, <?php echo $opcion ?>)" size='50' id="proveedor_escogido<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? ucwords(strtolower($this->proveedor['RazonSocial'])) : "" ?>">
+	<div style="float: left; width: 25%;"><b>Proveedor</b></div>
+	<input type="text" size="30" autocomplete="off" onkeypress="cargar_proveedor(this.value, <?php echo $opcion ?>)" id="proveedor_escogido<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? ucwords(strtolower($this->proveedor['RazonSocial'])) : "" ?>"><br>
 	<div id='proveedor<?php echo $opcion ?>'></div>
-	<input type="hidden" id="rut_proveedor<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? $this->proveedor['rut'] : "" ?>">
-	<input type="hidden" id="giro_proveedor<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? ucwords(strtolower($this->proveedor['giro'])) : "" ?>">
+	<div style="float: left; width: 25%;"><b style="width: 25%;">Rut</b></div>
+	<input type="text" size="30" id="rut_proveedor<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? $this->proveedor['rut'] : "" ?>"><br>
+	<div style="float: left; width: 25%;"><b style="width: 25%;">Giro</b></div>
+	<input type="text" size="30" id="giro_proveedor<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? ucwords(strtolower($this->proveedor['giro'])) : "" ?>">
 </div>
 <div style="width: 80%; float: left;">
 	<table class='tabla_listado' style="width: 97%;">
@@ -90,8 +93,10 @@ $proveedor = explode('_',$this->datos_nota['proveedor']);
 			<?php } ?>
 			</td>
 			<?php if (NotaHelper::isTestSite()){ ?>
-				<td><?php echo number_format($i['valor'],0,'','.') ?></td>
-				<td><?php echo number_format($i['cantidad']*$i['valor'],0,'','.') ?></td>
+				<td><?php echo $i['valor'] ? number_format($i['valor'],0,'','.') : '' ?></td>
+				<td><?php echo $i['valor'] ? number_format($i['cantidad']*$i['valor'],0,'','.') : '' ?></td>
+				<input type="hidden" id="valor_numerico<?php echo $opcion.'_'.$j ?>" value="<?php echo $i['valor'] ?>">
+				<input type="hidden" id="subtotal_numerico<?php echo $opcion.'_'.$j ?>" value="<?php echo $i['cantidad']*$i['valor'] ?>">
 			<?php } ?>
 		</tr>
 		<?php } ?>
@@ -103,7 +108,7 @@ $proveedor = explode('_',$this->datos_nota['proveedor']);
 				<td><b><?php echo number_format($total,0,'','.') ?></b></td>
 			</tr>
 		<?php } ?>
-			<input type="hidden" id="total<?php echo $opcion ?>" value="<?php echo number_format($total,0,'','.') ?>">
+			<input type="hidden" id="total<?php echo $opcion ?>" value="<?php echo $total ? number_format($total,0,'','.') : '' ?>">
 			<input type="hidden" id="total_numerico<?php echo $opcion ?>" value="<?php echo $total ?>">
 	<?php } ?>
 	</table>
@@ -190,4 +195,8 @@ $url = JRoute::_('index.php?option=com_nota&task=adquisiciones.generar_orden&for
 <?php $j=0; ?>
 </div>
 <?php } ?>
+
+<div id="proveedor_vacio" title="Atención" style="display: none;">
+ 	<p>Debe ingresar todos los datos de proveedor</p>
+</div>
 

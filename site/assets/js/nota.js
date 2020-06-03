@@ -479,7 +479,6 @@ function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
                 }
         });
     }
-
     $.ajax({
         url: 'index.php?option=com_nota&task=adquisiciones.generarOrden',
         timeout: 1500,
@@ -653,7 +652,7 @@ function cargar_proveedor(str, ind=0){
     else $("#proveedor"+ind).empty();
     if (str.length>1){
         $.ajax({
-            url: 'index.php?option=com_nota&task=carga.getProveedor&format=raw',
+            url: 'index.php?option=com_nota&task=carga.getListaProveedor&format=raw',
             type: 'post',
             data: { str: str, ind: ind },
             success: function(data){
@@ -693,17 +692,29 @@ function cargar_proveedor(str, ind=0){
     });*/
 }
 
-function escoger_proveedor(valor, rut=0, ind=0){
+function escoger_proveedor(razon_social, rut="", giro="", ind=0){
     if (!ind){
-        $("#proveedor_escogido").val(valor);
+        $("#proveedor_escogido").val(razon_social);
         $("#rut_proveedor").val(rut);
-        $("#rut_texto").append(rut);
+        $("#giro_proveedor").val(giro);
         $("#lista_proveedores").fadeOut();
         $("#proveedor").empty();
     }else{
-        $("#proveedor_escogido"+ind).val(valor);
-        $("#rut_proveedor"+ind).val(rut);
-        $("#rut_proveedor"+ind).append(rut);
+        $.ajax({
+            url: 'index.php?option=com_nota&task=carga.getProveedor&format=raw',
+            type: 'post',
+            data: { razon_social: razon_social, rut: rut },
+            success: function(data){
+                data = JSON.parse(data);
+                console.log(data['giro']);
+                $("#proveedor_escogido"+ind).val(data['RazonSocial']);
+                $("#rut_proveedor"+ind).val(data['rut']);
+                $("#giro_proveedor"+ind).val(data['giro']);
+            }
+        });
+        //$("#proveedor_escogido"+ind).val(razon_social);
+        //$("#rut_proveedor"+ind).val(rut);
+        //$("#giro_proveedor"+ind).val(rut);
         $("#lista_proveedores"+ind).fadeOut();
         $("#proveedor"+ind).empty();
     }

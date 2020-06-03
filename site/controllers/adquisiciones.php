@@ -165,10 +165,10 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$datos_nota = $model2->getDetalle_nota($id_remitente);
 		$proveedor = array();
 		if ($datos_nota['proveedor']){
-			$proveedor = explode('_', $datos_nota['proveedor']);
-			$proveedor = $model2->getProveedor('',$proveedor[1]);
-			/*print_r($proveedor);
-			if (sizeof($proveedor)) $proveedor = $proveedor[0];*/
+			$p = explode('_', $datos_nota['proveedor']);
+			$proveedor['RazonSocial'] = $p[0];
+			$proveedor['rut'] = $p[1];
+			$proveedor['giro'] = $p[2];
 		}
 		$items = $model2->getItems($id_remitente);
 		$opciones = array();
@@ -262,6 +262,11 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$solo_imprimir	= $jinput->get('solo_imprimir', 0, 'int');
 		$model	= $this->getModel('nota');
 		$model2 = $this->getModel('adquisiciones');
+		$datos_proveedor = $model->getProveedor($proveedor, $rut_proveedor);
+		$giro_proveedor = "sin - ".$proveedor.", ".$rut_proveedor;
+		/*if (sizeof($datos_proveedor)){
+			$giro_proveedor = $datos_proveedor['giro'];
+		}*/
 		$datos_nota = $model->getDetalle_nota($id_remitente);
 		$items = $model->getItems($id_remitente);
 		$datos_oc = $model2->getDetalle_orden($id_remitente, $opcion);

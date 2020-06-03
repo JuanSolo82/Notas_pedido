@@ -12,6 +12,7 @@ JHTML::script('bootstrap.js', 'components/com_nota/assets/bootstrap/js/');
 JHTML::script('datepicker-es.js', 'components/com_nota/assets/js/');
 JHTML::_('behavior.modal');
 ?>
+
 <br>
 <div class='centrar' style="margin-bottom: 30px;">
 <div class='barra_nombre' style='width: 95%;'>Reportes (beta)</div>
