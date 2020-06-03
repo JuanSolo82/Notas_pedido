@@ -263,7 +263,6 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$model	= $this->getModel('nota');
 		$model2 = $this->getModel('adquisiciones');
 		$datos_proveedor = $model->getProveedor($proveedor, $rut_proveedor);
-		$giro_proveedor = "sin - ".$proveedor.", ".$rut_proveedor;
 		/*if (sizeof($datos_proveedor)){
 			$giro_proveedor = $datos_proveedor['giro'];
 		}*/
@@ -272,19 +271,16 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$datos_oc = $model2->getDetalle_orden($id_remitente, $opcion);
 		if (sizeof($datos_oc)) $solo_imprimir = 1;
 		if (!$solo_imprimir){
-			$model2->setOrden($id_remitente, $opcion, $num_opciones, $proveedor);
+			$model2->setOrden($id_remitente, $opcion, $num_opciones, $proveedor."_".$rut_proveedor."_".$giro_proveedor);
 		}
-		//$items = $model2->items($id_remitente);
 		$datos_oc = $model2->getDetalle_orden($id_remitente, $opcion);
+		$p = explode('_', $datos_oc['proveedor']);
+		$proveedor = $p[0];
+		$rut_proveedor = $p[1];
+		$giro_proveedor = $p[2];
         $document = JFactory::getDocument();
 		$meses = array('01' => 'enero', '02' => 'febrero', '03' => 'marzo', '04' => 'abril', '05' => 'mayo',
 				'06' => 'junio', '07' => 'julio', '08' => 'agosto', '09' => 'septiembre', '10' => 'octubre', '11' => 'noviembre', '12' => 'diciembre');
-/*
-		if ( NotaHelper::isTestSite() ){
-			$archivo = "/var/www/portal/libraries/joomla/document/pdf/pdf.php";
-		}else{
-			$archivo = "/var/www/clients/client2/web4/web/portal/libraries/joomla/document/pdf/pdf.php";
-		}*/
 		$url = JPATH_SITE.'/media/notas_pedido/Orden_compra.pdf';
 		/**
 		 * Generador QR
@@ -299,9 +295,9 @@ class NotaControllerAdquisiciones extends JControllerForm
 		require_once(JPATH_LIBRARIES.'/joomla/document/pdf/pdf.php');
 		$html = $this->orden_html($datos_nota, $items, $opcion, $datos_oc, $proveedor, $rut_proveedor, $giro_proveedor);
 		$pdf = new JDocumentpdf();
-		//$pdf->guardar_oc($url, $html);
+		$pdf->guardar_oc($url, $html);
 		// envío de correo con adjunto
-		//$this->enviarOrdenCorreo($id_remitente, JPATH_SITE.'/media/notas_pedido/Orden_compra.pdf');
+		$this->enviarOrdenCorreo($id_remitente, JPATH_SITE.'/media/notas_pedido/Orden_compra.pdf');
 	}
 	public function generar_nota(){
 		$jinput = JFactory::getApplication()->input;

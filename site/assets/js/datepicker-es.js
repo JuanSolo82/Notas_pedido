@@ -11,7 +11,6 @@
 		factory( jQuery.datepicker );
 	}
 }( function( datepicker ) {
-
 datepicker.regional.es = {
 	closeText: "Cerrar",
 	prevText: "&#x3C;Ant",
