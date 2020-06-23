@@ -387,7 +387,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 				<td width="5%"><b>Cantidad</b></td>
 				<td width="30%"><b>Item</b></td>
 				<td width="30%"><b>Observaciones</b></td>';
-		if (NotaHelper::isTestSite()){
+		if (NotaHelper::isTestSite() && $items[0]['valor']){
 			$html .= '<td width="10%"><b>Valor unitario</b></td>';
 			$html .= '<td width="10%"><b>Subtotal</b></td>';
 		}
@@ -404,7 +404,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 						<td>'.$i['cantidad'].'</td>
 						<td>'.htmlentities($i['item']).'</td>
 						<td>'.htmlentities($i['motivo']).'</td>';
-				if (NotaHelper::isTestSite()){
+				if (NotaHelper::isTestSite() && $items[0]['valor']){
 					$html .= '<td align="right">'.number_format($i['valor'],0,'','.').'</td>';
 					$html .= '<td align="right">'.number_format($i['valor']*$cantidad,0,'','.').'</td>';
 					$total += $i['valor']*$cantidad;
@@ -413,7 +413,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 				}
 			}
 		}
-		if (NotaHelper::isTestSite()){
+		if (NotaHelper::isTestSite() && $items[0]['valor']){
 			$html .= "<tr>";
 			$html .= "<td align='right' colspan='5'>Total</td>";
 			$html .= "<td align='right'>".number_format($total,0,'','.')."</td>";

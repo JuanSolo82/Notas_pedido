@@ -148,7 +148,7 @@ class NotaControllerCarga extends JControllerForm
 			$html = "<ul id='lista_proveedores' onchange='escoger_proveedor(\"\",\"0\",\"\", 0)' class='lista_proveedores'>";
 		if (sizeof($proveedor)){
 			foreach ($proveedor as $p){
-				$html .= "<li id='".$p['RazonSocial']."' onclick='escoger_proveedor(\"".ucwords(strtolower($p['RazonSocial']))."\", \"".$p['rut']."\",\"".ucwords(strtolower($p['giro']))."\", ".$ind.")'>".$p['RazonSocial']."</li>";
+				$html .= "<li id='".$p['RazonSocial']."' onclick='escoger_proveedor(\"".utf8_encode(ucwords(strtolower($p['RazonSocial'])))."\", \"".$p['rut']."\",\"".ucwords(strtolower($p['giro']))."\", ".$ind.")'>".utf8_encode($p['RazonSocial'])."</li>";
 			}
 		}/*else{
 			$html .= "<li id='0'>Sin coincidencias</li>";

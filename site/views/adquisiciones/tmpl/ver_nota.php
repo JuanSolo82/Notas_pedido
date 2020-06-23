@@ -8,7 +8,6 @@ JHTML::script('jquery-ui.min.js', 'components/com_nota/assets/js/');
 JHTML::script('adquisiciones.js', 'components/com_nota/assets/js/');
 JHTML::script('bootstrap.js', 'components/com_nota/assets/bootstrap/js/');
 JHtml::_('behavior.modal'); 
-
 ?>
 <br>
 <div class='centrar' style="margin-bottom: 30px;">
