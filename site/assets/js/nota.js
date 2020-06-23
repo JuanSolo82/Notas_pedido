@@ -32,6 +32,12 @@ $(document).ready(function() {
             }
         }
     });
+
+    $("#parametro").keyup(function(e){
+        if (e.keyCode==13){
+            buscar_notas_propias();
+        }
+    });
     
     $("#desde").click(function(){
         $("#desde").datepicker({
@@ -719,4 +725,24 @@ function escoger_proveedor(razon_social, rut="", giro="", ind=0){
         $("#proveedor"+ind).empty();
     }
     $("#lista_proveedores").fadeOut();
+}
+
+function buscar_notas_propias(){
+    var parametro = $.trim($("#parametro").val());
+    if (parametro!=''){
+        $.ajax({
+            url: 'index.php?option=com_nota&task=carga.notas_rango&format=raw',
+            type: 'post',
+            data: {parametro: parametro},
+            success: function(data){
+                $("#lista").hide();
+                $("#lista_propias").html(data);
+            }
+        });
+        $("#lista_propias").css({'opacity':'0.5'});
+        setTimeout(function(){
+            $("#lista_propias").css({'opacity':'1'});
+        },500);
+        $("#pagina").val(pagina);
+    }
 }

@@ -4,11 +4,12 @@ defined('_JEXEC') or die('Restricted access');
 JHTML::stylesheet('nota.css', 'components/com_nota/assets/css/');
 JHTML::script('jquery.min.js', 'components/com_nota/assets/js/');
 JHTML::script('jquery-ui.min.js', 'components/com_nota/assets/js/');
-JHTML::script('nota.js', 'components/com_nota/assets/js/');
+//JHTML::script('nota.js', 'components/com_nota/assets/js/');
 JHtml::_('behavior.modal'); 
 $user = JFactory::getUser();
 $num_filas=0;
 ?>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?val=13"></script>
 <div class='fila_completa centrar' style='margin-bottom: 20px;'>
 	<div class='barra_nombre' style='width: 90%;'>Lista de notas propias</div>
 </div>
@@ -35,7 +36,12 @@ $num_filas=0;
 </div>
 
 <input type="hidden" id="pagina" value="1" size='5'>
-
+<div class='fila_completa centrar' style='margin-bottom: 20px;'>
+	<div class='barra_nombre' style='width: 90%;'>
+		<input type='text' id='parametro' name='parametro'>
+		<input type='button' onclick="buscar_notas_propias()" value="Buscar">
+	</div>
+</div>
 <div id='lista_propias' style="position: relative; float: left; width: 100%; opacity: 1;"></div>
 <div id='lista'>
 	<h3>Página 1</h3>
@@ -44,8 +50,9 @@ $num_filas=0;
 			<th width='5%'>#</th>
 			<th width='5%'>Nº</th>
 			<th width='20%'>Fecha</th>
-			<th width='60%'>Estado de avance</th>
+			<th width='50%'>Estado de avance</th>
 			<th width='10%'>Revisión</th>
+			<th width='10%'>OC</th>
 		</tr>
 	<?php 
 		$i=1;
@@ -54,8 +61,6 @@ $num_filas=0;
 			<td><?php echo $i; ?></td>
 			<td align='center'>
 				<a onclick="exportar_nota(<?php echo $n['id'] ?>)"><?php echo $n['id'] ?></a><br>
-				<!--<a href="<?php echo JRoute::_('index.php?option=com_nota&view=adquisiciones&task=adquisiciones.generar_nota&id_remitente='.$n['id']); ?>">
-				<img src="/portal/administrator/templates/hathor/images/menu/icon-16-help-docs.png" /></a>-->
 			</td>
 			<td><?php echo NotaHelper::fechamysql($n['fecha']) ?></td>
 			<td>
@@ -88,6 +93,7 @@ $num_filas=0;
 				<?php } ?>
 				
 			</td>
+			<td><a><img src='/portal/administrator/templates/hathor/images/menu/icon-16-article.png' /></a></td>
 		</tr>
 	<?php $i++; } ?>
 	</table>
