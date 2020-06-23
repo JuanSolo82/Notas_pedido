@@ -288,7 +288,12 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$filename = JPATH_SITE.'/media/notas_pedido/qr_ordenes/qr_'.$datos_oc['id'].'.png';
 		$matrixPointSize = 3;
 		$errorCorrectionLevel = 'L';
-		$tqr = "www.tabsa.cl";
+		/**
+		 * Por mientras para pruebas se usarán los elementos en producción (extensión hecha ahí)
+		 */
+		$tqr = "http://www.tabsa.cl/portal/index.php/es/validar-nota?ordenCompra=".$id_remitente;
+		//$tqr = JUri::base().'index.php/es/validar-nota?ordenCompra='.$id_remitente;
+
 		if (NotaHelper::isTestSite())
 			QRcode::png($tqr, $filename, $errorCorrectionLevel, $matrixPointSize, 2);
 
@@ -368,8 +373,8 @@ class NotaControllerAdquisiciones extends JControllerForm
 		if (NotaHelper::isTestSite()){
 			$html .= '	<td align="right" width="25%">
 						<div style="border: 1px solid silver; 
-								height: 88px; 
-								width: 88px;
+								height: 110px; 
+								width: 110px;
 								position: relative;
 								left: 200px;
 								background: url(/portal/media/notas_pedido/qr_ordenes/qr_'.$datos_oc['id'].'.png) no-repeat center;

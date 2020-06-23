@@ -746,3 +746,18 @@ function buscar_notas_propias(){
         $("#pagina").val(pagina);
     }
 }
+
+function copia_oc(id_remitente, orden_compra, opcion){
+    $.ajax({
+        url: 'index.php?option=com_nota&task=adquisiciones.generarOrden',
+        timeout: 1500,
+        method: 'post',
+        data: {id_remitente: id_remitente, 
+                orden_compra: orden_compra, 
+                opcion: opcion},
+        success: function(){
+            $("#generada_oc"+opcion).css("display", "block");
+            window.open('/portal/media/notas_pedido/Orden_compra.pdf');
+        }
+    });
+}

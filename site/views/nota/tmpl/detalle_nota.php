@@ -72,6 +72,12 @@ $f = explode('-', $this->detalle_nota['fecha']);
 		<div class="col-7"><?php echo $this->detalle_nota['depto_compra']; ?></div>
 	</div>
 </div>
+<div class='centrar'>
+	<div class='fila_completa bordear centrar' style='width: 90%;'>
+		<div class="col-3 titulo_item">Proveedor</div>
+		<div class="col-7"><?php echo $this->detalle_nota['proveedor']; ?></div>
+	</div>
+</div>
 <div class='fila_vacia'></div>
 <div class='centrar'>
 	<table class='tabla_listado'>

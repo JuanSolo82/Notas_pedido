@@ -6,11 +6,12 @@ $user = JFactory::getUser();
 <h3>Página <?php echo $this->pagina ?></h3>
 <table class='tabla_listado'>
     <tr>
-        <th width='5%'>#</th>
-        <th width='5%'>Nº</th>
-        <th width='20%'>Fecha</th>
-        <th width='60%'>Estado de avance</th>
-        <th width='10%'>Revisión</th>
+		<th width='5%'>#</th>
+		<th width='5%'>Nº</th>
+		<th width='10%'>OC</th>
+		<th width='20%'>Fecha</th>
+		<th width='50%'>Estado de avance</th>
+		<th width='10%'>Revisión</th>
     </tr>
 	<?php 
 		$i = ($this->pagina-1)*10+1;
@@ -18,6 +19,13 @@ $user = JFactory::getUser();
 		<tr>
 			<td><?php echo $i; ?></td>
 			<td align='center'><a onclick="exportar_nota(<?php echo $n['id'] ?>)"><?php echo $n['id'] ?></a></td>
+			<td>
+				<ul>
+				<?php foreach ($n['ordenes'] as $o){
+					echo "<li><a onclick='copia_oc(".$n['id'].", ".$o['orden_compra'].", ".$o['opcion_oc'].")'>".$o['orden_compra']."</a></li>";
+				} ?>
+				</ul>
+			</td>
 			<td><?php echo NotaHelper::fechamysql($n['fecha']) ?></td>
 			<td>
 				<div class='centrar'>
@@ -37,14 +45,16 @@ $user = JFactory::getUser();
 								{handler:'iframe', 
 								size: {x: 900, y: 550}, 
 								url:'<?php echo JRoute::_('index.php?option=com_nota&view=com_nota&task=detalle_nota&id_nota='.$n['id'].'&tmpl=component'); ?>',
-								onClose:function(){window.location.reload();} })">
+								onClose:function(){//window.location.reload();
+								} })">
 					<img src='/portal/administrator/templates/hathor/images/menu/icon-16-edit.png' /></a>
 				<?php }else{ ?>
 					<a onclick="SqueezeBox.fromElement(this, 
 								{handler:'iframe', 
 								size: {x: 900, y: 550}, 
 								url:'<?php echo JRoute::_('index.php?option=com_nota&view=com_nota&task=reportes.detalle_nota&id_nota='.$n['id'].'&tmpl=component'); ?>',
-								onClose:function(){window.location.reload();} })">
+								onClose:function(){//window.location.reload();
+								} })">
 					<img src='/portal/administrator/templates/hathor/images/menu/icon-16-edit.png' /></a>
 				<?php } ?>
 			</td>

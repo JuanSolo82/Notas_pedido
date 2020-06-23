@@ -8,8 +8,9 @@ JHTML::script('jquery-ui.min.js', 'components/com_nota/assets/js/');
 JHtml::_('behavior.modal'); 
 $user = JFactory::getUser();
 $num_filas=0;
+
 ?>
-<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?val=13"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?vl=13"></script>
 <div class='fila_completa centrar' style='margin-bottom: 20px;'>
 	<div class='barra_nombre' style='width: 90%;'>Lista de notas propias</div>
 </div>
@@ -49,10 +50,10 @@ $num_filas=0;
 		<tr>
 			<th width='5%'>#</th>
 			<th width='5%'>Nº</th>
+			<th width='10%'>OC</th>
 			<th width='20%'>Fecha</th>
 			<th width='50%'>Estado de avance</th>
 			<th width='10%'>Revisión</th>
-			<th width='10%'>OC</th>
 		</tr>
 	<?php 
 		$i=1;
@@ -61,6 +62,13 @@ $num_filas=0;
 			<td><?php echo $i; ?></td>
 			<td align='center'>
 				<a onclick="exportar_nota(<?php echo $n['id'] ?>)"><?php echo $n['id'] ?></a><br>
+			</td>
+			<td>
+				<ul>
+				<?php foreach ($n['ordenes'] as $o){
+					echo "<li><a onclick='copia_oc(".$n['id'].", ".$o['orden_compra'].", ".$o['opcion_oc'].")'>".$o['orden_compra']."</a></li>";
+				} ?>
+				</ul>
 			</td>
 			<td><?php echo NotaHelper::fechamysql($n['fecha']) ?></td>
 			<td>
@@ -81,19 +89,19 @@ $num_filas=0;
 								{handler:'iframe', 
 								size: {x: 1100, y: 550}, 
 								url:'<?php echo JRoute::_('index.php?option=com_nota&view=com_nota&task=detalle_nota&id_nota='.$n['id'].'&tmpl=component'); ?>',
-								onClose:function(){window.location.reload();} })">
+								onClose:function(){//window.location.reload();
+								} })">
 					<img src='/portal/administrator/templates/hathor/images/menu/icon-16-edit.png' /></a>
 				<?php }else{ ?>
 					<a onclick="SqueezeBox.fromElement(this, 
 								{handler:'iframe', 
 								size: {x: 1100, y: 550}, 
 								url:'<?php echo JRoute::_('index.php?option=com_nota&view=com_nota&task=reportes.detalle_nota&id_nota='.$n['id'].'&tmpl=component'); ?>',
-								onClose:function(){window.location.reload();} })">
+								onClose:function(){//window.location.reload();
+								} })">
 					<img src='/portal/administrator/templates/hathor/images/menu/icon-16-article.png' /></a>
 				<?php } ?>
-				
 			</td>
-			<td><a><img src='/portal/administrator/templates/hathor/images/menu/icon-16-article.png' /></a></td>
 		</tr>
 	<?php $i++; } ?>
 	</table>

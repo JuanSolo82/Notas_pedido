@@ -88,7 +88,7 @@ class NotaControllerCarga extends JControllerForm
 				$notas[$i]['anotacion'] 		= '';
 				$notas[$i]['fecha_aprobacion'] 	= '';
 			}
-			
+			$notas[$i]['ordenes']			= $model->getNotas_ordenes('', '', $n['id'], 0);
 			$i++;
 		}
 		$jinput->set("notas", $notas);

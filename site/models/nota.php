@@ -151,12 +151,15 @@ class NotaModelNota extends JModelItem{
 			$query .= " join nota_item ni on ni.id_remitente=nr.id and ni.item like '%".$parametro."%' ";
 		}
 		$query .= " where nr.id_user=".$id_user;
+		/*if ($parametro){
+			$query .= " or nr.proveedor like '%".$parametro."%' ";
+		}*/
 
 		$query .= " order by nr.id desc ";
 		if ($parametro==''){
 			$query .= " limit ".(10*$pagina).", 10";
 		}
-		
+		//print_r($query);
 		$db->setQuery($query);
 		$db->query();
 		if ($db->getNumRows())

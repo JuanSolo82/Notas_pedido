@@ -64,6 +64,7 @@ class NotaController extends JController{
 			$notas[$i]['aprobado']			= $aprobacion['aprobado'];
 			$notas[$i]['anotacion'] 		= $aprobacion['anotacion'];
 			$notas[$i]['fecha_aprobacion'] 	= $aprobacion['fecha'];
+			$notas[$i]['ordenes']			= $model->getNotas_ordenes('', '', $n['id'], 0);
 			$i++;
 		}
 		$datos_user = $model->getDatos_user($user->id);
@@ -86,6 +87,7 @@ class NotaController extends JController{
 		$detalle_nota 	= $model->getDetalle_nota($id_remitente);
 		$datos_user 	= $model->getDatos_user($detalle_nota['id_user']);
 		$items			= $model->getItems($id_remitente);
+		
 		
 		$datos_nota 	= $model->getDetalle_nota($id_remitente);
 		$jinput->set('id_remitente', $id_remitente);
