@@ -4,11 +4,12 @@ defined('_JEXEC') or die('Restricted access');
 JHTML::stylesheet('nota.css', 'components/com_nota/assets/css/');
 JHTML::script('jquery.min.js', 'components/com_nota/assets/js/');
 JHTML::script('jquery-ui.min.js', 'components/com_nota/assets/js/');
-JHTML::script('nota.js', 'components/com_nota/assets/js/');
+//JHTML::script('nota.js', 'components/com_nota/assets/js/');
 JHtml::_('behavior.modal'); 
 $user = JFactory::getUser();
 $num_filas=0;
 ?>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?val=13"></script>
 <div class='fila_completa centrar' style='margin-bottom: 20px;'>
 	<div class='barra_nombre' style='width: 90%;'>Lista de notas propias</div>
 </div>
@@ -38,6 +39,7 @@ $num_filas=0;
 <div class='fila_completa centrar' style='margin-bottom: 20px;'>
 	<div class='barra_nombre' style='width: 90%;'>
 		<input type='text' id='parametro' name='parametro'>
+		<input type='button' onclick="buscar_notas_propias()" value="Buscar">
 	</div>
 </div>
 <div id='lista_propias' style="position: relative; float: left; width: 100%; opacity: 1;"></div>

@@ -140,15 +140,23 @@ class NotaModelNota extends JModelItem{
 			return true;
 		}
 	}
-	function notas_propias($id_user,$pagina){
+	function notas_propias($id_user,$pagina, $parametro=""){
 		$db = JFactory::getDbo();
 		$query = "select nr.id, nr.id_user, nr.fecha, nrev.enviado_empleado as empleado, 
 						nrev.autorizado_capitan as capitan, nrev.autorizado_jefe as jefe, 
-						nrev.autorizado_depto as depto, nrev.aprobado_adquisiciones as adquisiciones
-					from nota_remitente nr 
-					join nota_revision nrev on nrev.id_nota_remitente=nr.id 
-					where nr.id_user=".$id_user;
-		$query .= " order by nr.id desc limit ".(10*$pagina).", 10";
+						nrev.autorizado_depto as depto, nrev.aprobado_adquisiciones as adquisiciones ";
+		$query .= "	from nota_remitente nr 
+					join nota_revision nrev on nrev.id_nota_remitente=nr.id ";
+		if ($parametro){
+			$query .= " join nota_item ni on ni.id_remitente=nr.id and ni.item like '%".$parametro."%' ";
+		}
+		$query .= " where nr.id_user=".$id_user;
+
+		$query .= " order by nr.id desc ";
+		if ($parametro==''){
+			$query .= " limit ".(10*$pagina).", 10";
+		}
+		
 		$db->setQuery($query);
 		$db->query();
 		if ($db->getNumRows())

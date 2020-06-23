@@ -72,8 +72,9 @@ class NotaControllerCarga extends JControllerForm
 		$view = $this->getView('nota','raw');
 		$model = $this->getModel('nota');
 		$user = JFactory::getUser();
+		$parametro	= $jinput->get('parametro', '', 'string');
 		$pagina		= $jinput->get("pagina", 1,"int");
-		$notas 		= $model->notas_propias($user->id, $pagina);
+		$notas 		= $model->notas_propias($user->id, $pagina, $parametro);
 		$datos_user = $model->getDatos_user($user->id);
 		$i=0;
 		foreach ($notas as $n){
