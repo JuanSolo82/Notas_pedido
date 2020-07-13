@@ -321,7 +321,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 				'06' => 'junio', '07' => 'julio', '08' => 'agosto', '09' => 'septiembre', '10' => 'octubre', '11' => 'noviembre', '12' => 'diciembre');
 
 		$f = explode("-", $datos['fecha']);
-		$fecha_creacion = $f[2].' de '.$meses[$f[1]].' de '.$f[0];
+		$fecha_creacion = $f[2].' de '.$meses[$f[1]].' de '.$f[0].', '.$datos_oc['hora'];
 		$file_logo = JPATH_SITE.'/images/logo.png';
 		$html = "<style>".$this->estilos()."</style>";
 		$html .= '<div style="font-family: sans-serif;">
@@ -602,6 +602,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$body .= "<p>Se adjunta la copia de orden de compra generada a partir de la nota 
 					de pedido nº ".$id_remitente."</p>";
 		$body .= "</div>";
+		
 		NotaHelper::mailAdjunto($subject, $body, 'jmarinan@tabsa.cl', $adjunto);
 	}
 /* ===================================================== */

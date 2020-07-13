@@ -72,9 +72,8 @@ class NotaControllerCarga extends JControllerForm
 		$view = $this->getView('nota','raw');
 		$model = $this->getModel('nota');
 		$user = JFactory::getUser();
-		$parametro	= $jinput->get('parametro', '', 'string');
 		$pagina		= $jinput->get("pagina", 1,"int");
-		$notas 		= $model->notas_propias($user->id, $pagina, $parametro);
+		$notas 		= $model->notas_propias($user->id, $pagina);
 		$datos_user = $model->getDatos_user($user->id);
 		$i=0;
 		foreach ($notas as $n){
@@ -96,6 +95,38 @@ class NotaControllerCarga extends JControllerForm
 		$jinput->set("datos_user", $datos_user);
 		$view->notas_rango();
 	}
+	function buscar_notas(){
+		$jinput = JFactory::getApplication()->input;
+		$model = $this->getModel('nota');
+		$view = $this->getView('nota','raw');
+		$user = JFactory::getUser();
+		$parametro	= $jinput->get('parametro', '', 'string');
+		$proveedor	= $jinput->get('proveedor', '', 'string');
+		$notas = array();
+		if ($parametro)
+			$notas	= $model->notas_propias($user->id, 1, $parametro);
+		elseif ($proveedor){
+			$notas	= $model->notas_proveedor($user->id, $proveedor);
+		}
+		$i=0;
+		foreach ($notas as $n){
+			$aprobacion = $model->getAnotacion($n['id']);
+			$notas[$i]['ordenes']			= $model->getNotas_ordenes('', '', $n['id'], 0);
+			if (sizeof($aprobacion)){
+				$notas[$i]['aprobado']			= $aprobacion['aprobado'];
+				$notas[$i]['anotacion'] 		= $aprobacion['anotacion'];
+				$notas[$i]['fecha_aprobacion'] 	= $aprobacion['fecha'];
+			}else{
+				$notas[$i]['aprobado']			= 0;
+				$notas[$i]['anotacion'] 		= '';
+				$notas[$i]['fecha_aprobacion'] 	= '';
+			}
+			$i++;
+		}
+		$jinput->set("notas", $notas);
+		$view->notas_rango();
+	}
+	
 	function depto_rango(){
 		$jinput = JFactory::getApplication()->input;
 		$view = $this->getView('nota','raw');

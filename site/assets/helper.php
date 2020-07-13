@@ -85,7 +85,7 @@ class NotaHelper {
 			$config->getValue( 'config.fromname' )
 		);
 		$mailer->setSender($sender);
-		$recipient = array('jmarinan@tabsa.cl');
+		$recipient = array('jmarinan@tabsa.cl', 'fperez@tabsa.cl');
 		$mailer->addRecipient($recipient);
 		$mailer->setSubject($subject);
 		$mailer->isHTML(true);

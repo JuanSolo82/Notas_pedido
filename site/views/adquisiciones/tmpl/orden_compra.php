@@ -35,10 +35,12 @@ foreach ($this->items as $i)
 <?php 
 foreach ($opciones as $opcion){ ?>
 <fieldset class="contenido"><legend style="font-size: 13px; width: auto">Nota <?php echo $opcion; ?></legend>
-<div style="border: 1px solid grey; height: auto; width: 400px; margin-bottom: 20px; padding: 10px;">
+
 <?php
 $proveedor = explode('_',$this->datos_nota['proveedor']);
+if (NotaHelper::isTestSite()){
 ?>
+<div style="border: 1px solid grey; height: auto; width: 400px; margin-bottom: 20px; padding: 10px;">
 	<div style="float: left; width: 25%;"><b>Proveedor</b></div>
 	<input type="text" size="30" autocomplete="off" onkeypress="cargar_proveedor(this.value, <?php echo $opcion ?>)" id="proveedor_escogido<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? ucwords(strtolower($this->proveedor['RazonSocial'])) : "" ?>"><br>
 	<div id='proveedor<?php echo $opcion ?>'></div>
@@ -47,6 +49,7 @@ $proveedor = explode('_',$this->datos_nota['proveedor']);
 	<div style="float: left; width: 25%;"><b style="width: 25%;">Giro</b></div>
 	<input type="text" size="30" id="giro_proveedor<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? ucwords(strtolower($this->proveedor['giro'])) : "" ?>">
 </div>
+<?php } ?>
 <div style="width: 80%; float: left;">
 	<table class='tabla_listado' style="width: 97%;">
 		<tr>

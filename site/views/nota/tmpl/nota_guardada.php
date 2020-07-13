@@ -31,6 +31,12 @@ $user = JFactory::getUser();
 	<div class="col-3 titulo_item">Departamento destino</div>
 	<div class="col-7"><?php echo $this->datos_nota['depto_destino'] ?></div>
 </div>
+<?php if ($this->proveedor){ ?>
+<div class='fila_completa bordear centrar' style='width: 90%;'>
+	<div class="col-3 titulo_item">Proveedor</div>
+	<div class="col-7"><?php echo $this->proveedor ?></div>
+</div>
+<?php } ?>
 <div class='fila_vacia'></div>
 <table class='adminlist'>
 	<tr class='encabezado_tabla'>

@@ -75,7 +75,7 @@ class NotaModelNota extends JModelItem{
 		if ($user->authorise('core.admin', 'com_nota')){
 			if ($user->authorise('empleado.depto', 'com_nota'))
 				$valores = "1,0,0,0,0";
-			if ($user->authorise('jefe.depto', 'com_nota'))
+			elseif ($user->authorise('jefe.depto', 'com_nota'))
 				$valores = "1,1,1,0,0";
 		}
 		else{
@@ -151,19 +151,28 @@ class NotaModelNota extends JModelItem{
 			$query .= " join nota_item ni on ni.id_remitente=nr.id and ni.item like '%".$parametro."%' ";
 		}
 		$query .= " where nr.id_user=".$id_user;
-		/*if ($parametro){
-			$query .= " or nr.proveedor like '%".$parametro."%' ";
-		}*/
-
 		$query .= " order by nr.id desc ";
 		if ($parametro==''){
 			$query .= " limit ".(10*$pagina).", 10";
 		}
-		//print_r($query);
 		$db->setQuery($query);
 		$db->query();
 		if ($db->getNumRows())
 			return $db->loadAssocList();
+		return array();
+	}
+	function notas_proveedor($id_user, $proveedor){
+		$db = JFactory::getDbo();
+		$query = "select nr.id, nr.id_user, nr.fecha, nrev.enviado_empleado as empleado, nrev.autorizado_capitan as capitan, 
+					nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto, nrev.aprobado_adquisiciones as adquisiciones, 
+					nr.proveedor, no.id as orden_compra, no.proveedor 
+				from nota_ordenDeCompra no join nota_remitente nr on nr.id=no.id_remitente and nr.id_user=".$id_user." 
+				join nota_revision nrev on nrev.id_nota_remitente=nr.id where no.proveedor like '%".$proveedor."%'";
+		$db->setQuery($query);
+		$db->query();
+		if ($db->getNumRows()){
+			return $db->loadAssocList();	
+		}
 		return array();
 	}
 	function getAnotacion($id_remitente){

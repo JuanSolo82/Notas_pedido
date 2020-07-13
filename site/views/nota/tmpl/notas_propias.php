@@ -10,7 +10,7 @@ $user = JFactory::getUser();
 $num_filas=0;
 
 ?>
-<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?vl=13"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?val=13"></script>
 <div class='fila_completa centrar' style='margin-bottom: 20px;'>
 	<div class='barra_nombre' style='width: 90%;'>Lista de notas propias</div>
 </div>
@@ -37,12 +37,21 @@ $num_filas=0;
 </div>
 
 <input type="hidden" id="pagina" value="1" size='5'>
+<?php if (NotaHelper::isTestSite()){ ?>
 <div class='fila_completa centrar' style='margin-bottom: 20px;'>
-	<div class='barra_nombre' style='width: 90%;'>
-		<input type='text' id='parametro' name='parametro'>
-		<input type='button' onclick="buscar_notas_propias()" value="Buscar">
+	<div class='barra_nombre' style='width: 50%;'>
+		<h3 class="titulo_item">Búsqueda por ítem</h3>
+		<input type='text' id='parametro' name='parametro' autocomplete="off">
+		<input type='button' class="boton_simple"  onclick="buscar_notas_propias()" value="Buscar">
+		<input style="float: right;" type='button' onclick="limpiar_busqueda()" value="Limpiar" class="boton_simple" >
+	</div>
+	<div class='barra_nombre' style='width: 50%;'>
+		<h3 class="titulo_item">Búsqueda por proveedor</h3>
+		<input type='text' id='proveedor' name='proveedor' autocomplete="off">
+		<input type='button' class="boton_simple" onclick="buscar_notas_propias()" value="Buscar">
 	</div>
 </div>
+<?php } ?>
 <div id='lista_propias' style="position: relative; float: left; width: 100%; opacity: 1;"></div>
 <div id='lista'>
 	<h3>Página 1</h3>
@@ -50,7 +59,9 @@ $num_filas=0;
 		<tr>
 			<th width='5%'>#</th>
 			<th width='5%'>Nº</th>
+		<?php if (NotaHelper::isTestSite()){ ?>
 			<th width='10%'>OC</th>
+		<?php } ?>
 			<th width='20%'>Fecha</th>
 			<th width='50%'>Estado de avance</th>
 			<th width='10%'>Revisión</th>
@@ -63,6 +74,7 @@ $num_filas=0;
 			<td align='center'>
 				<a onclick="exportar_nota(<?php echo $n['id'] ?>)"><?php echo $n['id'] ?></a><br>
 			</td>
+			<?php if (NotaHelper::isTestSite()){ ?>
 			<td>
 				<ul>
 				<?php foreach ($n['ordenes'] as $o){
@@ -70,6 +82,7 @@ $num_filas=0;
 				} ?>
 				</ul>
 			</td>
+			<?php } ?>
 			<td><?php echo NotaHelper::fechamysql($n['fecha']) ?></td>
 			<td>
 				<div class='centrar'>

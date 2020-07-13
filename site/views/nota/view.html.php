@@ -36,6 +36,7 @@ class NotaViewNota extends JView{
 			$this->datos_nota	= $jinput->get('datos_nota', array(), 'datos_nota');
 			$this->id_user		= $jinput->get('id_user_actual', 0, 'int');
 			$this->lista_deptos	= $jinput->get('lista_deptos', array(), 'array');
+			$this->proveedor 	= $this->getProveedor($this->detalle_nota['proveedor']);
 		}
 		if ($layout=="notas_jefe"){
 			$this->notas_jefe = $jinput->get("notas_jefe", array(), "array");
@@ -49,6 +50,7 @@ class NotaViewNota extends JView{
 		if ($layout=="nota_guardada"){
 			$this->datos_nota	= $jinput->get("datos_nota", array(), "array");
 			$this->items_nota	= $jinput->get("items_nota", array(), "array");
+			$this->proveedor 	= $this->getProveedor($this->datos_nota['proveedor']);
 		}
 		if ($layout=="notas_depto"){
 			$this->notas_depto 	= $jinput->get("notas_depto", array(), "array");
@@ -56,7 +58,12 @@ class NotaViewNota extends JView{
 		if ($layout=="notas_naves")
 			$this->notas_naves = $jinput->get("notas_naves", array(), "array");
         parent::display($tpl);
-    }
+	}
+	
+	function getProveedor($proveedor){
+		$p = explode('_', $proveedor);
+		return $p[0];
+	}
 	
 	function setMenu(){
 		$user = JFactory::getUser();

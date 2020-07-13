@@ -34,9 +34,20 @@ $(document).ready(function() {
     });
 
     $("#parametro").keyup(function(e){
-        if (e.keyCode==13){
+        if (e.keyCode==13 && $("#parametro").val()!=""){
             buscar_notas_propias();
         }
+    });
+    $("#proveedor").keyup(function(e){
+        if (e.keyCode==13 && $("#proveedor").val()!=""){
+            buscar_notas_propias();
+        }
+    });
+    $("#proveedor").focus(function(){
+        $("#parametro").val("");
+    });
+    $("#parametro").focus(function(){
+        $("#proveedor").val("");
     });
     
     $("#desde").click(function(){
@@ -67,6 +78,7 @@ $(document).ready(function() {
     $("#cantidad1").focus(function(){
         $("#lista_proveedores").fadeOut();
     });
+    
 });
 
 function anterior_previo(direccion){
@@ -729,11 +741,13 @@ function escoger_proveedor(razon_social, rut="", giro="", ind=0){
 
 function buscar_notas_propias(){
     var parametro = $.trim($("#parametro").val());
-    if (parametro!=''){
+    var proveedor = $.trim($("#proveedor").val());
+    $("#lista").html("<div class='loader'></div>");
+    if (parametro!='' || proveedor!=''){
         $.ajax({
-            url: 'index.php?option=com_nota&task=carga.notas_rango&format=raw',
+            url: 'index.php?option=com_nota&task=carga.buscar_notas&format=raw',
             type: 'post',
-            data: {parametro: parametro},
+            data: {parametro: parametro, proveedor: proveedor},
             success: function(data){
                 $("#lista").hide();
                 $("#lista_propias").html(data);
@@ -760,4 +774,11 @@ function copia_oc(id_remitente, orden_compra, opcion){
             window.open('/portal/media/notas_pedido/Orden_compra.pdf');
         }
     });
+}
+
+function limpiar_busqueda(){
+    $("#pagina").val(2);
+    $("#parametro").val('');
+    $("#proveedor").val('');
+    anterior_previo(2);
 }
