@@ -301,6 +301,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$html = $this->orden_html($datos_nota, $items, $opcion, $datos_oc, $proveedor, $rut_proveedor, $giro_proveedor);
 		$pdf = new JDocumentpdf();
 		$pdf->guardar_oc($url, $html);
+
 		// envío de correo con adjunto
 		$this->enviarOrdenCorreo($id_remitente, JPATH_SITE.'/media/notas_pedido/Orden_compra.pdf');
 	}
@@ -583,7 +584,9 @@ class NotaControllerAdquisiciones extends JControllerForm
 		return $style;
 	}
 
-	private function enviarOrdenCorreo($id_remitente, $adjunto) {
+	private function enviarOrdenCorreo($id_remitente, $adjunto="") {
+		$model = $this->getModel('nota');
+		$detalle_nota = $model->getDetalle_nota($id_remitente);
 		$subject = '[TABSA] Orden de compra';
 		$body = '<link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">';
 		$body .= "
@@ -602,8 +605,11 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$body .= "<p>Se adjunta la copia de orden de compra generada a partir de la nota 
 					de pedido nº ".$id_remitente."</p>";
 		$body .= "</div>";
+		if (NotaHelper::isTestSite())
+			NotaHelper::mailAdjunto($subject, $body, 'jmarinan@tabsa.cl', $adjunto);
+		else
+			NotaHelper::mail("[TABSA] Orden de compra", $body, $detalle_nota['email']);
 		
-		NotaHelper::mailAdjunto($subject, $body, 'jmarinan@tabsa.cl', $adjunto);
 	}
 /* ===================================================== */
 /* ======================= EMAILS ====================== */
