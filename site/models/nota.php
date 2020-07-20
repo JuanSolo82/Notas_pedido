@@ -75,7 +75,7 @@ class NotaModelNota extends JModelItem{
 		if ($user->authorise('core.admin', 'com_nota')){
 			if ($user->authorise('empleado.depto', 'com_nota'))
 				$valores = "1,0,0,0,0";
-			elseif ($user->authorise('jefe.depto', 'com_nota'))
+			if ($user->authorise('jefe.depto', 'com_nota'))
 				$valores = "1,1,1,0,0";
 		}
 		else{
@@ -764,6 +764,13 @@ class NotaModelNota extends JModelItem{
 	function cambiar_destino($id_remitente, $id_adepto){
 		$db = JFactory::getDbo();
 		$query = "update nota_remitente set id_adepto=".$id_adepto." where id=".$id_remitente;
+		$db->setQuery($query);
+		$db->query();
+		return $query;
+	}
+	function setProveedorNota($id_remitente,$proveedor){
+		$db = JFactory::getDbo();
+		$query = "update nota_remitente set proveedor=".$proveedor." where id=".$id_remitente;
 		$db->setQuery($query);
 		$db->query();
 		return $query;

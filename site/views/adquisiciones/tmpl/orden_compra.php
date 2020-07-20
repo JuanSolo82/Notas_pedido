@@ -38,7 +38,6 @@ foreach ($opciones as $opcion){ ?>
 
 <?php
 $proveedor = explode('_',$this->datos_nota['proveedor']);
-if (NotaHelper::isTestSite()){
 ?>
 <div style="border: 1px solid grey; height: auto; width: 400px; margin-bottom: 20px; padding: 10px;">
 	<div style="float: left; width: 25%;"><b>Proveedor</b></div>
@@ -49,7 +48,6 @@ if (NotaHelper::isTestSite()){
 	<div style="float: left; width: 25%;"><b style="width: 25%;">Giro</b></div>
 	<input type="text" size="30" id="giro_proveedor<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? ucwords(strtolower($this->proveedor['giro'])) : "" ?>">
 </div>
-<?php } ?>
 <div style="width: 80%; float: left;">
 	<table class='tabla_listado' style="width: 97%;">
 		<tr>

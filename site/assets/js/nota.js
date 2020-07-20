@@ -631,11 +631,17 @@ function aprobar_naves(id_remitente, items){
         }
     });
 
+    var proveedor_escogido  = $("#proveedor_escogido").length ? $("#proveedor_escogido").val() : '';
+    var rut_proveedor       = $("#rut_proveedor").length ? $("#rut_proveedor").val() : '';
+    var giro_proveedor      = $("#giro_proveedor").length ? $("#giro_proveedor").val() : '';
     $.ajax({
         url: 'index.php?option=com_nota&task=nota_tramitada',
         timeout: 2000,
         method: 'post',
-        data: {id_remitente: id_remitente}
+        data: {id_remitente: id_remitente, proveedor_escogido: proveedor_escogido, rut_proveedor: rut_proveedor, giro_proveedor: giro_proveedor},
+        success: function(data){
+            console.log(data);
+        }
     });
 }
 

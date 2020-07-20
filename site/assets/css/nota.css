@@ -304,6 +304,7 @@ a {
 	position: absolute;
 	list-style-type: '';
 	background: #AED6F1;
+	z-index: 5;
 }
 .lista_proveedores li{
 	margin: 10px;

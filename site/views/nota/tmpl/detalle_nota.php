@@ -72,14 +72,22 @@ $f = explode('-', $this->detalle_nota['fecha']);
 		<div class="col-7"><?php echo $this->detalle_nota['depto_compra']; ?></div>
 	</div>
 </div>
-<?php if ($this->proveedor){ ?>
+
+<?php if (NotaHelper::isTestSite()){ print_r($this->detalle_nota['proveedor']); ?>
 	<div class='centrar'>
-		<div class='fila_completa bordear centrar' style='width: 90%;'>
-			<div class="col-3 titulo_item">Proveedor</div>
-			<div class="col-7"><?php echo $this->proveedor; ?></div>
+		<div class='fila_completa bordear' style='width: 90%;'>
+			<div class="col-3 titulo_item">Proveedor (opcional)</div>
+			<div class="col-4">
+				<input type='text' id='proveedor_escogido' name='proveedor_escogido' autocomplete="off" size='40' onkeypress="cargar_proveedor(this.value)" placeholder="Nombre proveedor">
+				<div id='proveedor'></div>
+				<input type="text" name="rut_proveedor" id="rut_proveedor" placeholder="Rut">
+				<input type="text" name="giro_proveedor" id="giro_proveedor" placeholder="Giro">
+			</div>
+			<div class="col-3" id='rut_texto'></div>
+			
 		</div>
 	</div>
-<?php } ?>
+	<?php } ?>
 
 <div class='fila_vacia'></div>
 <div class='centrar'>
@@ -235,7 +243,7 @@ if ($this->id_user==$this->detalle_nota['id_user'] && $this->datos_nota['aprobad
 <?php if (($user->authorise('jefe.delgada','com_nota') || $user->authorise('jefe.natales', 'com_nota')) && !$user->authorise('core.admin', 'com_nota') && $this->detalle_nota['autorizado_jefe']==0){ ?>
 <div id='boton_guardar'>
 	<a onclick="aprobar_naves(<?php echo $this->id_remitente ?>, <?php echo $j ?>)">
-		<div class='boton' style="height: auto;"><img src='/portal/administrator/templates/hathor/images/header/icon-48-save.png' /><br>Guardar y enviar</div>
+		<div class='boton' style="height: auto;"><img src='/portal/administrator/templates/hathor/images/header/icon-48-save.png' /><br>Autorizar nota</div>
 	</a>
 </div>
 <?php } ?>

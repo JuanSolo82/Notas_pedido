@@ -123,7 +123,7 @@ $user = JFactory::getUser();
 <div class='fila_vacia'></div>
 <div class='centrar' id='botones'>
 <?php if ($this->datos_user['id']==$this->detalle_nota['id_user'] && $this->detalle_nota['aprobado_adquisiciones']==0){ ?>
-	<div onclick="guardar_cambios_items(<?php echo $j ?>, <?php echo ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota')) ? 1 : 0 ?>, <?php echo ($user->authorise('jefe.depto', 'com_nota')) ? 1 : 0 ?>)" class='boton'><img src='/portal/administrator/templates/hathor/images/header/icon-48-save.png' /><br>Guardar cambios</div>
+	<div onclick="guardar_cambios_items(<?php echo $j ?>, <?php echo ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota')) ? 1 : 0 ?>, <?php echo ($user->authorise('jefe.depto', 'com_nota')) ? 1 : 0 ?>)" class='boton'><img src='/portal/administrator/templates/hathor/images/header/icon-48-save.png' /><br>Autorizar nota</div>
 	<!--<div onclick="anular_nota(<?php echo $this->id_remitente ?>, <?php echo $this->detalle_nota['id_user'] ?>)" class='boton'>
 		<img src='/portal/administrator/templates/hathor/images/header/icon-48-deny.png' /><br>
 		Anular
