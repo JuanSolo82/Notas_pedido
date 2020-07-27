@@ -66,6 +66,23 @@ $user = JFactory::getUser();
 		<div class="col-7"><?php echo $this->detalle_nota['prioridad']; ?></div>
 	</div>
 </div>
+<?php if (NotaHelper::isTestSite()){ 
+	$p = explode('_', $this->detalle_nota['proveedor']);
+	?>
+	<div class='centrar'>
+		<div class='fila_completa bordear' style='width: 90%;'>
+			<div class="col-3 titulo_item">Proveedor (opcional)</div>
+			<div class="col-4">
+				<input value="<?php echo $p[0] ?>" type='text' id='proveedor_escogido' name='proveedor_escogido' autocomplete="off" size='40' onkeypress="cargar_proveedor(this.value)" placeholder="Nombre proveedor">
+				<div id='proveedor'></div>
+				<input value="<?php echo $p[1] ?>" type="text" name="rut_proveedor" id="rut_proveedor" placeholder="Rut">
+				<input value="<?php echo $p[2] ?>" type="text" name="giro_proveedor" id="giro_proveedor" placeholder="Giro">
+			</div>
+			<div class="col-3" id='rut_texto'></div>
+			
+		</div>
+	</div>
+<?php } ?>
 <div class='fila_vacia'></div>
 <form id='formItems' name="formItems" action="<?php echo JRoute::_('index.php?option=com_nota&view=com_nota&task=editar_nota'); ?>" method='post' autocomplete='off'>
 <input type="hidden" value="<?php echo $this->datos_user['generico']; ?>" id="generico" name="generico">

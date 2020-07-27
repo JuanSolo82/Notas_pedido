@@ -399,14 +399,24 @@ function guardar_cambios_items(num_items, capitan, jefe, autorizado_depto=0) {
             }
         });
         // tabla nota_tramitada
+        var proveedor = $("#proveedor_escogido").val();
+        var rut_proveedor = $("#rut_proveedor").val();
+        var giro_proveedor = $("#giro_proveedor").val();
         $.ajax({
             url: 'index.php?option=com_nota&task=nota_tramitada',
             type: 'post',
-            data: {id_remitente: id_remitente, generico: generico, nombre_remitente: nombre_remitente},
+            data: {id_remitente: id_remitente, 
+                    generico: generico, 
+                    nombre_remitente: nombre_remitente, 
+                    proveedor_escogido: proveedor,
+                    rut_proveedor: rut_proveedor,
+                    giro_proveedor: giro_proveedor
+            },
             success: function(data){
-                //console.log(data);
+                console.log(data);
             }
         });
+        
         if ($("#nombre_tripulante").length){
             $("#nombre_tripulante").hide();
             $("#campo_nombre").text(nombre_remitente);

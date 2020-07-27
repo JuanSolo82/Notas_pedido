@@ -773,7 +773,6 @@ class NotaModelNota extends JModelItem{
 		$query = "update nota_remitente set proveedor=".$proveedor." where id=".$id_remitente;
 		$db->setQuery($query);
 		$db->query();
-		return $query;
 	}
 	function pendientes_revision(){
 		$db = JFactory::getDbo();

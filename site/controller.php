@@ -377,6 +377,7 @@ class NotaController extends JController{
 		$proveedor		= $jinput->get("proveedor_escogido", "", "string");
 		$rut_proveedor	= $jinput->get("rut_proveedor", "", "string");
 		$giro_proveedor	= $jinput->get("giro_proveedor", "", "string");
+		print_r("((((((((("+$proveedor);
 		if (strlen($proveedor)){
 			$this->setProveedor($id_remitente, $proveedor, $rut_proveedor, $giro_proveedor);
 		}
@@ -386,8 +387,7 @@ class NotaController extends JController{
 	function setProveedor($id_remitente, $proveedor, $rut_proveedor, $giro_proveedor){
 		$model 		= $this->getModel("nota");
 		$proveedor 	= NotaHelper::msquote($proveedor."_".$rut_proveedor."_".$giro_proveedor);
-		$query = "[[[[[".$model->setProveedorNota($id_remitente,$proveedor)."]]]]";
-		print_r($query);
+		$model->setProveedorNota($id_remitente,$proveedor);
 	}
 	function nota_anotacion(){
 		$jinput = JFactory::getApplication()->input;
