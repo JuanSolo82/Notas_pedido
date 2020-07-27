@@ -151,6 +151,9 @@ a {
 	width: 100%;
 	font-size: 10px;
 }
+.tabla_listado, input, select {
+	font-size: 10px;
+}
 
 .tabla_listado td, .tabla_listado th {
     padding: 8px;

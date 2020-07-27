@@ -65,7 +65,7 @@ class NotaModelNota extends JModelItem{
 	public function insertar_nota($id_adepto, $id_user, $fecha, $hora, $id_prioridad, $id_depto_compra, $id_depto_costo, $proveedor, $ley_navarino, $id_tipo_pedido){
 		$db = JFactory::getDbo();
 		$query = "insert into nota_remitente(id_adepto, id_user, fecha, hora, id_prioridad, id_depto_compra, borrador, id_depto_costo, proveedor, ley_navarino, id_tipo_pedido) 
-			values(".$id_adepto.",".$id_user.", ".$fecha.", ".$hora.", ".$id_prioridad.",".$id_depto_compra.", 0, ".$id_depto_costo.", ".$proveedor.",".$ley_navarino.", ".$id_tipo_pedido.")";
+			values(".$id_adepto.",".$id_user.", ".$fecha.", ".$hora.", ".$id_prioridad.",".$id_depto_compra.", 0, ".$id_depto_costo.", ".(strlen($proveedor) ? $proveedor : '""').",".$ley_navarino.", ".$id_tipo_pedido.")";
 		$db->setQuery($query);
 		$db->query();
 		$id_remitente = $db->insertid();
@@ -773,7 +773,6 @@ class NotaModelNota extends JModelItem{
 		$query = "update nota_remitente set proveedor=".$proveedor." where id=".$id_remitente;
 		$db->setQuery($query);
 		$db->query();
-		return $query;
 	}
 	function pendientes_revision(){
 		$db = JFactory::getDbo();

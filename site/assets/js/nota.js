@@ -399,14 +399,24 @@ function guardar_cambios_items(num_items, capitan, jefe, autorizado_depto=0) {
             }
         });
         // tabla nota_tramitada
+        var proveedor = $("#proveedor_escogido").val();
+        var rut_proveedor = $("#rut_proveedor").val();
+        var giro_proveedor = $("#giro_proveedor").val();
         $.ajax({
             url: 'index.php?option=com_nota&task=nota_tramitada',
             type: 'post',
-            data: {id_remitente: id_remitente, generico: generico, nombre_remitente: nombre_remitente},
+            data: {id_remitente: id_remitente, 
+                    generico: generico, 
+                    nombre_remitente: nombre_remitente, 
+                    proveedor_escogido: proveedor,
+                    rut_proveedor: rut_proveedor,
+                    giro_proveedor: giro_proveedor
+            },
             success: function(data){
-                //console.log(data);
+                console.log(data);
             }
         });
+        
         if ($("#nombre_tripulante").length){
             $("#nombre_tripulante").hide();
             $("#campo_nombre").text(nombre_remitente);
@@ -787,4 +797,14 @@ function limpiar_busqueda(){
     $("#parametro").val('');
     $("#proveedor").val('');
     anterior_previo(2);
+}
+
+function actualiza_parcial(id_item){
+    var valor_unitario = parseInt($("#valor_unitario"+id_item).val());
+    var cantidad = parseInt($("#cantidad"+id_item).val());
+    $("#parcial_texto"+id_item).html((valor_unitario*cantidad).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.'));
+    $("#valor"+id_item).val((valor_unitario).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.'));
+    $("#subtotal"+id_item).val((valor_unitario*cantidad).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.'));
+    $("#valor_numerico"+id_item).html(valor_unitario);
+    $("#subtotal_numerico"+id_item).html(valor_unitario*cantidad);
 }

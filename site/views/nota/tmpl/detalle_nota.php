@@ -2,7 +2,7 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 JHTML::stylesheet('nota.css', 'components/com_nota/assets/css/');
-JHTML::script('jquery.min.js', 'components/com_nota/assets/js/');
+JHTML::script('jquery.min.js', 'compon<zents/com_nota/assets/js/');
 JHTML::script('jquery-ui.min.js', 'components/com_nota/assets/js/');
 JHTML::script('nota.js', 'components/com_nota/assets/js/');
 JHtml::_('behavior.modal');
@@ -73,21 +73,33 @@ $f = explode('-', $this->detalle_nota['fecha']);
 	</div>
 </div>
 
-<?php if (NotaHelper::isTestSite()){ print_r($this->detalle_nota['proveedor']); ?>
+<?php if (NotaHelper::isTestSite()){ 
+	$p = explode('_', $this->detalle_nota['proveedor']);
+	?>
 	<div class='centrar'>
 		<div class='fila_completa bordear' style='width: 90%;'>
 			<div class="col-3 titulo_item">Proveedor (opcional)</div>
 			<div class="col-4">
-				<input type='text' id='proveedor_escogido' name='proveedor_escogido' autocomplete="off" size='40' onkeypress="cargar_proveedor(this.value)" placeholder="Nombre proveedor">
-				<div id='proveedor'></div>
-				<input type="text" name="rut_proveedor" id="rut_proveedor" placeholder="Rut">
-				<input type="text" name="giro_proveedor" id="giro_proveedor" placeholder="Giro">
+			<?php 
+			if (strlen($this->detalle_nota['proveedor'])){
+				if ($this->detalle_nota['id_adepto']==$this->datos_jefe['id_depto'] && !$this->detalle_nota['autorizado_depto']){ ?>
+					<input value="<?php echo $p[0] ?>" type='text' id='proveedor_escogido' name='proveedor_escogido' autocomplete="off" size='40' onkeypress="cargar_proveedor(this.value)" placeholder="Nombre proveedor">
+					<div id='proveedor'></div>
+					<input value="<?php echo $p[1] ?>" type="text" name="rut_proveedor" id="rut_proveedor" placeholder="Rut">
+					<input value="<?php echo $p[2] ?>" type="text" name="giro_proveedor" id="giro_proveedor" placeholder="Giro">
+				<?php }else{ ?>
+					<p><?php echo $p[0] ?></p>
+					<p><?php echo $p[1] ?></p>
+					<p><?php echo $p[2] ?></p>
+				<?php } 
+			}else echo "<i>No ingresado</i>" ?>
+				
 			</div>
 			<div class="col-3" id='rut_texto'></div>
 			
 		</div>
 	</div>
-	<?php } ?>
+<?php } ?>
 
 <div class='fila_vacia'></div>
 <div class='centrar'>
