@@ -15,7 +15,6 @@ $user = JFactory::getUser();
 <div class='fila_completa centrar' style='margin-bottom: 20px;'>
 	<div class='barra_nombre' style='width: 90%;'>Notas naves</div>
 </div>
-
 <div class="fila_vacia"></div>
 <table>
 	<tr style="border:hidden;">
