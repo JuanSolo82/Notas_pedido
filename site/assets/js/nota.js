@@ -805,6 +805,6 @@ function actualiza_parcial(id_item){
     $("#parcial_texto"+id_item).html((valor_unitario*cantidad).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.'));
     $("#valor"+id_item).val((valor_unitario).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.'));
     $("#subtotal"+id_item).val((valor_unitario*cantidad).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.'));
-    $("#valor_numerico"+id_item).html(valor_unitario);
+    $("#valor_numerico"+id_item).val(valor_unitario);
     $("#subtotal_numerico"+id_item).html(valor_unitario*cantidad);
 }
