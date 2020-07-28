@@ -8,12 +8,11 @@ JHTML::script('jquery-ui.min.js', 'components/com_nota/assets/js/');
 JHTML::script('nota.js', 'components/com_nota/assets/js/');
 JHtml::_('behavior.modal'); 
 require_once(JPATH_COMPONENT_SITE.'/assets/helper.php');
-$f = explode('-', $this->detalle_nota['fecha']);
 $j=1;
 $user = JFactory::getUser();
+$f = explode('-', $this->detalle_nota['fecha']);
 ?>
 <br>
-
 <input type="hidden" value="<?php echo $this->detalle_nota['id_user'] ?>" size="2" id="id_user", name="id_user">
 <input type="hidden" value="<?php echo $this->id_remitente ?>" id="id_remitente" name="id_remitente">
 <input type="hidden" value="<?php echo $user->authorise('tripulante', 'com_nota') ?>" id="tripulante">
@@ -111,7 +110,7 @@ $user = JFactory::getUser();
 		<input type="hidden" id="descripcion_oculto<?php echo $j ?>" value="<?php echo $i['item'] ?>">
 		<input type="hidden" id="motivo_oculto<?php echo $j ?>" value="<?php echo $i['motivo'] ?>">
 		<input type="hidden" id="valor_numerico<?php echo $i['id'] ?>" value="<?php echo $i['valor'] ?>">
-		<input type="hidden" id="subtotal_numerico<?php echo $i['id'] ?>" value="<?php echo $i['valor']*$i['cantidad'] ?>">
+		<input type="hidden" size='3' id="subtotal_numerico<?php echo $i['id'] ?>" value="<?php echo $i['valor']*$i['cantidad'] ?>">
 		<tr>
 			<td align='center'>
 				<input id='cantidad<?php echo $i['id'] ?>' onchange="actualiza_parcial(<?php echo $i['id'] ?>)" value="<?php echo $i['cantidad'] ?>" type='number' required type="number" min="0" step=".1" style='width: 70px;'>
@@ -123,7 +122,7 @@ $user = JFactory::getUser();
 			<?php }else{ ?>
 				<input type="text" id="nuevo_motivo<?php echo $j ?>" value="<?php echo $i['motivo'] ?>" style="width: 80%;">
 			<?php } ?>
-			</td>
+			</td> 
 		<?php if (NotaHelper::isTestSite()){ ?>
 			<td id="parcial_texto<?php echo $i['id'] ?>"><?php echo $i['valor'] ? number_format($i['cantidad']*$i['valor'],0,'','.') : '' ?></td>
 		<?php } ?>
@@ -140,11 +139,11 @@ $user = JFactory::getUser();
 					<img src='/portal/administrator/templates/hathor/images/menu/icon-16-archive.png' />
 				</a>
 			<?php } ?>
-			</td>
+				</td>
 		</tr>
 	<?php $j++; 
 		} ?>
-	
+
 	</table>
 	<table class='tabla_listado' id="contenido_editado" style="display: none;">
 		<tr>
@@ -164,8 +163,34 @@ $user = JFactory::getUser();
 </form>
 <div class='fila_vacia'></div>
 <div class='centrar' id='botones'>
-<?php if ($this->datos_user['id']==$this->detalle_nota['id_user'] && $this->detalle_nota['aprobado_adquisiciones']==0){ ?>
-	<div onclick="guardar_cambios_items(<?php echo $j ?>, <?php echo ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota')) ? 1 : 0 ?>, <?php echo ($user->authorise('jefe.depto', 'com_nota')) ? 1 : 0 ?>)" class='boton'><img src='/portal/administrator/templates/hathor/images/header/icon-48-save.png' /><br>Autorizar nota</div>
+<?php 
+	if ($this->detalle_nota['id_adepto']==$this->datos_propios['id_depto']){
+		if ($this->detalle_nota['autorizado_depto']==0){ ?>
+			<div onclick="guardar_cambios_items(<?php echo $j ?>, 
+													<?php echo ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota')) ? 1 : 0 ?>, 
+													<?php echo ($user->authorise('jefe.depto', 'com_nota')) ? 1 : 0 ?>, 
+													<?php echo $this->detalle_nota['id_adepto']==$this->datos_propios['id_depto'] ? 1 : 0 ?>)" 
+					class='boton'>
+						<img src='/portal/administrator/templates/hathor/images/header/icon-48-save.png' />
+						<br>Autorizar nota
+			</div>
+			<div id="boton_anulacion" onclick="dialogo_anulacion()" class='boton'><img src='/portal/administrator/templates/hathor/images/header/icon-48-deny.png' /><br>Anular</div>
+			<div id="dialogo_anulacion" class="barra_nombre" style="display: none;">
+				Comentario <input type="text" id="comentario" autocomplete="off">
+				<a onclick="anular_nota(<?php echo $this->id_remitente ?>)"><img src='/portal/administrator/templates/hathor/images/menu/icon-16-save.png' /></a>
+			</div>
+		<?php }
+	}else
+if (($this->datos_user['id']==$this->detalle_nota['id_user'] && $this->detalle_nota['aprobado_adquisiciones']==0)){ 
+	?>
+	<div onclick="guardar_cambios_items(<?php echo $j ?>, 
+										<?php echo ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota')) ? 1 : 0 ?>, 
+										<?php echo ($user->authorise('jefe.depto', 'com_nota')) ? 1 : 0 ?>, 
+										<?php echo $this->detalle_nota['id_adepto']==$this->datos_propios['id_depto'] ? 1 : 0 ?>)" 
+		class='boton'>
+			<img src='/portal/administrator/templates/hathor/images/header/icon-48-save.png' />
+			<br>Autorizar nota
+	</div>
 
 	<div id="boton_anulacion" onclick="dialogo_anulacion()" class='boton'><img src='/portal/administrator/templates/hathor/images/header/icon-48-deny.png' /><br>Anular</div>
 	<div id="dialogo_anulacion" class="barra_nombre" style="display: none;">

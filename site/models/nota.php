@@ -317,12 +317,10 @@ class NotaModelNota extends JModelItem{
 		$db->query();
 		return $db->loadAssocList();
 	}
-	function editar_item($id_item, $cantidad_original, $nueva_cantidad, $descripcion, $motivo, $id_tipo_modificacion){
+	function editar_item($id_item, $cantidad_original, $nueva_cantidad, $descripcion, $motivo, $id_tipo_modificacion, $valor=0 ){
 		$db = JFactory::getDbo();
 		if ($descripcion!="" || $motivo!=''){
-			$query = "update nota_item set item='".$descripcion."', motivo='".$motivo."', id_tipoModificacion=".$id_tipoModificacion." where id=".$id_item;
-			$db->setQuery($query);
-			$db->query();
+			$query = "update nota_item set item='".$descripcion."', motivo='".$motivo."', valor=".$valor." where id=".$id_item;
 		}
 		if ($cantidad_original!=$nueva_cantidad){
 			$user = JFactory::getUser();
@@ -330,9 +328,9 @@ class NotaModelNota extends JModelItem{
 			$hora = date("H:i");
 			$query = "insert into nota_modificada(id_item, cantidad_original, nueva_cantidad, id_user, motivo, fecha, hora, id_tipoModificacion) 
 						values(".$id_item.", ".$cantidad_original.", ".$nueva_cantidad.", ".$user->id.", '".$motivo."', '".$fecha."', '".$hora."', ".$id_tipo_modificacion.")";
-			$db->setQuery($query);
-			$db->query();
 		}
+		$db->setQuery($query);
+		$db->query();
 	}
 	function actualizar_revision($id_remitente, $enviado_empleado, $autorizado_capitan, $autorizado_jefe, $autorizado_depto, $aprobado_adquisiciones){
 		$db = JFactory::getDbo();

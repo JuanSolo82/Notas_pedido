@@ -73,7 +73,6 @@ $(document).ready(function() {
     });
     $("#proveedor_escogido").blur(function(){
         $("#lista_proveedores").fadeOut();
-        console.log("");
     });
     $("#cantidad1").focus(function(){
         $("#lista_proveedores").fadeOut();
@@ -138,7 +137,6 @@ function previo_depto(direccion){
         pagina++;
     else
         pagina--;
-    console.log(pagina);
     if (!pagina){
         return;
     }
@@ -242,7 +240,6 @@ function anular_nota(id_remitente) {
                 for (var i=1;i<=num_opciones;i++)
                     $("#previa_oc"+i).hide();
             }
-            //console.log(data);
         }
     });
     $.ajax({
@@ -348,7 +345,7 @@ function guardar_cambios_items(num_items, capitan, jefe, autorizado_depto=0) {
     for (var i = 1; i <= num_items; i++) {
         var id_item = $("#id_oculto" + i).val();
         var cantidad_original = $("#cantidad_oculto" + i).val();
-        var nueva_cantidad = parseInt($("#cantidad" + i).val());
+        var nueva_cantidad = parseFloat($("#cantidad" + id_item).val());
         total += nueva_cantidad;
     }
     if ($("#nombre_tripulante").length){
@@ -365,9 +362,10 @@ function guardar_cambios_items(num_items, capitan, jefe, autorizado_depto=0) {
             var id_item = $("#id_oculto" + i).val();
             var cantidad_original = $("#cantidad_oculto" + i).val();
             var id_tipo_modificacion = $("#tipo_modificacion" + i).val();
-            var nueva_cantidad = parseFloat($("#cantidad" + i).val());
+            var nueva_cantidad = parseFloat($("#cantidad" + id_item).val());
             var descripcion = $.trim($("#nueva_descripcion" + i).val());
             var motivo = $.trim($("#nuevo_motivo" + i).val());
+            var valor_unitario = parseInt($("#valor_unitario"+id_item).val());
             $.ajax({
                 url: 'index.php?option=com_nota&task=editar_item',
                 type: 'post',
@@ -377,7 +375,11 @@ function guardar_cambios_items(num_items, capitan, jefe, autorizado_depto=0) {
                     nueva_cantidad: nueva_cantidad,
                     id_tipo_modificacion: id_tipo_modificacion,
                     descripcion: descripcion,
-                    motivo: motivo
+                    motivo: motivo,
+                    valor_unitario: valor_unitario
+                },
+                success: function(query){
+                    console.log(query);
                 }
             });
             $("#cantidad_editado" + i).text(nueva_cantidad);
@@ -650,7 +652,7 @@ function aprobar_naves(id_remitente, items){
         method: 'post',
         data: {id_remitente: id_remitente, proveedor_escogido: proveedor_escogido, rut_proveedor: rut_proveedor, giro_proveedor: giro_proveedor},
         success: function(data){
-            console.log(data);
+            //console.log(data);
         }
     });
 }
@@ -671,7 +673,6 @@ function cambiar_destino(id_remitente, nombre_remitente){
         type: 'post',
         data: {id_remitente: id_remitente, id_adepto: id_adepto},
         success: function(data){
-            console.log(data);
             $("#destino_actual").text(texto_depto);
         }
     });
@@ -740,7 +741,6 @@ function escoger_proveedor(razon_social, rut="", giro="", ind=0){
             data: { razon_social: razon_social, rut: rut },
             success: function(data){
                 data = JSON.parse(data);
-                console.log(data['giro']);
                 $("#proveedor_escogido"+ind).val(data['RazonSocial']);
                 $("#rut_proveedor"+ind).val(data['rut']);
                 $("#giro_proveedor"+ind).val(data['giro']);
@@ -806,5 +806,5 @@ function actualiza_parcial(id_item){
     $("#valor"+id_item).val((valor_unitario).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.'));
     $("#subtotal"+id_item).val((valor_unitario*cantidad).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.'));
     $("#valor_numerico"+id_item).val(valor_unitario);
-    $("#subtotal_numerico"+id_item).html(valor_unitario*cantidad);
+    $("#subtotal_numerico"+id_item).val(valor_unitario*cantidad);
 }

@@ -69,7 +69,7 @@ $user = JFactory::getUser();
 					<div class='barra_avance <?php echo ($j['adquisiciones']==1 ? "paso_aprobado" : "").($j['adquisiciones']==2 ? "paso_rechazado" : "") ?>'>OC generada</div>
 				</div>
 			</td>
-			<td align="center"> 
+			<td align="center">
 			<?php 
 			$url = "";
 			if (($user->authorise('jefe.delgada', 'com_nota') && $j['jefe']!=0) || 

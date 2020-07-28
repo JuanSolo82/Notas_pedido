@@ -102,6 +102,7 @@ class NotaController extends JController{
 	}
 	function detalle_notajefe(){
 		$jinput = JFactory::getApplication()->input;
+		$user = JFactory::getUser();
 		$jinput->set('view', 'nota');
 		$jinput->set( 'layout', 'detalle_notajefe' );
 		$id_remitente 	= $jinput->get("id_nota", 0, 'int');
@@ -109,11 +110,13 @@ class NotaController extends JController{
 		
 		$detalle_nota 	= $model->getDetalle_nota($id_remitente);
 		$datos_user 	= $model->getDatos_user($detalle_nota['id_user']);
+		$datos_propios	= $model->getDatos_user($user->id);
 		$items			= $model->getItems($id_remitente);
 		$jinput->set('id_remitente', $id_remitente);
 		$jinput->set('detalle_nota', $detalle_nota);
 		$jinput->set('items', $items);
 		$jinput->set("datos_user", $datos_user);
+		$jinput->set("datos_propios", $datos_propios);
 		parent::display();
 	}
 	function nota_guardada(){
@@ -286,7 +289,8 @@ class NotaController extends JController{
 		$descripcion			= $jinput->get("descripcion", "", "string");
 		$motivo					= $jinput->get("motivo", "", "string");
 		$id_tipo_modificacion 	= $jinput->get("id_tipo_modificacion", 0, "int");
-		$model->editar_item($id_item, $cantidad_original, $nueva_cantidad, $descripcion, $motivo, $id_tipo_modificacion);
+		$valor_unitario			= $jinput->get("valor_unitario", 0, "int");
+		$model->editar_item($id_item, $cantidad_original, $nueva_cantidad, $descripcion, $motivo, $id_tipo_modificacion, $valor_unitario);
 	}
 	function nota_revision(){
 		$jinput = JFactory::getApplication()->input;

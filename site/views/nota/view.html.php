@@ -46,6 +46,7 @@ class NotaViewNota extends JView{
 			$this->detalle_nota = $jinput->get("detalle_nota", array(), "array");
 			$this->items		= $jinput->get("items", array(), "array");
 			$this->datos_user	= $jinput->get("datos_user", array(), "array");
+			$this->datos_propios= $jinput->get("datos_propios", array(), "array");
 		}
 		if ($layout=="nota_guardada"){
 			$this->datos_nota	= $jinput->get("datos_nota", array(), "array");

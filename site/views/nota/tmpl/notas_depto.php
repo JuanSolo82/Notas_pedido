@@ -62,7 +62,7 @@ foreach ($this->notas_depto as $nd){ ?>
 					<div class='barra_avance <?php echo ($nd['capitan']==1 ? "paso_aprobado" : "").($nd['capitan']==2 ? "paso_rechazado" : "") ?>'>Autorizado capitán</div>
 				<?php } ?>
 				<div class='barra_avance <?php echo ($nd['jefe']==1 ? "paso_aprobado" : "").($nd['jefe']==2 ? "paso_rechazado" : "") ?>'>Autorizado jefe</div>
-				<div class='barra_avance <?php echo ($nd['depto']==1 ? "paso_aprobado" : "").($nd['depto']==2 ? "paso_rechazado" : "") ?>'>Autorizado depto.</div>
+				<div class='barra_avance <?php echo ($nd['depto']==1 ? "paso_aprobado" : "").($nd['depto']==2 ? "paso_rechazado" : "") ?>'>Autorizado depto</div>
 				<div class='barra_avance <?php echo ($nd['adquisiciones']==1 ? "paso_aprobado" : "").($nd['adquisiciones']==2 ? "paso_rechazado" : "") ?>'>OC generada</div>
 				<div class='barra_avance <?php echo ($nd['aprobado']==1 ? "paso_aprobado" : "").($nd['adquisiciones']==2 ? "paso_rechazado" : "") ?>'>Calificación</div>
 			</div>
@@ -73,7 +73,7 @@ foreach ($this->notas_depto as $nd){ ?>
 					<a onclick="SqueezeBox.fromElement(this, 
 								{handler:'iframe', 
 								size: {x: 900, y: 550}, 
-								url:'<?php echo JRoute::_('index.php?option=com_nota&view=com_nota&task=detalle_nota&id_nota='.$nd['id'].'&tmpl=component'); ?>',
+								url:'<?php echo JRoute::_('index.php?option=com_nota&view=com_nota&task=detalle_notajefe&id_nota='.$nd['id'].'&tmpl=component');//JRoute::_('index.php?option=com_nota&view=com_nota&task=detalle_nota&id_nota='.$nd['id'].'&tmpl=component'); ?>',
 								onClose:function(){window.location.reload();} })">
 					<img src='/portal/administrator/templates/hathor/images/menu/icon-16-edit.png' /></a>
 				<?php }else{ ?>
