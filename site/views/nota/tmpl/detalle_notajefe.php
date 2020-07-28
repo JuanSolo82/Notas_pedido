@@ -7,6 +7,7 @@ JHTML::script('jquery.min.js', 'components/com_nota/assets/js/');
 JHTML::script('jquery-ui.min.js', 'components/com_nota/assets/js/');
 JHTML::script('nota.js', 'components/com_nota/assets/js/');
 JHtml::_('behavior.modal'); 
+require_once(JPATH_COMPONENT_SITE.'/assets/helper.php');
 $f = explode('-', $this->detalle_nota['fecha']);
 $j=1;
 $user = JFactory::getUser();
@@ -89,38 +90,62 @@ $user = JFactory::getUser();
 <div class='centrar'>
 	<table class='tabla_listado' id='contenido_editable'>
 		<tr>
-			<th width='10%'>Cantidad</th>
-			<th width='40%'>Item</th>
-			<th width='30%'>Motivo</th>
+			<th width='8%'>Cantidad</th>
+			<th width='30%'>Item</th>
+			<th width='<?php echo NotaHelper::isTestSite() ? 10 : 30 ?>%'>
+				<?php echo NotaHelper::isTestSite() ? 'Valor unitario' : 'Motivo' ?>
+			</th>
+		<?php if (NotaHelper::isTestSite()){ ?>
+			<th>Subtotal</th>
+		<?php } ?>
 			<th width='10%'>Tipo de modificación</th>
 			<th width='10%'>Adjunto</th>
 		</tr>
-	<?php foreach ($this->items as $i){ ?>
+	<?php 
+	$total = 0;
+	foreach ($this->items as $i){ 
+		$total += $i['cantidad']*$i['valor'];
+		?>
 		<input type="hidden" id="id_oculto<?php echo $j ?>" value="<?php echo $i['id'] ?>">
 		<input type="hidden" id="cantidad_oculto<?php echo $j ?>" value="<?php echo $i['cantidad'] ?>">
 		<input type="hidden" id="descripcion_oculto<?php echo $j ?>" value="<?php echo $i['item'] ?>">
 		<input type="hidden" id="motivo_oculto<?php echo $j ?>" value="<?php echo $i['motivo'] ?>">
+		<input type="hidden" id="valor_numerico<?php echo $i['id'] ?>" value="<?php echo $i['valor'] ?>">
+		<input type="hidden" id="subtotal_numerico<?php echo $i['id'] ?>" value="<?php echo $i['valor']*$i['cantidad'] ?>">
 		<tr>
-			<td align='center'><input id='cantidad<?php echo $j ?>' value="<?php echo $i['cantidad'] ?>" type='number' size='2' required type="number" min="0" step=".1" style='width: 70px;'></td>
+			<td align='center'>
+				<input id='cantidad<?php echo $i['id'] ?>' onchange="actualiza_parcial(<?php echo $i['id'] ?>)" value="<?php echo $i['cantidad'] ?>" type='number' required type="number" min="0" step=".1" style='width: 70px;'>
+			</td>
 			<td><input type="text" id="nueva_descripcion<?php echo $j ?>" value="<?php echo $i['item'] ?>" style="width: 80%;"></td>
-			<td><input type="text" id="nuevo_motivo<?php echo $j ?>" value="<?php echo $i['motivo'] ?>" style="width: 80%;"></td>
+			<td>
+			<?php if (NotaHelper::isTestSite()){ ?>
+				<input type="number" onchange="actualiza_parcial(<?php echo $i['id'] ?>)" style="width: 90px;" id="valor_unitario<?php echo $i['id'] ?>" value="<?php echo $i['valor'] ? $i['valor'] : '' ?>">
+			<?php }else{ ?>
+				<input type="text" id="nuevo_motivo<?php echo $j ?>" value="<?php echo $i['motivo'] ?>" style="width: 80%;">
+			<?php } ?>
+			</td>
+		<?php if (NotaHelper::isTestSite()){ ?>
+			<td id="parcial_texto<?php echo $i['id'] ?>"><?php echo $i['valor'] ? number_format($i['cantidad']*$i['valor'],0,'','.') : '' ?></td>
+		<?php } ?>
 			<td>
 				<select id='tipo_modificacion<?php echo $j ?>' name='tipo_modificacion<?php echo $j ?>'>
 					<option value='1'>Reducción por existencia</option>
 					<option value='2'>Denegación</option>
 				</select>
 			</td>
-			<td align='center'><?php if ($i['adjunto']){ ?>
-					<a href="/portal/media/notas_pedido/adjuntos/<?php echo $this->id_remitente ?>/<?php echo $i['adjunto'] ?>" 
-						class="modal">
-						<img src='/portal/administrator/templates/hathor/images/menu/icon-16-archive.png' />
-					</a>
-				<?php } ?>
+			<td align='center'>
+			<?php if ($i['adjunto']){ ?>
+				<a href="/portal/media/notas_pedido/adjuntos/<?php echo $this->id_remitente ?>/<?php echo $i['adjunto'] ?>" 
+					class="modal">
+					<img src='/portal/administrator/templates/hathor/images/menu/icon-16-archive.png' />
+				</a>
+			<?php } ?>
 			</td>
 		</tr>
 	<?php $j++; 
 		} ?>
 	
+	</table>
 	<table class='tabla_listado' id="contenido_editado" style="display: none;">
 		<tr>
 			<th width='10%'>Cantidad</th>
@@ -141,10 +166,7 @@ $user = JFactory::getUser();
 <div class='centrar' id='botones'>
 <?php if ($this->datos_user['id']==$this->detalle_nota['id_user'] && $this->detalle_nota['aprobado_adquisiciones']==0){ ?>
 	<div onclick="guardar_cambios_items(<?php echo $j ?>, <?php echo ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota')) ? 1 : 0 ?>, <?php echo ($user->authorise('jefe.depto', 'com_nota')) ? 1 : 0 ?>)" class='boton'><img src='/portal/administrator/templates/hathor/images/header/icon-48-save.png' /><br>Autorizar nota</div>
-	<!--<div onclick="anular_nota(<?php echo $this->id_remitente ?>, <?php echo $this->detalle_nota['id_user'] ?>)" class='boton'>
-		<img src='/portal/administrator/templates/hathor/images/header/icon-48-deny.png' /><br>
-		Anular
-	</div>-->
+
 	<div id="boton_anulacion" onclick="dialogo_anulacion()" class='boton'><img src='/portal/administrator/templates/hathor/images/header/icon-48-deny.png' /><br>Anular</div>
 	<div id="dialogo_anulacion" class="barra_nombre" style="display: none;">
 		Comentario <input type="text" id="comentario" autocomplete="off">

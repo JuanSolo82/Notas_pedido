@@ -62,6 +62,11 @@ $proveedor = explode('_',$this->datos_nota['proveedor']);
 		<?php } ?>
 		</tr>
 	<?php 
+		$items_orden = 0;
+		foreach ($this->items as $i){
+			if (($i['nueva_cantidad']==null || $i['nueva_cantidad']>0) && $i['opcion_oc']==$opcion)
+				$items_orden++;
+		}
 		$j=0;
 		$total = 0;
 		foreach ($this->items as $i){
@@ -94,8 +99,11 @@ $proveedor = explode('_',$this->datos_nota['proveedor']);
 			<?php } ?>
 			</td>
 			<?php if (NotaHelper::isTestSite()){ ?>
-				<td><?php echo $i['valor'] ? number_format($i['valor'],0,'','.') : '' ?></td>
-				<td><?php echo $i['valor'] ? number_format($i['cantidad']*$i['valor'],0,'','.') : '' ?></td>
+				<td>
+					<input type="number" min="0" step="1" id="valor_unitario<?php echo $opcion.'_'.$j ?>" onchange="actualiza_parcial('<?php echo $opcion.'_'.$j ?>')" type="text" style="width: 60px" value="<?php echo $i['valor'] ? $i['valor'] : '' ?>">
+					<div style="display: none;" id="parcial<?php echo $opcion.'_'.$j ?>"><?php echo $i['valor'] ? number_format($i['valor'],0,'','.') : '' ?></div>
+				</td>
+				<td id="parcial_texto<?php echo $opcion.'_'.$j ?>"><?php echo $i['valor'] ? number_format($i['cantidad']*$i['valor'],0,'','.') : '' ?></td>
 				<input type="hidden" id="valor_numerico<?php echo $opcion.'_'.$j ?>" value="<?php echo $i['valor'] ?>">
 				<input type="hidden" id="subtotal_numerico<?php echo $opcion.'_'.$j ?>" value="<?php echo $i['cantidad']*$i['valor'] ?>">
 			<?php } ?>
@@ -106,7 +114,7 @@ $proveedor = explode('_',$this->datos_nota['proveedor']);
 		<?php if ($total){ ?>
 			<tr>
 				<td align='right' colspan='6'><b>Total</b></td>
-				<td><b><?php echo number_format($total,0,'','.') ?></b></td>
+				<td id="total"><b><?php echo number_format($total,0,'','.') ?></b></td>
 			</tr>
 		<?php } ?>
 			<input type="hidden" id="total<?php echo $opcion ?>" value="<?php echo $total ? number_format($total,0,'','.') : '' ?>">

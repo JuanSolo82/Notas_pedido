@@ -151,6 +151,9 @@ a {
 	width: 100%;
 	font-size: 10px;
 }
+.tabla_listado, input, select {
+	font-size: 10px;
+}
 
 .tabla_listado td, .tabla_listado th {
     padding: 8px;
@@ -161,7 +164,7 @@ a {
     background: url(/portal/templates/justbusiness-fjt/images/mainmenu.png) no-repeat;
 	background-size: 100%;
 	padding: 5px;
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: bold;
 	color: white;
 }
