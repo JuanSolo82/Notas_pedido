@@ -4,12 +4,13 @@ defined('_JEXEC') or die('Restricted access');
 JHTML::stylesheet('nota.css', 'components/com_nota/assets/css/');
 JHTML::script('jquery.min.js', 'components/com_nota/assets/js/');
 JHTML::script('jquery-ui.min.js', 'components/com_nota/assets/js/');
-JHTML::script('nota.js', 'components/com_nota/assets/js/');
+//JHTML::script('nota.js', 'components/com_nota/assets/js/');
 JHtml::_('behavior.modal'); 
 //JHTML::script('bootstrap.js', 'components/com_nota/assets/bootstrap/js/');
 $i=1;
 $user = JFactory::getUser();
 ?>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?var=46"></script>
 <input type="hidden" id="vista" value="<?php echo $this->layout; ?>">
 <input type='hidden' size='3' id='pagina' value='1'>
 <div class='fila_completa centrar' style='margin-bottom: 20px;'>
@@ -37,7 +38,20 @@ $user = JFactory::getUser();
 </div>
 </div>
 <input type="hidden" id="pagina" value="1" size='5'>
-
+<input type='hidden' id="naves" value='1'>
+<div class='fila_completa centrar' style='margin-bottom: 20px;'>
+	<div class='barra_nombre' style='width: 50%;'>
+		<h3 class="titulo_item">Búsqueda por ítem</h3>
+		<input type='text' id='parametro' name='parametro' autocomplete="off">
+		<input type='button' class="boton_simple"  onclick="buscar_notas_propias()" value="Buscar">
+		<input style="float: right;" type='button' onclick="limpiar_busqueda()" value="Limpiar" class="boton_simple" >
+	</div>
+	<!--<div class='barra_nombre' style='width: 50%;'>
+		<h3 class="titulo_item">Búsqueda por proveedor</h3>
+		<input type='text' id='proveedor' name='proveedor' autocomplete="off">
+		<input type='button' class="boton_simple" onclick="buscar_notas_propias()" value="Buscar">
+	</div>-->
+</div>
 <div id='lista_propias' style="position: relative; float: left; width: 100%; opacity: 1;"></div>
 <div id='lista'>
 <h3>Página 1</h3>

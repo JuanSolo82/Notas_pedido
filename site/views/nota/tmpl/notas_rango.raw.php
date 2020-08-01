@@ -8,7 +8,9 @@ $user = JFactory::getUser();
     <tr>
 		<th width='5%'>#</th>
 		<th width='5%'>Nº</th>
+	<?php if (NotaHelper::isTestSite()){ ?>
 		<th width='10%'>OC</th>
+	<?php } ?>
 		<th width='20%'>Fecha</th>
 		<th width='50%'>Estado de avance</th>
 		<th width='10%'>Revisión</th>
@@ -19,6 +21,7 @@ $user = JFactory::getUser();
 		<tr>
 			<td><?php echo $i; ?></td>
 			<td align='center'><a onclick="exportar_nota(<?php echo $n['id'] ?>)"><?php echo $n['id'] ?></a></td>
+		<?php if (NotaHelper::isTestSite()){ ?>
 			<td>
 				<ul>
 				<?php foreach ($n['ordenes'] as $o){
@@ -26,6 +29,7 @@ $user = JFactory::getUser();
 				} ?>
 				</ul>
 			</td>
+		<?php } ?>
 			<td><?php echo NotaHelper::fechamysql($n['fecha']) ?></td>
 			<td>
 				<div class='centrar'>

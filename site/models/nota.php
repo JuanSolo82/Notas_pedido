@@ -721,7 +721,7 @@ class NotaModelNota extends JModelItem{
 			return $db->loadAssoc();
 		return array();
 	}
-	function notas_naves($pagina=0){
+	function notas_naves($pagina=0, $parametro=''){
 		$db = JFactory::getDbo();
 		$user = JFactory::getUser();
 		$datos_user = $this->getDatos_user($user->id);
@@ -738,11 +738,18 @@ class NotaModelNota extends JModelItem{
 		elseif ($user->authorise("jefe.natales", "com_nota"))
 			$query .= " and od.id_area=5 ";
 		$query .= " and od.id_tipo=2";
+		if ($parametro){
+			$query .= " join nota_item ni on ni.id_remitente=nr.id and ni.item like '%".$parametro."%' ";
+		}
 		$query .= " order by nr.id desc ";
-		if ($pagina) 
-			$query .= ' limit '.(($pagina-1)*10).', 10';
-		else
-			$query .= ' limit 10';
+		if ($parametro!=''){
+
+		}else{
+			if ($pagina) 
+				$query .= ' limit '.(($pagina-1)*10).', 10';
+			else
+				$query .= ' limit 10';
+		}
 		$db->setQuery($query);
 		$db->query();
 		if ($db->getNumRows()){

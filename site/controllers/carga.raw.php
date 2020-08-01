@@ -100,13 +100,17 @@ class NotaControllerCarga extends JControllerForm
 		$model = $this->getModel('nota');
 		$view = $this->getView('nota','raw');
 		$user = JFactory::getUser();
+		$naves		= $jinput->get('naves', 0, 'int');
 		$parametro	= $jinput->get('parametro', '', 'string');
 		$proveedor	= $jinput->get('proveedor', '', 'string');
 		$notas = array();
-		if ($parametro)
-			$notas	= $model->notas_propias($user->id, 1, $parametro);
-		elseif ($proveedor){
-			$notas	= $model->notas_proveedor($user->id, $proveedor);
+		if ($naves){
+			$notas = $model->notas_naves(0,$parametro);
+		}else{
+			if ($parametro)
+				$notas	= $model->notas_propias($user->id, 1, $parametro);
+			elseif ($proveedor)
+				$notas	= $model->notas_proveedor($user->id, $proveedor);
 		}
 		$i=0;
 		foreach ($notas as $n){

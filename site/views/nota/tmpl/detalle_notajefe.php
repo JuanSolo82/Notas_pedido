@@ -72,7 +72,7 @@ $f = explode('-', $this->detalle_nota['fecha']);
 	<div class='centrar'>
 		<div class='fila_completa bordear' style='width: 90%;'>
 			<div class="col-3 titulo_item">Proveedor (opcional)</div>
-			<div class="col-4">
+			<div class="col-4" id="datos_proveedor">
 				<input value="<?php echo $p[0] ?>" type='text' id='proveedor_escogido' name='proveedor_escogido' autocomplete="off" size='40' onkeypress="cargar_proveedor(this.value)" placeholder="Nombre proveedor">
 				<div id='proveedor'></div>
 				<input value="<?php echo $p[1] ?>" type="text" name="rut_proveedor" id="rut_proveedor" placeholder="Rut">
@@ -112,11 +112,13 @@ $f = explode('-', $this->detalle_nota['fecha']);
 		<input type="hidden" id="valor_numerico<?php echo $i['id'] ?>" value="<?php echo $i['valor'] ?>">
 		<input type="hidden" size='3' id="subtotal_numerico<?php echo $i['id'] ?>" value="<?php echo $i['valor']*$i['cantidad'] ?>">
 		<tr>
-			<td align='center'>
+			<td align='center' id="columna_cantidad<?php echo $i['id'] ?>">
 				<input id='cantidad<?php echo $i['id'] ?>' onchange="actualiza_parcial(<?php echo $i['id'] ?>)" value="<?php echo $i['cantidad'] ?>" type='number' required type="number" min="0" step=".1" style='width: 70px;'>
 			</td>
-			<td><input type="text" id="nueva_descripcion<?php echo $j ?>" value="<?php echo $i['item'] ?>" style="width: 80%;"></td>
-			<td>
+			<td id="columna_descripcion<?php echo $i['id'] ?>">
+				<input type="text" id="nueva_descripcion<?php echo $j ?>" value="<?php echo $i['item'] ?>" style="width: 80%;">
+			</td>
+			<td id="columna_parcial<?php echo $i['id'] ?>">
 			<?php if (NotaHelper::isTestSite()){ ?>
 				<input type="number" onchange="actualiza_parcial(<?php echo $i['id'] ?>)" style="width: 90px;" id="valor_unitario<?php echo $i['id'] ?>" value="<?php echo $i['valor'] ? $i['valor'] : '' ?>">
 			<?php }else{ ?>
@@ -145,20 +147,9 @@ $f = explode('-', $this->detalle_nota['fecha']);
 		} ?>
 
 	</table>
-	<table class='tabla_listado' id="contenido_editado" style="display: none;">
-		<tr>
-			<th width='10%'>Cantidad</th>
-			<th width='45%'>Item</th>
-			<th width='45%'>Motivo</th>
-		</tr>
-	<?php for ($k=1;$k<$j;$k++){ ?>
-		<tr>
-			<td id="cantidad_editado<?php echo $k ?>"></td>
-			<td id="descripcion_editado<?php echo $k ?>"></td>
-			<td id="motivo_editado<?php echo $k ?>"></td>
-		</tr>
-	<?php } $j--; ?>
-	</table>
+</div>
+<div class="centrar" id="aviso_nota_autorizada" style="display: none;">
+	<div class="contenido">Nota autorizada</div>
 </div>
 </form>
 <div class='fila_vacia'></div>
@@ -166,7 +157,7 @@ $f = explode('-', $this->detalle_nota['fecha']);
 <?php 
 	if ($this->detalle_nota['id_adepto']==$this->datos_propios['id_depto']){
 		if ($this->detalle_nota['autorizado_depto']==0){ ?>
-			<div onclick="guardar_cambios_items(<?php echo $j ?>, 
+			<div onclick="guardar_cambios_items(<?php echo sizeof($this->items) ?>, 
 													<?php echo ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota')) ? 1 : 0 ?>, 
 													<?php echo ($user->authorise('jefe.depto', 'com_nota')) ? 1 : 0 ?>, 
 													<?php echo $this->detalle_nota['id_adepto']==$this->datos_propios['id_depto'] ? 1 : 0 ?>)" 
@@ -183,7 +174,7 @@ $f = explode('-', $this->detalle_nota['fecha']);
 	}else
 if (($this->datos_user['id']==$this->detalle_nota['id_user'] && $this->detalle_nota['aprobado_adquisiciones']==0)){ 
 	?>
-	<div onclick="guardar_cambios_items(<?php echo $j ?>, 
+	<div onclick="guardar_cambios_items(<?php echo sizeof($this->items) ?>, 
 										<?php echo ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota')) ? 1 : 0 ?>, 
 										<?php echo ($user->authorise('jefe.depto', 'com_nota')) ? 1 : 0 ?>, 
 										<?php echo $this->detalle_nota['id_adepto']==$this->datos_propios['id_depto'] ? 1 : 0 ?>)" 

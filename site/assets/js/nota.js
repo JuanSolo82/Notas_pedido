@@ -344,7 +344,6 @@ function guardar_cambios_items(num_items, capitan, jefe, autorizado_depto=0) {
     var generico = 0;
     for (var i = 1; i <= num_items; i++) {
         var id_item = $("#id_oculto" + i).val();
-        var cantidad_original = $("#cantidad_oculto" + i).val();
         var nueva_cantidad = parseFloat($("#cantidad" + id_item).val());
         total += nueva_cantidad;
     }
@@ -356,7 +355,6 @@ function guardar_cambios_items(num_items, capitan, jefe, autorizado_depto=0) {
         }
         generico = 1;
     }
-
     if (total) {
         for (var i = 1; i <= num_items; i++) {
             var id_item = $("#id_oculto" + i).val();
@@ -377,17 +375,13 @@ function guardar_cambios_items(num_items, capitan, jefe, autorizado_depto=0) {
                     descripcion: descripcion,
                     motivo: motivo,
                     valor_unitario: valor_unitario
-                },
-                success: function(query){
-                    console.log(query);
                 }
             });
-            $("#cantidad_editado" + i).text(nueva_cantidad);
-            $("#descripcion_editado" + i).text(descripcion);
-            $("#motivo_editado" + i).text(motivo);
+            $("#columna_cantidad"+id_item).html(nueva_cantidad);
+            $("#columna_descripcion"+id_item).html(descripcion);
+            $("#columna_parcial"+id_item).html(valor_unitario);
+            $("#parcial_texto"+id_item).html(valor_unitario*nueva_cantidad);
         }
-        $("#contenido_editable").hide();
-        $("#contenido_editado").show();
         $("#botones").hide();
         if (jefe == 1)
             capitan = 1;
@@ -395,12 +389,11 @@ function guardar_cambios_items(num_items, capitan, jefe, autorizado_depto=0) {
             url: "index.php?option=com_nota&task=carga.nota_revision&format=raw",
             type: 'post',
             data: { id_remitente: id_remitente, enviado_empleado: 1, autorizado_capitan: capitan, autorizado_jefe: jefe, autorizado_depto: autorizado_depto, aprobado_adquisiciones: 0 },
-            success: function(data){
+            success: function(){
                 $("#conjunto_botones").hide();
                 $("#enviado").css({'display': 'block'});
             }
         });
-        // tabla nota_tramitada
         var proveedor = $("#proveedor_escogido").val();
         var rut_proveedor = $("#rut_proveedor").val();
         var giro_proveedor = $("#giro_proveedor").val();
@@ -413,20 +406,19 @@ function guardar_cambios_items(num_items, capitan, jefe, autorizado_depto=0) {
                     proveedor_escogido: proveedor,
                     rut_proveedor: rut_proveedor,
                     giro_proveedor: giro_proveedor
-            },
-            success: function(data){
-                console.log(data);
             }
         });
+        var html = proveedor+"<br>"+rut_proveedor+"<br>"+giro_proveedor;
+        $("#datos_proveedor").html(html);
         
         if ($("#nombre_tripulante").length){
             $("#nombre_tripulante").hide();
             $("#campo_nombre").text(nombre_remitente);
         }
+        $("#aviso_nota_autorizada").show(300);
     } else {
         anular_nota($("#id_remitente").val(), $("#id_user").val());
     }
-    $("#botones").html("<h3>Cambios guardados</h3>");
 }
 
 function ocultar_mostrar(id){
@@ -758,12 +750,13 @@ function escoger_proveedor(razon_social, rut="", giro="", ind=0){
 function buscar_notas_propias(){
     var parametro = $.trim($("#parametro").val());
     var proveedor = $.trim($("#proveedor").val());
+    var naves = parseInt($("#naves").val());
     $("#lista").html("<div class='loader'></div>");
     if (parametro!='' || proveedor!=''){
         $.ajax({
             url: 'index.php?option=com_nota&task=carga.buscar_notas&format=raw',
             type: 'post',
-            data: {parametro: parametro, proveedor: proveedor},
+            data: {parametro: parametro, proveedor: proveedor, naves: naves},
             success: function(data){
                 $("#lista").hide();
                 $("#lista_propias").html(data);
@@ -808,3 +801,4 @@ function actualiza_parcial(id_item){
     $("#valor_numerico"+id_item).val(valor_unitario);
     $("#subtotal_numerico"+id_item).val(valor_unitario*cantidad);
 }
+
