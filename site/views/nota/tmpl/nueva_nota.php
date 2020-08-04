@@ -48,7 +48,9 @@ $user = JFactory::getUser();
 	</div>
 		</div>
 			</div>
-	<?php if ($user->authorise('jefe.depto', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota') || $user->authorise('jefe.instalacion', 'com_nota') || $user->authorise('adquisiciones.jefe', 'com_nota')){ ?>
+	<?php 
+	if ($user->authorise('jefe.depto', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota') || 
+				$user->authorise('jefe.instalacion', 'com_nota') || $user->authorise('adquisiciones.jefe', 'com_nota') || $user->authorise('centro_costo', 'com_nota')){ ?>
 		<div class='centrar'>
 			<div class='fila_completa bordear centrar' style='width: 90%;'>
 				<div class="col-3 titulo_item">Centro de costo</div>

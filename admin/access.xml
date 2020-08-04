@@ -16,5 +16,6 @@
 		<action name="facturacion" title="Ingreso de facturas y búsqueda por OC" description="Permite buscar OC, ingresar facturas para cada OC" />
 		<action name="procedimientos" title="Menú de reportes" description="Permite ingresar a menú de reportes de procedimientos" />
 		<action name="tripulante.maquina" title="Destino notas Mantenimiento" description="Restringe departamento de destino Operaciones" />
+		<action name="centro_costo" title="Escoger centro de costo" description="El empleado puede escoger centro de costo" />
 	</section>
 </access>
