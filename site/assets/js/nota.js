@@ -80,6 +80,45 @@ $(document).ready(function() {
     
 });
 
+function aprobar_naves(id_remitente, items){
+    for (var i=1;i<=items;i++){
+        console.log($("#id_oculto"+i).val()+'?');
+        $.ajax({
+            url: 'index.php?option=com_nota&task=editar_item',
+            type: 'post',
+            data: {id_item: $("#id_oculto"+i).val(), 
+                    cantidad_original: $("#cantidad_oculto"+i).val(),
+                    nueva_cantidad: $("#cantidad"+i).val(),
+                    descripcion: $("#nueva_descripcion"+i).val(),
+                    motivo: $("#nuevo_motivo"+i).val(),
+                    id_tipo_modificacion: $("#tipo_modificacion"+i).val()
+                }
+        });
+    }
+
+    $.ajax({
+        url: 'index.php?option=com_nota&task=nota_revision',
+        method: 'post',
+        data: {id_remitente: id_remitente, enviado_empleado:1, autorizado_capitan:1, autorizado_jefe:1, autorizado_depto:0, aprobado_adquisiciones:0},
+        success: function(){
+            $("#boton_guardar").html("<h3>Enviado</h3>");
+        }
+    });
+
+    var proveedor_escogido  = $("#proveedor_escogido").length ? $("#proveedor_escogido").val() : '';
+    var rut_proveedor       = $("#rut_proveedor").length ? $("#rut_proveedor").val() : '';
+    var giro_proveedor      = $("#giro_proveedor").length ? $("#giro_proveedor").val() : '';
+    $.ajax({
+        url: 'index.php?option=com_nota&task=nota_tramitada',
+        timeout: 2000,
+        method: 'post',
+        data: {id_remitente: id_remitente, proveedor_escogido: proveedor_escogido, rut_proveedor: rut_proveedor, giro_proveedor: giro_proveedor},
+        success: function(data){
+            //console.log(data);
+        }
+    });
+}
+
 function anterior_previo(direccion){
     var pagina = parseInt($("#pagina").val());
     if (direccion==1)
@@ -607,44 +646,6 @@ function bajar_pdf(id_remitente, orden_compra, opcion){
         success: function(){
             $("#generada_oc"+opcion).css("display", "block");
             window.open('/portal/media/notas_pedido/Orden_compra.pdf');
-        }
-    });
-}
-
-function aprobar_naves(id_remitente, items){
-    for (var i=1;i<=items;i++){
-        $.ajax({
-            url: 'index.php?option=com_nota&task=editar_item',
-            type: 'post',
-            data: {id_item: $("#id_oculto"+i).val(), 
-                    cantidad_original: $("#cantidad_oculto"+i).val(),
-                    nueva_cantidad: $("#cantidad"+i).val(),
-                    descripcion: $("#nueva_descripcion"+i).val(),
-                    motivo: $("#nuevo_motivo"+i).val(),
-                    id_tipo_modificacion: $("#tipo_modificacion"+i).val()
-                }
-        });
-    }
-
-    $.ajax({
-        url: 'index.php?option=com_nota&task=nota_revision',
-        method: 'post',
-        data: {id_remitente: id_remitente, enviado_empleado:1, autorizado_capitan:1, autorizado_jefe:1, autorizado_depto:0, aprobado_adquisiciones:0},
-        success: function(){
-            $("#boton_guardar").html("<h3>Enviado</h3>");
-        }
-    });
-
-    var proveedor_escogido  = $("#proveedor_escogido").length ? $("#proveedor_escogido").val() : '';
-    var rut_proveedor       = $("#rut_proveedor").length ? $("#rut_proveedor").val() : '';
-    var giro_proveedor      = $("#giro_proveedor").length ? $("#giro_proveedor").val() : '';
-    $.ajax({
-        url: 'index.php?option=com_nota&task=nota_tramitada',
-        timeout: 2000,
-        method: 'post',
-        data: {id_remitente: id_remitente, proveedor_escogido: proveedor_escogido, rut_proveedor: rut_proveedor, giro_proveedor: giro_proveedor},
-        success: function(data){
-            //console.log(data);
         }
     });
 }

@@ -2,13 +2,53 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 JHTML::stylesheet('nota.css', 'components/com_nota/assets/css/');
-JHTML::script('jquery.min.js', 'compon<zents/com_nota/assets/js/');
-JHTML::script('jquery-ui.min.js', 'components/com_nota/assets/js/');
-JHTML::script('nota.js', 'components/com_nota/assets/js/');
+//JHTML::script('jquery.min.js', 'compon<zents/com_nota/assets/js/');
+//JHTML::script('jquery-ui.min.js', 'components/com_nota/assets/js/');
+//JHTML::script('nota.js', 'components/com_nota/assets/js/');
 JHtml::_('behavior.modal');
 $user = JFactory::getUser();
 $f = explode('-', $this->detalle_nota['fecha']);
 ?>
+<script>
+function aprobar_nave(id_remitente, items){
+    for (var i=1;i<=items;i++){
+        console.log($("#id_oculto"+i).val()+'?');
+        $.ajax({
+            url: 'index.php?option=com_nota&task=editar_item',
+            type: 'post',
+            data: {id_item: $("#id_oculto"+i).val(), 
+                    cantidad_original: $("#cantidad_oculto"+i).val(),
+                    nueva_cantidad: $("#cantidad"+i).val(),
+                    descripcion: $("#nueva_descripcion"+i).val(),
+                    motivo: $("#nuevo_motivo"+i).val(),
+                    id_tipo_modificacion: $("#tipo_modificacion"+i).val()
+                }
+        });
+    }
+
+    $.ajax({
+        url: 'index.php?option=com_nota&task=nota_revision',
+        method: 'post',
+        data: {id_remitente: id_remitente, enviado_empleado:1, autorizado_capitan:1, autorizado_jefe:1, autorizado_depto:0, aprobado_adquisiciones:0},
+        success: function(){
+            $("#boton_guardar").html("<h3>Enviado</h3>");
+        }
+    });
+
+    var proveedor_escogido  = $("#proveedor_escogido").length ? $("#proveedor_escogido").val() : '';
+    var rut_proveedor       = $("#rut_proveedor").length ? $("#rut_proveedor").val() : '';
+    var giro_proveedor      = $("#giro_proveedor").length ? $("#giro_proveedor").val() : '';
+    $.ajax({
+        url: 'index.php?option=com_nota&task=nota_tramitada',
+        timeout: 2000,
+        method: 'post',
+        data: {id_remitente: id_remitente, proveedor_escogido: proveedor_escogido, rut_proveedor: rut_proveedor, giro_proveedor: giro_proveedor},
+        success: function(data){
+            //console.log(data);
+        }
+    });
+}
+</script>
 <br>
 <input type="hidden" id="id_remitente" value="<?php echo $this->id_remitente ?>">
 <input type="hidden" id="id_user" value="<?php echo $user->id ?>">
@@ -118,7 +158,8 @@ $f = explode('-', $this->detalle_nota['fecha']);
 	foreach ($this->items as $i){ 
 		$j++;
 		?>
-		<input type="hidden" id="id_oculto<?php echo $j ?>" value="<?php echo $i['id'] ?>">
+
+		<input type="hidden" size='3' id="id_oculto<?php echo $j ?>" value="<?php echo $i['id'] ?>">
 		<tr>
 			<td align='center'>
 			<?php
@@ -167,6 +208,7 @@ $f = explode('-', $this->detalle_nota['fecha']);
 	<?php } ?>
 	</table>
 </div>
+
 <div class='fila_vacia'></div>
 <div class='centrar'>
 <?php 
@@ -260,4 +302,7 @@ if ($this->id_user==$this->detalle_nota['id_user'] && $this->datos_nota['aprobad
 </div>
 <?php } ?>
 </div>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?car=6"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/jquery.min.js?car=6"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/jquery-ui.min.js?car=6"></script>
 

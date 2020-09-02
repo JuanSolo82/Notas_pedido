@@ -112,3 +112,4 @@ foreach ($this->notas_naves as $nd){ ?>
 	</div>
 	</a>
 </div>
+
