@@ -418,8 +418,10 @@ class NotaController extends JController{
 		$jinput->set('view', 'nota');
 		$jinput->set( 'layout', 'notas_naves' );
 		$model = $this->getModel('nota');
+		$naves = $model->getNaves();
 		$notas_naves = $model->notas_naves();
 		$jinput->set("notas_naves", $notas_naves);
+		$jinput->set("naves", $naves);
 		parent::display();
 	}
 	function cambiar_destino(){

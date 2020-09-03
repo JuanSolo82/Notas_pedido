@@ -56,8 +56,10 @@ class NotaViewNota extends JView{
 		if ($layout=="notas_depto"){
 			$this->notas_depto 	= $jinput->get("notas_depto", array(), "array");
 		}
-		if ($layout=="notas_naves")
+		if ($layout=="notas_naves"){
 			$this->notas_naves = $jinput->get("notas_naves", array(), "array");
+			$this->naves		= $jinput->get("naves", array(), "array");
+		}	
         parent::display($tpl);
 	}
 	

@@ -41,6 +41,16 @@ $user = JFactory::getUser();
 <input type='hidden' id="naves" value='1'>
 <div class='fila_completa centrar' style='margin-bottom: 20px;'>
 	<div class='barra_nombre' style='width: 50%;'>
+		<h3 class="titulo_item">Búsqueda por origen</h3>
+		<select id="nave_origen">
+			<option value='0'>Todas las naves</option>
+		<?php foreach ($this->naves as $n){ ?>
+			<option value="<?php echo $n['id'] ?>"><?php echo $n['nave'] ?></option>
+		<?php } ?>
+		</select>
+		<input type='button' class="boton_simple"  onclick="busca_nave(nave_origen.value)" value="Buscar">
+	</div>
+	<div class='barra_nombre' style='width: 50%;'>
 		<h3 class="titulo_item">Búsqueda por ítem</h3>
 		<input type='text' id='parametro' name='parametro' autocomplete="off">
 		<input type='button' class="boton_simple"  onclick="buscar_notas_propias()" value="Buscar">

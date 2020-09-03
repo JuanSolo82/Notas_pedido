@@ -803,3 +803,20 @@ function actualiza_parcial(id_item){
     $("#subtotal_numerico"+id_item).val(valor_unitario*cantidad);
 }
 
+
+
+function busca_nave(id_nave){
+    id_nave = parseInt(id_nave);
+    if (id_nave){
+        $("#lista").html("<div class='loader'></div>");
+        $.ajax({
+            url: 'index.php?option=com_nota&task=carga.buscar_notas&format=raw',
+            type: 'post',
+            data: {id_nave: id_nave},
+            success: function(data){
+                $("#lista").hide();
+                $("#lista_propias").html(data);
+            }
+        });
+    }
+}

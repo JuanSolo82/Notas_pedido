@@ -721,7 +721,7 @@ class NotaModelNota extends JModelItem{
 			return $db->loadAssoc();
 		return array();
 	}
-	function notas_naves($pagina=0, $parametro=''){
+	function notas_naves($pagina=0, $parametro='', $deptos=''){
 		$db = JFactory::getDbo();
 		$user = JFactory::getUser();
 		$datos_user = $this->getDatos_user($user->id);
@@ -731,24 +731,30 @@ class NotaModelNota extends JModelItem{
 				join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan=1  
 				join nota_user nu on nu.id_user=nr.id_user join jml_users u on u.id=nu.id_user 
 				join oti_departamento od on od.id=nu.id_depto and od.id_tipo=2 ";
+		if ($deptos!=''){
+			$query .= ' and od.id in ('.$deptos.')';
+		}
 		if ($user->authorise("jefe.delgada", "com_nota") && $user->authorise("jefe.punta_arenas", "com_nota"))
 			$query .= " and (od.id_area=4 or od.id_area=2 or od.id_area=1)";
 		elseif ($user->authorise("jefe.delgada", "com_nota"))
 			$query .= " and od.id_area=4 ";
 		elseif ($user->authorise("jefe.natales", "com_nota"))
 			$query .= " and od.id_area=5 ";
-		$query .= " and od.id_tipo=2";
+		//$query .= " and od.id_tipo=2";
+
 		if ($parametro){
 			$query .= " join nota_item ni on ni.id_remitente=nr.id and ni.item like '%".$parametro."%' ";
 		}
 		$query .= " order by nr.id desc ";
-		if ($parametro!=''){
+		if ($deptos==''){
+			if ($parametro!=''){
 
-		}else{
-			if ($pagina) 
-				$query .= ' limit '.(($pagina-1)*10).', 10';
-			else
-				$query .= ' limit 10';
+			}else{
+				if ($pagina) 
+					$query .= ' limit '.(($pagina-1)*10).', 10';
+				else
+					$query .= ' limit 10';
+			}
 		}
 		$db->setQuery($query);
 		$db->query();
@@ -846,5 +852,25 @@ class NotaModelNota extends JModelItem{
 			return array();
 		}		
 		return $array;
+	}
+	function getNaves(){
+		$db = JFactory::getDbo();
+		$query = "select id, nave from nota_naves order by nave";
+		$db->setQuery($query);
+		$db->query();
+		if ($db->getNumRows())
+			return $db->loadAssocList();
+		return array();
+	}
+	function getSeccionesNaves($id_nave){
+		$db = JFactory::getDbo();
+		$query = "select od.id as id_depto, nn.nave, od.nombre 
+				from oti_departamento od, nota_naveSeccion ns, nota_naves nn 
+				where od.id=ns.id_seccion and ns.id_nave=nn.id and ns.id_nave=".$id_nave;
+		$db->setQuery($query);
+		$db->query();
+		if ($db->getNumRows())
+			return $db->loadAssocList();
+		return array();
 	}
 }
