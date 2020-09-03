@@ -807,16 +807,20 @@ function actualiza_parcial(id_item){
 
 function busca_nave(id_nave){
     id_nave = parseInt(id_nave);
-    if (id_nave){
+    var desde = $("#desde").val();
+    var hasta = $("#hasta").val()
+    if (id_nave && desde!='' && hasta!=''){
         $("#lista").html("<div class='loader'></div>");
         $.ajax({
             url: 'index.php?option=com_nota&task=carga.buscar_notas&format=raw',
             type: 'post',
-            data: {id_nave: id_nave},
+            data: {id_nave: id_nave, desde: desde, hasta: hasta},
             success: function(data){
                 $("#lista").hide();
                 $("#lista_propias").html(data);
             }
         });
+    }else{
+        console.log('complete los campos de fecha y ferry');
     }
 }

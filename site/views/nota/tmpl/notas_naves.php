@@ -4,9 +4,11 @@ defined('_JEXEC') or die('Restricted access');
 JHTML::stylesheet('nota.css', 'components/com_nota/assets/css/');
 JHTML::script('jquery.min.js', 'components/com_nota/assets/js/');
 JHTML::script('jquery-ui.min.js', 'components/com_nota/assets/js/');
-//JHTML::script('nota.js', 'components/com_nota/assets/js/');
-JHtml::_('behavior.modal'); 
-//JHTML::script('bootstrap.js', 'components/com_nota/assets/bootstrap/js/');
+JHTML::stylesheet('jquery.timepicker.min.css', 'components/com_nota/assets/css/');
+JHTML::script('datepicker-es.js', 'components/com_nota/assets/js/');
+JHTML::stylesheet('jquery.timepicker.min.css', 'components/com_nota/assets/css/');
+JHTML::stylesheet('jquery-ui.css', 'components/com_nota/assets/css/');
+JHtml::_('behavior.modal');
 $i=1;
 $user = JFactory::getUser();
 ?>
@@ -42,12 +44,16 @@ $user = JFactory::getUser();
 <div class='fila_completa centrar' style='margin-bottom: 20px;'>
 	<div class='barra_nombre' style='width: 50%;'>
 		<h3 class="titulo_item">Búsqueda por origen</h3>
-		<select id="nave_origen">
-			<option value='0'>Todas las naves</option>
-		<?php foreach ($this->naves as $n){ ?>
-			<option value="<?php echo $n['id'] ?>"><?php echo $n['nave'] ?></option>
-		<?php } ?>
-		</select>
+		<div>
+			<select id="nave_origen">
+				<option value='0'>Todas las naves</option>
+			<?php foreach ($this->naves as $n){ ?>
+				<option value="<?php echo $n['id'] ?>"><?php echo $n['nave'] ?></option>
+			<?php } ?>
+			</select>
+			<br>
+			<input type='text' id='desde' autocomplete='off'> hasta <input type='text' id='hasta' autocomplete='off'>
+		</div>
 		<input type='button' class="boton_simple"  onclick="busca_nave(nave_origen.value)" value="Buscar">
 	</div>
 	<div class='barra_nombre' style='width: 50%;'>

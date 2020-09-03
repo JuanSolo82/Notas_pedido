@@ -721,7 +721,7 @@ class NotaModelNota extends JModelItem{
 			return $db->loadAssoc();
 		return array();
 	}
-	function notas_naves($pagina=0, $parametro='', $deptos=''){
+	function notas_naves($pagina=0, $parametro='', $deptos='', $desde='', $hasta=''){
 		$db = JFactory::getDbo();
 		$user = JFactory::getUser();
 		$datos_user = $this->getDatos_user($user->id);
@@ -744,6 +744,9 @@ class NotaModelNota extends JModelItem{
 
 		if ($parametro){
 			$query .= " join nota_item ni on ni.id_remitente=nr.id and ni.item like '%".$parametro."%' ";
+		}
+		if ($desde!=''){
+			$query .= ' where nr.fecha between "'.NotaHelper::fechamysql($desde,2).'" and "'.NotaHelper::fechamysql($hasta,2).'" ';
 		}
 		$query .= " order by nr.id desc ";
 		if ($deptos==''){

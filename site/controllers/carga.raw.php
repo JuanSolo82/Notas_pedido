@@ -104,6 +104,8 @@ class NotaControllerCarga extends JControllerForm
 		$parametro	= $jinput->get('parametro', '', 'string');
 		$proveedor	= $jinput->get('proveedor', '', 'string');
 		$id_nave	= $jinput->get('id_nave', 0, 'int');
+		$desde 		= $jinput->get('desde', '', 'string');
+		$hasta 		= $jinput->get('hasta', '', 'string');
 
 		$notas = array();
 		if ($id_nave){
@@ -113,7 +115,7 @@ class NotaControllerCarga extends JControllerForm
 				$str_naves .= $n['id_depto'].',';
 			}
 			$str_naves = trim($str_naves,',');
-			$notas = $model->notas_naves(0,'', $str_naves);
+			$notas = $model->notas_naves(0,'', $str_naves, $desde, $hasta);
 		}else if ($naves){
 			$notas = $model->notas_naves(0,$parametro);
 		}else{
