@@ -759,6 +759,7 @@ class NotaModelNota extends JModelItem{
 					$query .= ' limit 10';
 			}
 		}
+		//print_r($query);
 		$db->setQuery($query);
 		$db->query();
 		if ($db->getNumRows()){

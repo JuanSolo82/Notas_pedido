@@ -12,7 +12,7 @@ JHtml::_('behavior.modal');
 $i=1;
 $user = JFactory::getUser();
 ?>
-<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?var=46"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?col=46"></script>
 <input type="hidden" id="vista" value="<?php echo $this->layout; ?>">
 <input type='hidden' size='3' id='pagina' value='1'>
 <div class='fila_completa centrar' style='margin-bottom: 20px;'>
