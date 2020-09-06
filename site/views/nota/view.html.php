@@ -15,7 +15,7 @@ class NotaViewNota extends JView{
 			$this->notas_pendientes = $jinput->get("notas_pendientes", 0, "int");
 			$this->pendientes_depto = $jinput->get("pendientes_depto", 0, "int");
 		}
-		if ($user->authorise("jefe.delgada", "com_nota")){
+		if ($user->authorise("jefe.delgada", "com_nota") || $user->authorise("jefe.natales", "com_nota")){
 			$this->pendientes_naves = $jinput->get("pendientes_naves", 0, "int");
 			$this->layout			= $layout;
 		}
@@ -59,7 +59,13 @@ class NotaViewNota extends JView{
 		if ($layout=="notas_naves"){
 			$this->notas_naves = $jinput->get("notas_naves", array(), "array");
 			$this->naves		= $jinput->get("naves", array(), "array");
-		}	
+		}
+		if ($layout=="reporte_naves"){
+			$this->id_nave  = $jinput->get("id_nave", 0, "int");
+			$this->desde	= $jinput->get("desde", "", "string");
+			$this->hasta	= $jinput->get("hasta", "", "string");
+			$this->reporte	= $jinput->get("reporte", array(), "array");
+		}
         parent::display($tpl);
 	}
 	
@@ -84,7 +90,7 @@ class NotaViewNota extends JView{
 			if (!$user->authorise('capitan.jefe', 'com_nota') && !$user->authorise('capitan.sin_jefe', 'com_nota'))
 				$menu .= $this->getBoton('Notas enviadas al departamento', 'article-add', 'notas_depto','',1);
 		}
-		if ($user->authorise('jefe.delgada', 'com_nota'))
+		if ($user->authorise('jefe.delgada', 'com_nota') || $user->authorise('jefe.natales', 'com_nota'))
 			$menu .= $this->getBoton('Notas de naves', 'cpanel', 'notas_naves', '',1);
 		if ($user->authorise('adquisiciones.jefe', 'com_nota')){
 			$menu .= $this->getBoton('Notas recibidas', 'category', '','adquisiciones');		

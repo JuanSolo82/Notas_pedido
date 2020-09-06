@@ -54,7 +54,17 @@ $user = JFactory::getUser();
 			<br>
 			<input type='text' id='desde' autocomplete='off'> hasta <input type='text' id='hasta' autocomplete='off'>
 		</div>
-		<input type='button' class="boton_simple"  onclick="busca_nave(nave_origen.value)" value="Buscar">
+		<input type='button' class="boton_simple" onclick="busca_nave(nave_origen.value)" value="Buscar">
+		<?php if (NotaHelper::isTestSite()){ ?>
+			<input type="button" class="boton_simple" value="Exporta">
+			<a onclick="SqueezeBox.fromElement(this, 
+								{handler:'iframe', 
+								size: {x: screen.width*0.65, y: 550}, 
+								url: '<?php echo JRoute::_('index.php?option=com_nota&task=reporte_naves&tmpl=component&id_nave='); ?>'
+									+nave_origen.value+'&desde='+desde.value+'&hasta='+hasta.value,
+								})">
+					<img src='/portal/administrator/templates/hathor/images/menu/icon-16-edit.png' /></a>
+		<?php } ?>
 	</div>
 	<div class='barra_nombre' style='width: 50%;'>
 		<h3 class="titulo_item">Búsqueda por ítem</h3>
