@@ -436,7 +436,6 @@ class NotaController extends JController{
 	function reporte_naves(){
 		$jinput = JFactory::getApplication()->input;
 		$model = $this->getModel('nota');
-
 		$id_nave	= $jinput->get("id_nave", 0, "int");
 		$desde		= $jinput->get("desde", "", "string");
 		$hasta		= $jinput->get("hasta", "", "string");

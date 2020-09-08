@@ -888,7 +888,7 @@ class NotaModelNota extends JModelItem{
 					nm.nueva_cantidad, ni.opcion_oc, nu.id_user, nu.id_depto, nn.nave, 
 					nrev.autorizado_capitan as capitan, nrev.autorizado_jefe as jefe, 
 					nrev.autorizado_depto as depto, nrev.aprobado_adquisiciones as emision_oc,
-					noc.id as orden_compra, noc.fecha as fecha_oc, od.nombre as depto_Destino
+					noc.id as orden_compra, noc.fecha as fecha_oc, od.nombre as depto_destino
 				from nota_remitente nr 
 				join nota_item ni on ni.id_remitente=nr.id and nr.fecha between '".$desde."' and '".$hasta."' 
 				join nota_user nu on nu.id_user=nr.id_user 
