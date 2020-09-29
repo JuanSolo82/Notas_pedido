@@ -23,7 +23,7 @@ class NotaController extends JController{
 			$notas_pendientes = $model->getPendientes();
 			$pendientes_depto = $model->getPendientes_depto();
 		}
-		if ($user->authorise('jefe.delgada', 'com_nota'))
+		if ($user->authorise('jefe.delgada', 'com_nota') || $user->authorise('jefe.natales', 'com_nota'))
 			$pendientes_naves = $model->getPendientes_naves();
 		$jinput->set("datos_user", $datos_user);
 		$jinput->set("notas_pendientes", $notas_pendientes);
@@ -432,6 +432,26 @@ class NotaController extends JController{
 		$nombre_remitente	= $jinput->get('nombre_remitente', '', 'string');
 		$model->cambiar_destino($id_remitente, $id_adepto);
 		$this->preparar_correo($id_remitente, $nombre_remitente);
+	}
+	function reporte_naves(){
+		$jinput = JFactory::getApplication()->input;
+		$model = $this->getModel('nota');
+		$id_nave	= $jinput->get("id_nave", 0, "int");
+		$desde		= $jinput->get("desde", "", "string");
+		$hasta		= $jinput->get("hasta", "", "string");
+		$reporte = array();
+		$desde = NotaHelper::fechamysql($desde,2);
+		$hasta = NotaHelper::fechamysql($hasta,2);
+		$reporte = $model->getReporteNaves($id_nave, $desde, $hasta);
+		$desde = NotaHelper::fechamysql($desde,1);
+		$hasta = NotaHelper::fechamysql($hasta,1);
+		$jinput->set("reporte", $reporte);
+		$jinput->set("id_nave",$id_nave);
+		$jinput->set("desde", $desde);
+		$jinput->set("hasta", $hasta);
+		$jinput->set('view', 'nota');
+		$jinput->set( 'layout', 'reporte_naves' );
+		parent::display();
 	}
 	/*
 	Consulta timis para buscar notas por nombre de item aproximado

@@ -281,7 +281,9 @@ class NotaModelNota extends JModelItem{
 		$db = JFactory::getDbo();
 		$user = JFactory::getUser();
 
-		$deptos = array(69 => "8,33", 
+		$deptos = array(
+			51 => "",
+			69 => "8,33", 
 			70 => "37,19",
 			71 => "18,26", // crux 
 			72 => '9,29', 
@@ -290,14 +292,18 @@ class NotaModelNota extends JModelItem{
 			75 => "34,10", 
 			76 => "30,22",
 			77 => "41",
-			106 => "107"); // anan
+			106 => "107", // anan 
+			108 => "109,110,111,112,113,114" // Kaweskar, 109 sala máquinas borrado
+		); 
 		$query = "select nr.id as id_remitente, nr.fecha, od.nombre as depto_origen, nrev.enviado_empleado as empleado, nrev.autorizado_capitan as capitan, ";
 		$query .= " nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto, nrev.aprobado_adquisiciones as adquisiciones";
 		$query .= " from nota_remitente nr 
 						join nota_revision nrev on nrev.id_nota_remitente=nr.id 
-						join nota_user nu on nu.id_user=nr.id_user and nu.id_nivel=1
+						join nota_user nu on nu.id_user=nr.id_user
 						join oti_departamento od on od.id=nu.id_depto ";
-		if ($user->authorise('jefe.depto', 'com_nota'))
+		if ($user->authorise('jefe.delgada','com_nota'))
+			$query .= " and (od.id=62 or od.id=".$datos_user['id_depto'].") ";
+		elseif ($user->authorise('jefe.depto', 'com_nota'))
 			$query .= " and od.id=".$datos_user['id_depto']; 
 		if ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota'))
 			$query .= " and od.id in (".$deptos[$datos_user['id_depto']].") ";
@@ -312,7 +318,6 @@ class NotaModelNota extends JModelItem{
 			$query .= ' limit '.(($pagina-1)*10).', 10';
 		else
 			$query .= ' limit 10';
-		//print_r($query);
 		$db->setQuery($query);
 		$db->query();
 		return $db->loadAssocList();
@@ -599,7 +604,7 @@ class NotaModelNota extends JModelItem{
 					join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan=1 and nrev.autorizado_jefe=0 
 					join nota_user nu on nu.id_user=nr.id_user join oti_departamento od on od.id=nu.id_depto";
 		if ($user->authorise("jefe.delgada", "com_nota") && $user->authorise("jefe.punta_arenas", "com_nota"))
-			$query .= " and (od.id_area=4 or od.id_area=2 or od.id_area=1)";
+			$query .= " and (od.id_area=4 or od.id_area=2 or od.id_area=3 or od.id_area=1)";
 		elseif ($user->authorise("jefe.delgada", "com_nota"))
 			$query .= " and od.id_area=4 ";
 		elseif ($user->authorise("jefe.natales", "com_nota"))
@@ -730,12 +735,12 @@ class NotaModelNota extends JModelItem{
 				from nota_remitente nr 
 				join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan=1  
 				join nota_user nu on nu.id_user=nr.id_user join jml_users u on u.id=nu.id_user 
-				join oti_departamento od on od.id=nu.id_depto and od.id_tipo=2 ";
+				join oti_departamento od on od.id=nu.id_depto ";
 		if ($deptos!=''){
 			$query .= ' and od.id in ('.$deptos.')';
 		}
 		if ($user->authorise("jefe.delgada", "com_nota") && $user->authorise("jefe.punta_arenas", "com_nota"))
-			$query .= " and (od.id_area=4 or od.id_area=2 or od.id_area=1)";
+			$query .= " and (od.id_area=1 or od.id_area=2 or od.id_area=3 or od.id_area=4)";
 		elseif ($user->authorise("jefe.delgada", "com_nota"))
 			$query .= " and od.id_area=4 ";
 		elseif ($user->authorise("jefe.natales", "com_nota"))
@@ -759,7 +764,7 @@ class NotaModelNota extends JModelItem{
 					$query .= ' limit 10';
 			}
 		}
-		//print_r($query);
+		
 		$db->setQuery($query);
 		$db->query();
 		if ($db->getNumRows()){
@@ -871,6 +876,36 @@ class NotaModelNota extends JModelItem{
 		$query = "select od.id as id_depto, nn.nave, od.nombre 
 				from oti_departamento od, nota_naveSeccion ns, nota_naves nn 
 				where od.id=ns.id_seccion and ns.id_nave=nn.id and ns.id_nave=".$id_nave;
+		$db->setQuery($query);
+		$db->query();
+		if ($db->getNumRows())
+			return $db->loadAssocList();
+		return array();
+	}
+
+	/**
+	 * Llamado desde controlador principal, reporte en notas naves
+	 */
+	function getReporteNaves($id_nave, $desde, $hasta){
+		$db = JFactory::getDbo();
+		$query = "select nr.id as id_remitente, nr.fecha as fecha_nota, 
+					ni.cantidad, ni.item, ni.motivo, ni.id as id_item, 
+					nm.nueva_cantidad, ni.opcion_oc, nu.id_user, nu.id_depto, nn.nave, 
+					nrev.autorizado_capitan as capitan, nrev.autorizado_jefe as jefe, 
+					nrev.autorizado_depto as depto, nrev.aprobado_adquisiciones as emision_oc,
+					noc.id as orden_compra, noc.fecha as fecha_oc, od.nombre as depto_destino
+				from nota_remitente nr 
+				join nota_item ni on ni.id_remitente=nr.id and nr.fecha between '".$desde."' and '".$hasta."' 
+				join nota_user nu on nu.id_user=nr.id_user 
+				join nota_revision nrev on nrev.id_nota_remitente=nr.id 
+				join oti_departamento od on od.id=nr.id_adepto 
+				left join (select nm.nueva_cantidad, nm.id_item from nota_modificada nm, nota_item ni 
+					where ni.id=nm.id_item order by nm.id desc limit 1) nm on nm.id_item=ni.id 
+				left join nota_ordenDeCompra noc on noc.id_remitente=nr.id and noc.opcion_oc=ni.opcion_oc 
+				join nota_naveSeccion nns on nns.id_seccion=nu.id_depto 
+				join nota_naves nn on nn.id=nns.id_nave";
+		if ($id_nave)
+			$query .=  " and nn.id=".$id_nave;
 		$db->setQuery($query);
 		$db->query();
 		if ($db->getNumRows())
