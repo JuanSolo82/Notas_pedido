@@ -77,12 +77,14 @@ class NotaViewNota extends JView{
 	function setMenu(){
 		$user = JFactory::getUser();
 		$menu = '';
-		//$menu = ".".$user->authorise('jefe.depto', 'com_nota').','.$user->authorise('empleado.depto', 'com_nota').'.';
+		$menu = ".".$user->authorise('jefe.depto', 'com_nota').','.$user->authorise('empleado.depto', 'com_nota').'.';
 		$menu .= $this->getBoton('Nueva nota', 'article-add', 'nueva_nota','');
 		$menu .= $this->getBoton('Notas propias', 'article', 'notas_propias','');
 		
-		if (($user->authorise('jefe.depto', 'com_nota') || $user->authorise('capitan.jefe', 'com_nota') 
-			|| $user->authorise('capitan.sin_jefe', 'com_nota')) && !$user->authorise('empleado.depto', 'com_nota')){
+		if (($user->authorise('jefe.depto', 'com_nota') 
+			|| $user->authorise('capitan.jefe', 'com_nota') 
+			|| $user->authorise('capitan.sin_jefe', 'com_nota')) 
+			&& !$user->authorise('empleado.depto', 'com_nota')){
 			$txt = "Notas recibidas del departamento";
 			if ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota'))
 				$txt = "Notas de la nave";

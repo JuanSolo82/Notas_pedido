@@ -75,7 +75,7 @@ class NotaModelNota extends JModelItem{
 		if ($user->authorise('core.admin', 'com_nota')){
 			if ($user->authorise('empleado.depto', 'com_nota'))
 				$valores = "1,0,0,0,0";
-			if ($user->authorise('jefe.depto', 'com_nota'))
+			elseif ($user->authorise('jefe.depto', 'com_nota'))
 				$valores = "1,1,1,0,0";
 		}
 		else{

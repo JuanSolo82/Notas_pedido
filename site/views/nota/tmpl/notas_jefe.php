@@ -72,13 +72,14 @@ $user = JFactory::getUser();
 			<td align="center">
 			<?php 
 			$url = "";
-			if (($user->authorise('jefe.delgada', 'com_nota') && $j['jefe']!=0) || 
-				($user->authorise('adquisiciones.jefe', 'com_nota') && $j['adquisiciones']) || 
-				($user->authorise('capitan.jefe', 'com_nota') && $j['capitan']!=0)){ 
+			if (($user->authorise('jefe.delgada', 'com_nota') 
+					&& $j['jefe']!=0) 
+				|| ($user->authorise('adquisiciones.jefe', 'com_nota') && $j['adquisiciones']) 
+				|| ($user->authorise('capitan.jefe', 'com_nota') && $j['capitan']!=0)){ 
 				$url = JRoute::_('index.php?option=com_nota&view=reportes&task=reportes.detalle_nota&id_nota='.$j['id_remitente'].'&tmpl=component');
-			} elseif (($j['jefe']==0 && ($user->authorise('jefe.depto', 'com_nota') && !$j['capitan'])) || 
-						(($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota')) && $j['capitan']==0) && 
-						$j['empleado']!=2 || $user->authorise('jefe.delgada', 'com_nota')){ 
+			} else if (($user->authorise('jefe.depto', 'com_nota') && !$j['jefe'])
+					|| (($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota')) && !$j['capitan'])
+					|| ($user->authorise('jefe.delgada', 'com_nota') && !$j['jefe'])){ 
 				$url = JRoute::_('index.php?option=com_nota&view=com_nota&task=detalle_notajefe&id_nota='.$j['id_remitente'].'&tmpl=component');
 			}else{
 				$url = JRoute::_('index.php?option=com_nota&view=com_nota&task=reportes.detalle_nota&id_nota='.$j['id_remitente'].'&tmpl=component');

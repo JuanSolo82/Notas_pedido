@@ -294,7 +294,9 @@ if ($this->id_user==$this->detalle_nota['id_user'] && $this->datos_nota['aprobad
 	</div>
 <?php } ?>
 
-<?php if (($user->authorise('jefe.delgada','com_nota') || $user->authorise('jefe.natales', 'com_nota')) && !$user->authorise('core.admin', 'com_nota') && $this->detalle_nota['autorizado_jefe']==0){ ?>
+<?php if (($user->authorise('jefe.delgada','com_nota') || $user->authorise('jefe.natales', 'com_nota')) 
+			&& !$user->authorise('core.admin', 'com_nota') 
+			&& $this->detalle_nota['autorizado_jefe']==0){ ?>
 <div id='boton_guardar'>
 	<a onclick="aprobar_naves(<?php echo $this->id_remitente ?>, <?php echo $j ?>)">
 		<div class='boton' style="height: auto;"><img src='/portal/administrator/templates/hathor/images/header/icon-48-save.png' /><br>Autorizar nota</div>

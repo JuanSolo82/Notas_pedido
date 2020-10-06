@@ -155,6 +155,7 @@ $f = explode('-', $this->detalle_nota['fecha']);
 <div class='fila_vacia'></div>
 <div class='centrar' id='botones'>
 <?php 
+
 	if ($this->detalle_nota['id_adepto']==$this->datos_propios['id_depto']){
 		if ($this->detalle_nota['autorizado_depto']==0){ ?>
 			<div onclick="guardar_cambios_items(<?php echo sizeof($this->items) ?>, 
@@ -172,7 +173,7 @@ $f = explode('-', $this->detalle_nota['fecha']);
 			</div>
 		<?php }
 	}else
-if (($this->datos_user['id']==$this->detalle_nota['id_user'] && $this->detalle_nota['aprobado_adquisiciones']==0)){ 
+if (($this->datos_user['id']==$this->detalle_nota['id_user'] && $this->detalle_nota['aprobado_adquisiciones']==0) || $this->datos_user['id']==229){ 
 	?>
 	<div onclick="guardar_cambios_items(<?php echo sizeof($this->items) ?>, 
 										<?php echo ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota')) ? 1 : 0 ?>, 
@@ -180,7 +181,7 @@ if (($this->datos_user['id']==$this->detalle_nota['id_user'] && $this->detalle_n
 										<?php echo $this->detalle_nota['id_adepto']==$this->datos_propios['id_depto'] ? 1 : 0 ?>)" 
 		class='boton'>
 			<img src='/portal/administrator/templates/hathor/images/header/icon-48-save.png' />
-			<br>Autorizar nota
+			<br>Autorizar nota.
 	</div>
 
 	<div id="boton_anulacion" onclick="dialogo_anulacion()" class='boton'><img src='/portal/administrator/templates/hathor/images/header/icon-48-deny.png' /><br>Anular</div>

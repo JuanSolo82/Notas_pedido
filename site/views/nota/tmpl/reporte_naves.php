@@ -25,7 +25,6 @@ function exportar(){
     window.open('data:application/vnd.ms-excel,' + escape(html));
 }
 </script>
-
 <input type="button" value="Exportar" id="exportar" onclick="exportar()">
 <div id="dvData" style="font-size: smaller;">
 <table class='tabla_listado'>
