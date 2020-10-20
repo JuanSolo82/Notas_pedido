@@ -198,7 +198,7 @@ class NotaController extends JController{
 		$items_nota = $model->getItems($id_remitente);
 		$jinput->set("datos_nota", $datos_nota);
 		$jinput->set("items_nota", $items_nota);
-		if (!$user->authorise('adquisiciones.jefe','com_nota'))
+		if (!$user->authorise('adquisiciones.jefe','com_nota') || $user->username!='jmarinan')
 			$this->preparar_correo($id_remitente, $nombre_tripulante);
 		parent::display();
 	}

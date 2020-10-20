@@ -36,7 +36,7 @@ class NotaModelNota extends JModelItem{
 	}
 	public function getCentros_costo(){
         $db = JFactory::getDBO();
-        $query = 'SELECT id, nombre, noteable, id_tipo, id_area, ley_navarino from oti_departamento where activo=1 and id_tipo!=3 order by nombre';
+        $query = 'SELECT id, nombre, noteable, id_tipo, id_area, ley_navarino from oti_departamento where activo=1 order by nombre';
         $db->setQuery($query);
         $db->query();
         $num_rows = $db->getNumRows();
@@ -73,10 +73,15 @@ class NotaModelNota extends JModelItem{
 		$user = JFactory::getUser();
 		$valores = "0,0,0,0,0";
 		if ($user->authorise('core.admin', 'com_nota')){
-			if ($user->authorise('empleado.depto', 'com_nota'))
+			/*if ($user->authorise('empleado.depto', 'com_nota'))
 				$valores = "1,0,0,0,0";
 			elseif ($user->authorise('jefe.depto', 'com_nota'))
-				$valores = "1,1,1,0,0";
+				$valores = "1,1,1,1,0";*/
+			if ($user->authorise('jefe.depto', 'com_nota'))
+				$valores = "1,1,1,1,0";
+			elseif ($user->authorise('empleado.depto', 'com_nota'))
+				$valores = "1,0,0,0,0";
+			//print_r($valores);
 		}
 		else{
 			if ($user->authorise('tripulante', 'com_nota') || $user->authorise('empleado.depto', 'com_nota')){
