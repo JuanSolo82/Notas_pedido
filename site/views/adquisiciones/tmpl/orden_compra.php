@@ -12,7 +12,7 @@ $opciones = array();
 foreach ($this->items as $i)
 	$opciones[$i['opcion_oc']] = $i['opcion_oc'];
 ?>
-<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?fra=2999"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?fra=10"></script>
 <script type="text/javascript" src="/portal/components/com_nota/assets/js/adquisiciones.js?tim=5544"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <br>
@@ -190,14 +190,16 @@ $proveedor = explode('_',$this->datos_nota['proveedor']);
 		p.p. Transbordadora Austral Broom
 	</div>
 </div>
+<?php if (NotaHelper::isTestSite()){ ?>
+	<a href="/portal/media/notas_pedido/Orden_compra.pdf" target="_blank">OC_____</a>
+<?php } ?>
+
 <?php 
 $url = JRoute::_('index.php?option=com_nota&task=adquisiciones.generar_orden&format=pdf&tmpl=component&id_remitente='.$this->id_remitente.'&opcion='.$opcion); 
 ?>
 	<!--<a onclick="preparar_oc('<?php echo $url ?>', <?php echo $this->id_remitente ?>, <?php echo $opcion ?>, <?php echo $j ?>)">-->
 	<a onclick="cargar_pdf(<?php echo $this->id_remitente ?>,0, <?php echo $opcion ?>, <?php echo sizeof($opciones) ?>)">
 		<div class='boton'><img src='/portal/administrator/templates/hathor/images/header/icon-48-print.png' /><br>Imprimir</div>
-	</a>
-	<a>
 	</a>
 	<!--<input type='button' onclick="cargar_pdf(<?php echo $this->id_remitente ?>)" value="boton">-->
 	<br>

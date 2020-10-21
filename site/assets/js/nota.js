@@ -541,6 +541,7 @@ function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
                 }
         });
     }
+    //console.log(proveedor+', '+cotizacion);
     $.ajax({
         url: 'index.php?option=com_nota&task=adquisiciones.generarOrden',
         timeout: 1500,
@@ -553,10 +554,10 @@ function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
                 giro_proveedor: giro_proveedor,
                 opciones: opciones,
                 cotizacion: cotizacion},
-        success: function(data){
-            console.log(data);
+        success: function(){
+            window.open('/portal/media/notas_pedido/Orden_compra.pdf', 'nombre'); 
             $("#generada_oc"+opcion).css("display", "block");
-            window.open('/portal/media/notas_pedido/Orden_compra.pdf');
+            //window.open('/portal/media/notas_pedido/Orden_compra.pdf');
         }
     });
 }

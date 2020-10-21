@@ -118,7 +118,7 @@ class NotaModelAdquisiciones extends JModelItem{
 	}
 	public function getDetalle_orden($id_remitente, $opcion){
 		$db = JFactory::getDbo();
-		$query = "select id, id_remitente, id_user, opcion_oc, fecha, hora, proveedor 
+		$query = "select id, id_remitente, id_user, opcion_oc, fecha, hora, proveedor, cotizacion 
 				from nota_ordenDeCompra where id_remitente=".$id_remitente." and opcion_oc=".$opcion;
 		$db->setQuery($query);
 		$db->query();
