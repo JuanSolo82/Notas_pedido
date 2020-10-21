@@ -62,10 +62,10 @@ class NotaModelNota extends JModelItem{
 		$db->query();
 		return $db->loadAssocList();
 	}
-	public function insertar_nota($id_adepto, $id_user, $fecha, $hora, $id_prioridad, $id_depto_compra, $id_depto_costo, $proveedor, $ley_navarino, $id_tipo_pedido){
+	public function insertar_nota($id_adepto, $id_user, $fecha, $hora, $id_prioridad, $id_depto_compra, $id_depto_costo, $proveedor, $ley_navarino, $id_tipo_pedido, $cotizacion=""){
 		$db = JFactory::getDbo();
-		$query = "insert into nota_remitente(id_adepto, id_user, fecha, hora, id_prioridad, id_depto_compra, borrador, id_depto_costo, proveedor, ley_navarino, id_tipo_pedido) 
-			values(".$id_adepto.",".$id_user.", ".$fecha.", ".$hora.", ".$id_prioridad.",".$id_depto_compra.", 0, ".$id_depto_costo.", ".(strlen($proveedor) ? $proveedor : '""').",".$ley_navarino.", ".$id_tipo_pedido.")";
+		$query = "insert into nota_remitente(id_adepto, id_user, fecha, hora, id_prioridad, id_depto_compra, borrador, id_depto_costo, proveedor, ley_navarino, id_tipo_pedido, cotizacion) 
+			values(".$id_adepto.",".$id_user.", ".$fecha.", ".$hora.", ".$id_prioridad.",".$id_depto_compra.", 0, ".$id_depto_costo.", ".(strlen($proveedor) ? $proveedor : '""').",".$ley_navarino.", ".$id_tipo_pedido.", '".$cotizacion."')";
 		$db->setQuery($query);
 		$db->query();
 		$id_remitente = $db->insertid();
@@ -201,7 +201,7 @@ class NotaModelNota extends JModelItem{
 	function getDetalle_nota($id_remitente){
 		$db = JFactory::getDbo();
 		$query = "select nr.id as id_remitente, nr.id_tipo_pedido, nr.ley_navarino, u.name as nombre_usuario, u.email,
-					od.nombre as depto_origen, nr.fecha, nr.proveedor, nr.id_depto_costo, 
+					od.nombre as depto_origen, nr.fecha, nr.proveedor, nr.id_depto_costo, nr.cotizacion,
 					nnr.nombre as nombre_remitente, nu.id_depto as id_depto_origen, nr.id_user,
 					nr.id_adepto, nrev.autorizado_jefe, nrev.autorizado_capitan, nrev.autorizado_depto, nrev.aprobado_adquisiciones, 
 					np.descripcion as prioridad, dc.depto_compra, na.aprobado, na.anotacion, na.fecha_anotacion 

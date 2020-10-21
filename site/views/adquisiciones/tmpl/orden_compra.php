@@ -5,15 +5,15 @@ defined('_JEXEC') or die('Restricted access');
 JHTML::stylesheet('nota.css', 'components/com_nota/assets/css/');
 JHTML::script('jquery.min.js', 'components/com_nota/assets/js/');
 JHTML::script('jquery-ui.min.js', 'components/com_nota/assets/js/');
-JHTML::script('nota.js', 'components/com_nota/assets/js/');
+//JHTML::script('nota.js', 'components/com_nota/assets/js/');
 JHtml::_('behavior.modal'); 
 require_once(JPATH_COMPONENT_SITE.'/assets/helper.php');
 $opciones = array();
 foreach ($this->items as $i)
 	$opciones[$i['opcion_oc']] = $i['opcion_oc'];
 ?>
-<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?vr=123"></script>
-<script type="text/javascript" src="/portal/components/com_nota/assets/js/adquisiciones.js?vr=123"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?fra=2999"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/adquisiciones.js?tim=5544"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <br>
 <input type="hidden" id="sitio_pruebas" value="<?php echo NotaHelper::isTestSite() ?>">
@@ -40,13 +40,15 @@ foreach ($opciones as $opcion){ ?>
 $proveedor = explode('_',$this->datos_nota['proveedor']);
 ?>
 <div style="border: 1px solid grey; height: auto; width: 400px; margin-bottom: 20px; padding: 10px;">
-	<div style="float: left; width: 25%;"><b>Proveedor</b></div>
+	<div style="float: left; width: 35%;"><b>Proveedor</b></div>
 	<input type="text" size="30" autocomplete="off" onkeypress="cargar_proveedor(this.value, <?php echo $opcion ?>)" id="proveedor_escogido<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? ucwords(strtolower($this->proveedor['RazonSocial'])) : "" ?>"><br>
 	<div id='proveedor<?php echo $opcion ?>'></div>
-	<div style="float: left; width: 25%;"><b style="width: 25%;">Rut</b></div>
+	<div style="float: left; width: 35%;"><b style="width: 25%;">Rut</b></div>
 	<input type="text" size="30" id="rut_proveedor<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? $this->proveedor['rut'] : "" ?>"><br>
-	<div style="float: left; width: 25%;"><b style="width: 25%;">Giro</b></div>
+	<div style="float: left; width: 35%;"><b style="width: 25%;">Giro</b></div>
 	<input type="text" size="30" id="giro_proveedor<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? ucwords(strtolower($this->proveedor['giro'])) : "" ?>">
+	<div style="float: left; width: 35%;"><b style="width: 25%;">Cotización (opcional)</b></div>
+	<input type="text" size="30" autocomplete="off" id="cotizacion<?php echo $opcion ?>" value="<?php echo $this->datos_nota['cotizacion'] ? $this->datos_nota['cotizacion'] : "" ?>">
 </div>
 <div style="width: 80%; float: left;">
 	<table class='tabla_listado' style="width: 97%;">

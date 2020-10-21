@@ -83,13 +83,14 @@ function previa_oc(opcion, num_items){
 		return;
 	}
 	if (proveedor!=''){
-		html = "Proveedor: "+$("#proveedor_escogido"+opcion).val()+"<br>";
+		html += "Proveedor: "+$("#proveedor_escogido"+opcion).val()+"<br>";
 		html += "Rut: "+$("#rut_proveedor"+opcion).val()+"<br>";
 		html += "Giro: "+$("#giro_proveedor"+opcion).val();
-		$("#proveedor_oc"+opcion).html(html);
 	}
-	else
-		$("#proveedor_oc"+opcion).html("");
+	if ($("#cotizacion"+opcion).val().trim()!='')
+		html += "<br>Cotizacion: "+$("#cotizacion"+opcion).val();
+	$("#proveedor_oc"+opcion).html(html);
+	
 	var html = "<table class='items_oc'><tr>";
 	html += "<td class='numero_oc'><b>#</b></td>";
 	html += "<td class='cantidad_oc'><b>Cantidad</b></td>";

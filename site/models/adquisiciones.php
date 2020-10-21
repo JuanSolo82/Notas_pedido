@@ -61,18 +61,19 @@ class NotaModelAdquisiciones extends JModelItem{
 		$db->setQuery($query);
 		$db->query();
 	}
-	public function setOrden($id_remitente, $opcion, $num_opciones, $proveedor='', $rut_proveedor='', $giro_proveedor=''){
+	public function setOrden($id_remitente, $opcion, $num_opciones, $proveedor='', $rut_proveedor='', $giro_proveedor='', $cotizacion=''){
+		echo $cotizacion.'_';
 		$datos_oc = $this->getDetalle_orden($id_remitente, $opcion);
 		$db = JFactory::getDbo();
 		$fecha = date("Y-m-d");
 		$hora = date("H:i:s");
 		$user = JFactory::getUser();
 		if (!sizeof($datos_oc)){
-			$query = "insert into nota_ordenDeCompra(id_remitente, id_user, opcion_oc, fecha, hora, proveedor, activo) 
-						values(".$id_remitente.", ".$user->id.", ".$opcion.", '".$fecha."', '".$hora."', '".$proveedor."',1)";
+			$query = "insert into nota_ordenDeCompra(id_remitente, id_user, opcion_oc, fecha, hora, proveedor, activo, cotizacion) 
+						values(".$id_remitente.", ".$user->id.", ".$opcion.", '".$fecha."', '".$hora."', '".$proveedor."',1, '".$cotizacion."')";
 			$db->setQuery($query);
 			$db->query();
-			
+			print_r($query);
 		}else{
 			$query = "update nota_ordenDeCompra set activo=0 where id_remitente=".$id_remitente." and opcion_oc=".$opcion;
 			$db->setQuery($query);
@@ -114,8 +115,6 @@ class NotaModelAdquisiciones extends JModelItem{
 				$db->query();
 			}
 		}
-		
-		
 	}
 	public function getDetalle_orden($id_remitente, $opcion){
 		$db = JFactory::getDbo();

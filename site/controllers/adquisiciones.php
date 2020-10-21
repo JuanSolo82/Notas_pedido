@@ -258,11 +258,13 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$proveedor 		= $jinput->get('proveedor', '', 'string');
 		$rut_proveedor	= $jinput->get('rut_proveedor', '', 'string');
 		$giro_proveedor	= $jinput->get('giro_proveedor', '', 'string');
+		$cotizacion		= $jinput->get('cotizacion', '', 'string');
 		$num_opciones	= $jinput->get('opciones', 1, 'int');
 		$solo_imprimir	= $jinput->get('solo_imprimir', 0, 'int');
 		$model	= $this->getModel('nota');
 		$model2 = $this->getModel('adquisiciones');
 		$datos_proveedor = $model->getProveedor($proveedor, $rut_proveedor);
+
 		/*if (sizeof($datos_proveedor)){
 			$giro_proveedor = $datos_proveedor['giro'];
 		}*/
@@ -271,8 +273,9 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$datos_oc = $model2->getDetalle_orden($id_remitente, $opcion);
 		if (sizeof($datos_oc)) $solo_imprimir = 1;
 		if (!$solo_imprimir){
-			$model2->setOrden($id_remitente, $opcion, $num_opciones, $proveedor."_".$rut_proveedor."_".$giro_proveedor);
+			$model2->setOrden($id_remitente, $opcion, $num_opciones, $proveedor."_".$rut_proveedor."_".$giro_proveedor, $rut_proveedor, $giro_proveedor, $cotizacion);
 		}
+		return;
 		$datos_oc = $model2->getDetalle_orden($id_remitente, $opcion);
 		$p = explode('_', $datos_oc['proveedor']);
 		$proveedor = $p[0];
@@ -298,7 +301,8 @@ class NotaControllerAdquisiciones extends JControllerForm
 			QRcode::png($tqr, $filename, $errorCorrectionLevel, $matrixPointSize, 2);
 
 		require_once(JPATH_LIBRARIES.'/joomla/document/pdf/pdf.php');
-		$html = $this->orden_html($datos_nota, $items, $opcion, $datos_oc, $proveedor, $rut_proveedor, $giro_proveedor);
+		echo $cotizacion.'>>>>>>>>>>>';
+		$html = $this->orden_html($datos_nota, $items, $opcion, $datos_oc, $proveedor, $rut_proveedor, $giro_proveedor, $cotizacion);
 		$pdf = new JDocumentpdf();
 		$pdf->guardar_oc($url, $html);
 
@@ -317,7 +321,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$pdf = new JDocumentpdf();
 		$pdf->guardar_oc(JPATH_SITE.'/media/notas_pedido/nota_pedido.pdf', $html);
 	}
-	function orden_html($datos, $items, $opcion, $datos_oc, $proveedor, $rut_proveedor, $giro_proveedor){
+	function orden_html($datos, $items, $opcion, $datos_oc, $proveedor, $rut_proveedor, $giro_proveedor, $cotizacion){
 		$meses = array('01' => 'enero', '02' => 'febrero', '03' => 'marzo', '04' => 'abril', '05' => 'mayo',
 				'06' => 'junio', '07' => 'julio', '08' => 'agosto', '09' => 'septiembre', '10' => 'octubre', '11' => 'noviembre', '12' => 'diciembre');
 
@@ -369,6 +373,8 @@ class NotaControllerAdquisiciones extends JControllerForm
 			$html .= 'Rut: '.$rut_proveedor.'<br>';
 			$html .= 'Giro: '.$giro_proveedor;
 		}
+		if ($cotizacion!='')
+			$html .= '<br>Cotizaci'.htmlentities(ó).'n: '.$cotizacion;
 		$html .= '		</div>
 					</td>';
 		if (NotaHelper::isTestSite()){

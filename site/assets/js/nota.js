@@ -525,6 +525,7 @@ function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
     var proveedor       = $('#proveedor_escogido'+opcion).val();
     var rut_proveedor   = $("#rut_proveedor"+opcion).val();
     var giro_proveedor  = $("#giro_proveedor"+opcion).val();
+    var cotizacion      = $("#cotizacion"+opcion).val();
     var items_orden = $("#items_orden"+opcion).val();
     for (var i=1;i<=items_orden;i++){
         $.ajax({
@@ -550,8 +551,10 @@ function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
                 proveedor: proveedor, 
                 rut_proveedor: rut_proveedor,
                 giro_proveedor: giro_proveedor,
-                opciones: opciones},
-        success: function(){
+                opciones: opciones,
+                cotizacion: cotizacion},
+        success: function(data){
+            console.log(data);
             $("#generada_oc"+opcion).css("display", "block");
             window.open('/portal/media/notas_pedido/Orden_compra.pdf');
         }

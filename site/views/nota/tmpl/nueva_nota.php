@@ -94,18 +94,25 @@ $user = JFactory::getUser();
 				</div>
 			</div>
 		</div>
-		<?php if (NotaHelper::isTestSite()){ ?>
+		<?php if (/*NotaHelper::isTestSite()*/ $user->authorise('jefe.depto','com_nota')){ ?>
 		<div class='centrar'>
 			<div class='fila_completa bordear' style='width: 90%;'>
 				<div class="col-3 titulo_item">Proveedor (opcional)</div>
 				<div class="col-4">
 					<input type='text' id='proveedor_escogido' name='proveedor_escogido' size='40' onkeypress="cargar_proveedor(this.value)" placeholder="Nombre proveedor">
 					<div id='proveedor'></div>
-					<input type="text" name="rut_proveedor" id="rut_proveedor" placeholder="Rut.">
+					<input type="text" name="rut_proveedor" id="rut_proveedor" placeholder="Rut">
 					<input type="text" name="giro_proveedor" id="giro_proveedor" placeholder="Giro">
 				</div>
 				<div class="col-3" id='rut_texto'></div>
-				
+			</div>
+		</div>
+		<div class='centrar'>
+			<div class='fila_completa bordear' style='width: 90%;'>
+				<div class="col-3 titulo_item">Cotización (opcional)</div>
+				<div class="col-7">
+					<input type="text" name="cotizacion" id="cotizacion">
+				</div>
 			</div>
 		</div>
 		<?php } ?>

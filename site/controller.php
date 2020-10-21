@@ -146,6 +146,7 @@ class NotaController extends JController{
 		$proveedor 			= $jinput->get("proveedor_escogido", "", "string");
 		$rut_proveedor		= $jinput->get("rut_proveedor", "", "string");
 		$giro_proveedor		= $jinput->get("giro_proveedor", "", "string");
+		$cotizacion 		= $jinput->get("cotizacion", "", "string");
 		
 		if (strlen($proveedor)){
 			$proveedor 			= NotaHelper::msquote($proveedor."_".$rut_proveedor."_".$giro_proveedor);
@@ -173,7 +174,7 @@ class NotaController extends JController{
 		print_r($intervalo->format('%Y años %m meses %d days %H horas %i minutos %s segundos')); */
 		$valor = 0;
 		if (!$id_remitente){
-			$id_remitente = $model->insertar_nota($id_adepto, $id_user, $fecha, $hora, $id_prioridad, $id_depto_compra, $id_depto_costo, $proveedor, $datos_depto['ley_navarino'], $id_tipo_pedido);
+			$id_remitente = $model->insertar_nota($id_adepto, $id_user, $fecha, $hora, $id_prioridad, $id_depto_compra, $id_depto_costo, $proveedor, $datos_depto['ley_navarino'], $id_tipo_pedido, $cotizacion);
 			for ($i=1;$i<=15;$i++){
 				$nombre_archivo = '';
 				$cantidad 		= $jinput->get("cantidad".$i, 0, 'float');
