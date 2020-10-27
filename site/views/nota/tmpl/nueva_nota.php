@@ -11,7 +11,7 @@ JHTML::script('jquery.typeahead.min.js', 'components/com_nota/assets/js/');
 //echo JRequest::checkToken('get')."?";
 $user = JFactory::getUser();
 ?>
-<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?car=46"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?gast=128"></script>
 <div class='fila_completa centrar' style='margin-bottom: 20px;'>
 	<div class='barra_nombre' style='width: 90%;'>Nueva nota</div>
 </div>
@@ -41,7 +41,10 @@ $user = JFactory::getUser();
 	<?php }else{ ?>
 				<select id="depto_destino" name="depto_destino">
 				<?php foreach ($this->deptos as $d){ ?>
-					<option value='<?php echo $d['id'] ?>' <?php echo ($d['id']==4 ? 'selected' : '') ?>><?php echo $d['nombre'] ?></option>
+					<?php if ($d['id']!=$this->datos_user['id_depto']){ ?>
+						<option value='<?php echo $d['id'] ?>' <?php echo ($d['id']==4 ? 'selected' : '') ?>><?php echo $d['nombre'] ?></option>
+					<?php } ?>
+					
 				<?php } ?>
 				</select>
 	<?php } ?>
@@ -66,7 +69,21 @@ $user = JFactory::getUser();
 			</div>
 		</div>
 	<?php } ?>
-	
+	<?php if ($user->authorise('depto_compra', 'com_nota')){ ?>
+	<div class='centrar'>
+		<div class='fila_completa bordear' style='width: 90%;'>
+			<div class="col-3 titulo_item">Responsable compra</div>
+			<div class="col-7">
+				<select name="id_depto_compra" id="id_depto_compra">
+					<option value='4'>Adquisiciones</option>
+					<option value='0'>Depto. destino</option>
+					<option value='<?php echo $this->datos_user['id_depto'] ?>'><?php echo $this->datos_user['departamento'] ?></option>
+				</select>
+			</div>
+		</div>
+	</div>
+	<?php } ?>
+
 	<div class='centrar'>
 		<div class='fila_completa bordear' style='width: 90%;'>
 			<div class="col-3 titulo_item">Prioridad</div>
@@ -86,12 +103,27 @@ $user = JFactory::getUser();
 		<div class='centrar'>
 			<div class='fila_completa bordear' style='width: 90%;'>
 				<div class="col-3 titulo_item">Tipo de pedido</div>
-				<div class="col-7">
+				<div class="col-3">
 					<select name="tipo_pedido" id="tipo_pedido">
 						<option value='1'>Producto</option>
 						<option value='2'>Servicio</option>
 					</select>
 				</div>
+			<?php if ($user->authorise('core.admin', 'com_nota')){ ?>
+				<div class="col-4" id="gasto_inversion">
+				<div class="col-4">
+					<b>Inversión o gasto: </b> 
+				</div>
+				<div class="col-5">
+					<select name="tipo_gasto" id="tipo_gasto">
+						<option value='0'>Sin calificar</option>
+						<option value='1'>Inversión</option>
+						<option value='2'>Gasto</option>
+					</select>
+				</div>
+				</div>
+			<?php } ?>
+				
 			</div>
 		</div>
 		<?php if (/*NotaHelper::isTestSite()*/ $user->authorise('jefe.depto','com_nota')){ ?>

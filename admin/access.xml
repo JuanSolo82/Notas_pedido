@@ -17,5 +17,6 @@
 		<action name="procedimientos" title="Menú de reportes" description="Permite ingresar a menú de reportes de procedimientos" />
 		<action name="tripulante.maquina" title="Destino notas Mantenimiento" description="Restringe departamento de destino Operaciones" />
 		<action name="centro_costo" title="Escoger centro de costo" description="El empleado puede escoger centro de costo" />
+		<action name="depto_compra" title="Departamento compra" description="El empleado puede escoger el departamento que se hace cargo de la compra" />
 	</section>
 </access>

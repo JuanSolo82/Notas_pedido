@@ -77,7 +77,23 @@ $(document).ready(function() {
     $("#cantidad1").focus(function(){
         $("#lista_proveedores").fadeOut();
     });
-    
+
+    if ($("#tipo_gasto").length){
+        var tipo_pedido = parseInt($("#tipo_pedido option:selected").val());
+        if (tipo_pedido==1)
+            $("#tipo_gasto").prop('disabled', false);
+        else
+            $("#tipo_gasto").prop('disabled', true);
+        $("#tipo_pedido").change(function(){
+            var tipo_pedido = parseInt($("#tipo_pedido option:selected").val());
+            if (tipo_pedido==1)
+                $("#tipo_gasto").prop('disabled', false);
+            else{
+                $("#tipo_gasto").val(0);
+                $("#tipo_gasto").prop('disabled', true);
+            }
+        });
+    }
 });
 
 function aprobar_naves(id_remitente, items){

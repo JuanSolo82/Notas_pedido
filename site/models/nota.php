@@ -77,8 +77,12 @@ class NotaModelNota extends JModelItem{
 				$valores = "1,0,0,0,0";
 			elseif ($user->authorise('jefe.depto', 'com_nota'))
 				$valores = "1,1,1,1,0";*/
-			if ($user->authorise('jefe.depto', 'com_nota'))
-				$valores = "1,1,1,1,0";
+			if ($user->authorise('jefe.depto', 'com_nota')){
+				if ($id_adepto==4)
+					$valores = "1,1,1,1,0";
+				else
+					$valores = "1,1,1,0,0";
+			}
 			elseif ($user->authorise('empleado.depto', 'com_nota'))
 				$valores = "1,0,0,0,0";
 			//print_r($valores);
@@ -916,5 +920,18 @@ class NotaModelNota extends JModelItem{
 		if ($db->getNumRows())
 			return $db->loadAssocList();
 		return array();
+	}
+
+	function setTipo_gasto($id_remitente, $id_tipo){
+		$db = JFactory::getDbo();
+		$query = "select id from nota_gastoInversion where id_remitente=".$id_remitente;
+		$db->setQuery($query);
+		$db->query();
+
+		if (!$db->getNumRows()){
+			$query = "insert into nota_gastoInversion(id_remitente, id_tipo) values(".$id_remitente.", ".$id_tipo.")";
+			$db->setQuery($query);
+			$db->query();
+		}
 	}
 }

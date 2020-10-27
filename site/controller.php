@@ -141,12 +141,15 @@ class NotaController extends JController{
 		
 		$id_prioridad 		= $jinput->get("prioridad", 0, "int");
 		$nombre_tripulante	= $jinput->get("nombre_tripulante", "", "string");
-		$id_depto_compra	= 4; // para revisar
+		$id_depto_compra	= $jinput->get("id_depto_compra", 4, "int");; // para revisar
 		$id_tipo_pedido 	= $jinput->get("tipo_pedido", 1, "int"); // 1 producto, 2 servicio
 		$proveedor 			= $jinput->get("proveedor_escogido", "", "string");
 		$rut_proveedor		= $jinput->get("rut_proveedor", "", "string");
 		$giro_proveedor		= $jinput->get("giro_proveedor", "", "string");
 		$cotizacion 		= $jinput->get("cotizacion", "", "string");
+		$tipo_gasto			= $jinput->get("tipo_gasto", 0, "int");
+
+		if (!$id_depto_compra) $id_depto_compra = $id_adepto;
 		
 		if (strlen($proveedor)){
 			$proveedor 			= NotaHelper::msquote($proveedor."_".$rut_proveedor."_".$giro_proveedor);
@@ -194,7 +197,8 @@ class NotaController extends JController{
 		if (trim($nombre_tripulante)){
 			$model->nombre_remitente($id_remitente, $nombre_tripulante);
 		}
-		
+		if ($tipo_gasto)
+			$model->setTipo_gasto($id_remitente, $tipo_gasto);
 		$datos_nota = $model->getDetalle_nota($id_remitente);
 		$items_nota = $model->getItems($id_remitente);
 		$jinput->set("datos_nota", $datos_nota);
@@ -204,6 +208,7 @@ class NotaController extends JController{
 				$this->preparar_correo($id_remitente, $nombre_tripulante);
 		parent::display();
 	}
+
 	function preparar_correo($id_remitente, $nombre_tripulante=""){
 		$jinput = JFactory::getApplication()->input;
 		$model = $this->getModel('nota');
