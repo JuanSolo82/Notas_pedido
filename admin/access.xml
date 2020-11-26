@@ -3,6 +3,7 @@
 	<section name="component">
 		<action name="core.admin" title="JACTION_ADMIN" description="JACTION_ADMIN_COMPONENT_DESC" />
 		<action name="core.manage" title="JACTION_MANAGE" description="JACTION_MANAGE_COMPONENT_DESC" />
+		<action name="acceder" title="Acceso" description="Permite acceder al módulo de notas de pedido 1.5" />
 		<action name="empleado.depto" title="Empleado de departamento" description="Permite crear y revisar notas de pedido" />
 		<action name="jefe.depto" title="Revisión jefe" description="Permite aprobar, modificar o rechazar notas del propio departamento" />
 		<action name="tripulante" title="Tripulaciones" description="Permite a un tripulante de nave crean notas" />

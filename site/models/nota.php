@@ -73,19 +73,15 @@ class NotaModelNota extends JModelItem{
 		$user = JFactory::getUser();
 		$valores = "0,0,0,0,0";
 		if ($user->authorise('core.admin', 'com_nota')){
-			/*if ($user->authorise('empleado.depto', 'com_nota'))
-				$valores = "1,0,0,0,0";
-			elseif ($user->authorise('jefe.depto', 'com_nota'))
-				$valores = "1,1,1,1,0";*/
-			if ($user->authorise('jefe.depto', 'com_nota')){
+			$usuario = $this->getDatos_user($user->id);
+			if ($usuario['id_nivel']==2){
 				if ($id_adepto==4)
 					$valores = "1,1,1,1,0";
 				else
 					$valores = "1,1,1,0,0";
-			}
-			elseif ($user->authorise('empleado.depto', 'com_nota'))
+			}else{
 				$valores = "1,0,0,0,0";
-			//print_r($valores);
+			}
 		}
 		else{
 			if ($user->authorise('tripulante', 'com_nota') || $user->authorise('empleado.depto', 'com_nota')){

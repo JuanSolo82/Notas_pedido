@@ -534,7 +534,7 @@ class NotaControllerAdquisiciones extends JControllerForm
         $document = JFactory::getDocument();
 		$meses = array('01' => 'enero', '02' => 'febrero', '03' => 'marzo', '04' => 'abril', '05' => 'mayo',
 				'06' => 'junio', '07' => 'julio', '08' => 'agosto', '09' => 'septiembre', '10' => 'octubre', '11' => 'noviembre', '12' => 'diciembre');
-		$url = JPATH_SITE.'/media/notas_pedido/Orden_compra.pdf';
+		$url = JPATH_SITE.'/media/notas_pedido/Orden_compra'.$id_remitente.'-'.$opcion.'.pdf';
 		/**
 		 * Generador QR
 		 */
