@@ -292,6 +292,7 @@ class NotaModelNota extends JModelItem{
 			70 => "37,19",
 			71 => "18,26", // crux 
 			72 => '9,29', 
+			73 => '7,25,86', // bahía
 			90 => "40",
 			74 => "11,38", // yaghan
 			75 => "34,10", 
@@ -929,5 +930,20 @@ class NotaModelNota extends JModelItem{
 			$db->setQuery($query);
 			$db->query();
 		}
+	}
+
+	function getItems_usuario($id_usuario, $item){
+		$db = JFactory::getDbo();
+		$query = "select ni.item 
+				from nota_item ni
+				join nota_remitente nr on nr.id=ni.id_remitente and nr.id_user=".$id_usuario."
+				where ni.item LIKE '%".$item."%'
+				group by ni.item";
+		$db->setQuery($query);
+		$db->query();
+		if ($db->getNumRows()){
+			return $db->loadAssocList();
+		}
+		return array();
 	}
 }

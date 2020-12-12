@@ -11,7 +11,7 @@ JHTML::script('jquery.typeahead.min.js', 'components/com_nota/assets/js/');
 //echo JRequest::checkToken('get')."?";
 $user = JFactory::getUser();
 ?>
-<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?gast=128"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?ges=128"></script>
 <div class='fila_completa centrar' style='margin-bottom: 20px;'>
 	<div class='barra_nombre' style='width: 90%;'>Nueva nota</div>
 </div>
@@ -126,12 +126,13 @@ $user = JFactory::getUser();
 				
 			</div>
 		</div>
-		<?php if (/*NotaHelper::isTestSite()*/ $user->authorise('jefe.depto','com_nota')){ ?>
+		<?php if ($user->authorise('jefe.depto','com_nota')){ ?>
 		<div class='centrar'>
 			<div class='fila_completa bordear' style='width: 90%;'>
 				<div class="col-3 titulo_item">Proveedor (opcional)</div>
 				<div class="col-4">
-					<input type='text' id='proveedor_escogido' name='proveedor_escogido' size='40' onkeypress="cargar_proveedor(this.value)" placeholder="Nombre proveedor">
+					<input type='text' id='proveedor_escogido' name='proveedor_escogido' size='40'
+						 onkeypress="cargar_proveedor(this.value)" placeholder="Nombre proveedor">
 					<div id='proveedor'></div>
 					<input type="text" name="rut_proveedor" id="rut_proveedor" placeholder="Rut">
 					<input type="text" name="giro_proveedor" id="giro_proveedor" placeholder="Giro">
@@ -166,7 +167,14 @@ $user = JFactory::getUser();
 	<?php for ($i=1;$i<=15;$i++){ ?>
 		<tr>
 			<td><input class='entrada' id='cantidad<?php echo $i ?>' name='cantidad<?php echo $i ?>' type='number' size='2' required type="number" min="0" step=".1" style='width: 70px;'></td>
-			<td><input class='entrada' id='descripcion<?php echo $i ?>' name='descripcion<?php echo $i ?>' type='text' style='width: 90%;'></td>
+			<td>
+				<input class='entrada' id='descripcion<?php echo $i ?>' name='descripcion<?php echo $i ?>' type='text' style='width: 90%;' 
+				<?php if ($user->username=='cvelasquez' || $user->username=='mjaman'){ ?>
+					onkeypress="buscar_item(<?php echo $i ?>,this.value,<?php echo $this->datos_user['id'] ?>)"		
+				<?php } ?>
+				>
+					<div id='items<?php echo $i ?>'></div>
+			</td>
 			<td><input class='entrada' id='motivo<?php echo $i ?>' name='motivo<?php echo $i ?>' type='text' style='width: 90%;'></td>
 			<?php if (NotaHelper::isTestSite()){ ?>
 				<td><input class='entrada' id='valor<?php echo $i ?>' name='valor<?php echo $i ?>' type='text' style='width: 90%;'></td>

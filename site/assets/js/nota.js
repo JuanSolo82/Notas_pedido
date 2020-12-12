@@ -843,3 +843,22 @@ function busca_nave(id_nave){
         console.log('complete los campos de fecha y ferry');
     }
 }
+
+function buscar_item(ind, item, id_user){
+    if (item.length>3){
+        $.ajax({
+            url: 'index.php?option=com_nota&task=carga.buscar_item&format=raw',
+            type: 'post',
+            data: {ind: ind, item: item, id_user: id_user},
+            success: function(data){
+                $("#items"+ind).html(data);
+            }
+        });
+        
+    }
+}
+
+function escoger_item(ind,item){
+    $("#descripcion"+ind).val(item);
+    $("#items"+ind).fadeOut(500);
+}

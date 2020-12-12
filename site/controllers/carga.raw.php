@@ -217,4 +217,20 @@ class NotaControllerCarga extends JControllerForm
 		}
 		echo json_encode($proveedor);
 	}
+
+	function buscar_item(){
+		$jinput = JFactory::getApplication()->input;
+		$id_user 	= $jinput->get("id_user", 0, "int");
+		$item 		= $jinput->get("item", "", "string");
+		$model = $this->getModel('nota');
+		$items = $model->getItems_usuario($id_user, $item);
+		$valor = "pantalla";
+		$ind = $jinput->get("ind",0,"int");
+
+		$html = "<ul id='lista_items".$ind."' class='lista_proveedores'>";
+		foreach ($items as $i)
+			$html .= "<li onclick='escoger_item(".$ind.",\"".$i['item']."\")'>".$i['item']."</li>";
+		$html .= "</ul>";
+		echo $html;
+	}
 }
