@@ -300,7 +300,7 @@ class NotaModelNota extends JModelItem{
 			77 => "41",
 			106 => "107", // anan 
 			108 => "109,110,111,112,113,114" // Kaweskar, 109 sala máquinas borrado
-		); 
+		);
 		$query = "select nr.id as id_remitente, nr.fecha, od.nombre as depto_origen, nrev.enviado_empleado as empleado, nrev.autorizado_capitan as capitan, ";
 		$query .= " nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto, nrev.aprobado_adquisiciones as adquisiciones";
 		$query .= " from nota_remitente nr 

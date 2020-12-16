@@ -19,7 +19,7 @@ $user = JFactory::getUser();
 <div class='centrar'>
 	<div class='fila_completa bordear centrar' style='width: 90%;'></div>
 </div>
-<form id='form_nota' name='form_nota' action="<?php echo JRoute::_('index.php?option=com_nota&view=com_nota&task=nota_guardada'); ?>" class="form-validate" method='post' autocomplete='off' enctype="multipart/form-data">
+<form id='form_nota' name='form_nota' action="<?php echo JRoute::_('index.php?option=com_nota&view=com_nota&task=nota_guardada'); ?>" class="form-validate" method='post' enctype="multipart/form-data">
 	<input type='hidden' name='tipo' id='tipo' value='<?php echo $this->datos_user['tipo'] ?>'>
 	<input type='hidden' name='id_user' id='id_user' value='<?php echo $this->datos_user['id'] ?>'>
 	<?php if ($user->authorise('tripulante', 'com_nota') && !($user->authorise("core.admin", "com_nota"))){ ?>
@@ -168,10 +168,10 @@ $user = JFactory::getUser();
 		<tr>
 			<td><input class='entrada' id='cantidad<?php echo $i ?>' name='cantidad<?php echo $i ?>' type='number' size='2' required type="number" min="0" step=".1" style='width: 70px;'></td>
 			<td>
-				<input class='entrada' id='descripcion<?php echo $i ?>' name='descripcion<?php echo $i ?>' type='text' style='width: 90%;' 
-				<?php if ($user->username=='cvelasquez' || $user->username=='mjaman'){ ?>
+				<input class='entrada' id='descripcion<?php echo $i ?>' name='descripcion<?php echo $i ?>' type='text' style='width: 90%;' autocomplete='on'
+				<?php /*if ($user->username=='mjaman'){ ?>
 					onkeypress="buscar_item(<?php echo $i ?>,this.value,<?php echo $this->datos_user['id'] ?>)"		
-				<?php } ?>
+				<?php }*/ ?>
 				>
 					<div id='items<?php echo $i ?>'></div>
 			</td>
