@@ -1,271 +1,138 @@
 <?php
-
 // No direct access.
-
 defined('_JEXEC') or die;
 
-
-
 // Include dependancy of the main controllerform class
-
 jimport('joomla.application.component.controllerform');
-
 require_once(JPATH_COMPONENT_SITE.'/assets/helper.php');
-
 require_once(JPATH_COMPONENT_SITE.'/assets/phpqrcode.php');
 
-
-
 class NotaControllerAdquisiciones extends JControllerForm
-
 {
-
 	public function getModel($name = '', $prefix = '', $config = array('ignore_request' => true)) {
-
 		return parent::getModel($name, $prefix, array('ignore_request' => false));
-
 	}
-
-
 
 	public function display($cachable = false, $urlparams = false) {
-
 		parent::display($cachable, $urlparams);
-
 	}
-
-
 
 	public function defaultview() {
-
 		$user = JFactory::getUser();
-
 		if ($user->authorise('adquisiciones.jefe', 'com_nota')){
-
 			JFactory::getApplication()->input->set( 'layout', 'default' );
-
 			$this->display();
-
 		}else{
-
 			echo "No posee permisos para este menú";
-
 			return;
-
 		}
-
 	}
-
 	public function lista_notas(){
-
 		$jinput = JFactory::getApplication()->input;
-
 		$user = JFactory::getUser();
-
 		if ($user->authorise('adquisiciones.jefe', 'com_nota')){
-
 			$jinput->set('view', 'adquisiciones');
-
 			$jinput->set('layout', 'lista_notas');
-
 			$model = $this->getModel('adquisiciones');
-
 			$lista_notas = $model->getLista_notas();
-
 			
-
 			$jinput->set("lista_notas", $lista_notas);
-
 			//$borrar_notas = $model->borrar_atrasadas();
-
 		}else{
-
 			$msg = JFactory::getApplication();
-
 			$msg->enqueueMessage("No posee permisos para esta vista", 'error');
-
 			$jinput->set('view', '');
-
 			$jinput->set('layout', '');
-
 		}
-
 		
-
 		parent::display();
-
 	}
-
 	public function opcion_oc(){
-
 		$jinput = JFactory::getApplication()->input;
-
 		$user = JFactory::getUser();
-
 		if ($user->authorise('adquisiciones.jefe', 'com_nota')){
-
 			$jinput->set('view', 'adquisiciones');
-
 			$jinput->set('layout', 'opcion_oc');
-
 			$id_remitente = $jinput->get("id_remitente", 0, "int");
-
 			$model = $this->getModel('adquisiciones');
-
 			$nota = $this->getModel("nota");
-
 			$datos_nota 	= $nota->getDetalle_nota($id_remitente);
-
 			$depto_costo 	= $nota->getDatos_depto($datos_nota['id_depto_costo']);
-
 			$centros_costo 	= $nota->getCentros_costo();
-
 			$items 			= $model->items($id_remitente);
-
 			$item = array();
-
 			foreach ($items as $i){
-
 				$item[$i['id']]['id'] 				= $i['id'];
-
 				$item[$i['id']]['cantidad'] 		= $i['cantidad'];
-
 				$item[$i['id']]['item'] 			= $i['item'];
-
 				$item[$i['id']]['motivo'] 			= $i['motivo'];
-
 				$item[$i['id']]['adjunto'] 			= $i['adjunto'];
-
 				$item[$i['id']]['nueva_cantidad'] 	= $i['nueva_cantidad'];
-
 				$item[$i['id']]['opcion_oc'] 		= $i['opcion_oc'];
-
 			}
-
 			$jinput->set("items", $item);
-
 			$jinput->set("id_remitente", $id_remitente);
-
 			$jinput->set("depto_costo", $depto_costo);
-
 			$jinput->set("centros_costo", $centros_costo);
-
 		}else{
-
 			$jinput->set('view', '');
-
 			$jinput->set('layout', '');
-
 		}
-
 		parent::display();
-
 	}
-
 	public function cambiar_opcion(){
-
 		$jinput = JFactory::getApplication()->input;
-
 		$model = $this->getModel("adquisiciones");
-
 		$id_item 	= $jinput->get('id_item', 0, 'int');
-
 		$opcion 	= $jinput->get('opcion', 0, 'int');
-
 		$model->cambiar_opcion($id_item, $opcion);
-
 	}
-
 	public function cambiar_cc(){
-
 		$jinput = JFactory::getApplication()->input;
-
 		$model = $this->getModel("adquisiciones");
-
 		$id_remitente 		= $jinput->get("id_remitente", 0, "int");
-
 		$id_centro_costo 	= $jinput->get("id_centro_costo", 0, "int");
-
 		$model->actualiza_cc($id_remitente, $id_centro_costo);
-
 	}
-
 	public function ver_nota(){
-
 		$jinput = JFactory::getApplication()->input;
-
 		$jinput->set('view', 'adquisiciones');
-
 		$jinput->set('layout', 'ver_nota');
-
 		$model = $this->getModel("adquisiciones");
-
 		
-
 		$id_remitente = $jinput->get("id_remitente", 0, "int");
-
 		$items = $model->items($id_remitente);
-
 		$item = array();
-
 		foreach ($items as $i){
-
 			$item[$i['id']]['id'] 				= $i['id'];
-
 			$item[$i['id']]['cantidad'] 		= $i['cantidad'];
-
 			$item[$i['id']]['item'] 			= $i['item'];
-
 			$item[$i['id']]['motivo'] 			= $i['motivo'];
-
 			$item[$i['id']]['adjunto'] 			= $i['adjunto'];
-
 			$item[$i['id']]['nueva_cantidad'] 	= $i['nueva_cantidad'];
-
 			$item[$i['id']]['opcion_oc'] 		= $i['opcion_oc'];
-
 		}
-
 		$jinput->set("items", $item);
-
 		$jinput->set("id_remitente", $id_remitente);
-
 		parent::display();
-
 	}
 
 	public function generar_oc(){
-
 		$jinput = JFactory::getApplication()->input;
-
 		$user = JFactory::getUser();
-
 		if ($user->authorise('adquisiciones.jefe', 'com_nota')){
-
 			$jinput->set('view', 'adquisiciones');
-
 			$jinput->set('layout', 'generar_oc');
-
 			$model = $this->getModel('adquisiciones');
-
 			$lista_notas = $model->getLista_oc();
-
 			$jinput->set("lista_notas", $lista_notas);
-
 		}else{
-
 			$msg = JFactory::getApplication();
-
 			$msg->enqueueMessage("No posee permisos para esta vista", 'error');
-
 			$jinput->set('view', '');
-
 			$jinput->set('layout', '');
-
 		}
-
 		parent::display();
-
 	}
 
 	public function regenerar_oc(){
@@ -620,7 +487,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 						Centro de costo: '.htmlentities($datos['depto_costo']).'<br>
 						Solicitado por: '.htmlentities($datos['depto_origen']).'<br>';
 		if ($proveedor){
-			$html .= 'Proveedor: '.htmlentities(ucwords(strtolower($proveedor))).'<br>';
+			$html .= 'Proveedor: '.htmlentities(ucwords(strtolower(htmlentities($proveedor)))).'<br>';
 			$html .= 'Rut: '.$rut_proveedor.'<br>';
 			$html .= 'Giro: '.$giro_proveedor;
 		}
@@ -642,148 +509,80 @@ class NotaControllerAdquisiciones extends JControllerForm
 			$html .= '	</td>';
 		}
 
-		
-
 		$html .= '</tr>
-
 				</table>';
-
 		$html .= '<table class="tabla_items" border=1 cellspacing=0 cellpadding=2>
-
 			<tr>
-
 				<td width="5%"><b>#</b></td>
-
 				<td width="5%"><b>Cantidad</b></td>
-
 				<td width="30%"><b>Item</b></td>
-
 				<td width="30%"><b>Observaciones</b></td>';
-
-		if (NotaHelper::isTestSite() && $items[0]['valor']){
-
-			$html .= '<td width="10%"><b>Valor unitario</b></td>';
-
-			$html .= '<td width="10%"><b>Subtotal</b></td>';
-
-		}
+			if ($items[0]['valor']){
+				$html .= '<td width="10%"><b>Valor unitario</b></td>';
+				$html .= '<td width="10%"><b>Subtotal</b></td>';
+			}
 
 		$html .= '</tr>';
-
 		$j=1;
-
 		$total = 0;
-
 		foreach ($items as $i){
-
 			if ($i['opcion_oc']==$opcion){
-
 				$cantidad = $i['cantidad'] ? $i['cantidad'] : $i['nueva_cantidad'];
-
 				if ($cantidad){
-
 					$html .= '
-
 					<tr>
-
 						<td>'.$j++.'</td>
-
 						<td>'.$i['cantidad'].'</td>
-
 						<td>'.htmlentities($i['item']).'</td>
-
 						<td>'.htmlentities($i['motivo']).'</td>';
-
-				if (NotaHelper::isTestSite() && $items[0]['valor']){
-
+				if ($i['valor']){
 					$html .= '<td align="right">'.number_format($i['valor'],0,'','.').'</td>';
-
 					$html .= '<td align="right">'.number_format($i['valor']*$cantidad,0,'','.').'</td>';
-
 					$total += $i['valor']*$cantidad;
-
 				}
-
 				$html .= '</tr>';
-
 				}
-
 			}
-
 		}
-
-		if (NotaHelper::isTestSite() && $items[0]['valor']){
-
+		if ($items[0]['valor']){
 			$html .= "<tr>";
-
 			$html .= "<td align='right' colspan='5'>Total</td>";
-
 			$html .= "<td align='right'>".number_format($total,0,'','.')."</td>";
-
 			$html .= "</tr>";
-
 		}
-
-		
 
 		$html .= '</table>';
-
 		$html .= '<br><br>
-
 			<div class="beneficio">';
-
 			if ($datos['ley_navarino']){
-
 				if ($datos['id_tipo_pedido']==1)
-
-					$html .= 'Facturar con documento especial de venta (ley 18.392) a Transbordadora Austral Broom S.A., rut 82.074.900-6, direcci'.htmlentities('ó').'n Manuel Se'.htmlentities('ñ').'oret #831, Porvenir, exento de IVA';
-
+					$html .= 'Facturar con documento especial de venta (ley 18.392) a 
+								Transbordadora Austral Broom S.A., rut 82.074.900-6, 
+								direcci'.htmlentities('ó').'n Manuel Se'.htmlentities('ñ').'oret #831, Porvenir, exento de IVA';
 				elseif ($datos['id_tipo_pedido']==2)
-
-					$html .= 'Facturar con documento a Transbordadora Austral Broom S.A., rut 82.074.900-6, direcci'.htmlentities('ó').'n Manuel Se'.htmlentities('ñ').'oret #831, Porvenir, afecto a IVA';
-
+					$html .= 'Facturar con documento a Transbordadora Austral Broom S.A., rut 82.074.900-6, direcci'.htmlentities('ó').'n 
+								Manuel Se'.htmlentities('ñ').'oret #831, Porvenir, afecto a IVA';
 			}else{
-
 				$html .= 'Facturar a Transbordadora Austral Broom S.A., rut 82.074.900-6, direcci'.htmlentities('ó').'n Juan Williams #06450, Punta Arenas, afecto a IVA';
-
 			}
-
 			$html .= '
-
 			</div>
-
 			<div style="position: absolute; bottom: 60px; width: 40%; left: 400px; z-index: 5; font-size: 13px;">';
-
 			if (NotaHelper::isTestSite()){
-
 				$html .= '<div style="text-align: center; position: relative;">
-
 							<img src="'.JPATH_SITE.'/components/com_nota/assets/img/firma.jpg" width="180" height="130">
-
 							<div style="position: absolute; margin-left: 37%; margin-top: 8.6%;">'.$f[2].'-'.$f[1].'-'.$f[0].'</div>
-
 						</div>';
-
 			}
-
-				
 
 			$html .= '<hr/>
-
 				<p style="position: relative; left: 5px; text-align: center; line-height: 1.2;">
-
 					p.p. Transbordadora Austral Broom<br>
-
 					Punta Arenas, '.$fecha_creacion.'
-
 				</p>
-
 			</div>
-
 			</div>';
-
 		return $html;
-
 	}
 
 	function nota_html($datos, $items){

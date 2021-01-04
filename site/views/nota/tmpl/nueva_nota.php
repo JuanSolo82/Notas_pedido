@@ -126,7 +126,7 @@ $user = JFactory::getUser();
 				
 			</div>
 		</div>
-		<?php if ($user->authorise('jefe.depto','com_nota')){ ?>
+		<?php if ($user->authorise('jefe.depto','com_nota') || $user->authorise('adquisiciones.jefe','com_nota')){ ?>
 		<div class='centrar'>
 			<div class='fila_completa bordear' style='width: 90%;'>
 				<div class="col-3 titulo_item">Proveedor (opcional)</div>
@@ -158,7 +158,7 @@ $user = JFactory::getUser();
 			<th width='8%'>Cantidad</th>
 			<th width='25%'>Descripción</th>
 			<th width='20%'>Motivo</th>
-		<?php if (NotaHelper::isTestSite()){ ?>
+		<?php if ($user->authorise('adquisiciones.jefe','com_nota')){ ?>
 			<th width='12%'>Valor unitario</th>
 		<?php } ?>
 			<th width='10%'>Distribución</th>
@@ -176,7 +176,7 @@ $user = JFactory::getUser();
 					<div id='items<?php echo $i ?>'></div>
 			</td>
 			<td><input class='entrada' id='motivo<?php echo $i ?>' name='motivo<?php echo $i ?>' type='text' style='width: 90%;'></td>
-			<?php if (NotaHelper::isTestSite()){ ?>
+			<?php if ($user->authorise('adquisiciones.jefe','com_nota')){ ?>
 				<td><input class='entrada' id='valor<?php echo $i ?>' name='valor<?php echo $i ?>' type='text' style='width: 90%;'></td>
 			<?php } ?>
 			<td>

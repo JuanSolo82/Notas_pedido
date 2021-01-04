@@ -553,8 +553,12 @@ function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
                     nueva_cantidad: $("#cantidad"+opcion+"_"+i).val(),
                     descripcion: $("#descripcion_item"+opcion+"_"+i).val(),
                     motivo: $("#motivo"+opcion+"_"+i).val(),
-                    id_tipo_modificacion: $("#tipo_modificacion"+opcion+"_"+i).val()
-                }
+                    id_tipo_modificacion: $("#tipo_modificacion"+opcion+"_"+i).val(),
+                    valor_unitario: $("#valor_unitario"+opcion+"_"+i).val()
+                },
+            success: function(datos){
+                console.log(datos);
+            }
         });
     }
     $.ajax({

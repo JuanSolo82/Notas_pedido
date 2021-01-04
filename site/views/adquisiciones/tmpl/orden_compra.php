@@ -11,6 +11,8 @@ require_once(JPATH_COMPONENT_SITE.'/assets/helper.php');
 $opciones = array();
 foreach ($this->items as $i)
 	$opciones[$i['opcion_oc']] = $i['opcion_oc'];
+
+$user = JFactory::getUser();
 ?>
 <script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?nock=10"></script>
 <script type="text/javascript" src="/portal/components/com_nota/assets/js/adquisiciones.js?tim=5544"></script>
@@ -46,7 +48,7 @@ $proveedor = explode('_',$this->datos_nota['proveedor']);
 	<div style="float: left; width: 35%;"><b style="width: 25%;">Rut</b></div>
 	<input type="text" size="30" id="rut_proveedor<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? $this->proveedor['rut'] : "" ?>"><br>
 	<div style="float: left; width: 35%;"><b style="width: 25%;">Giro</b></div>
-	<input type="text" size="30" id="giro_proveedor<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? ucwords(strtolower($this->proveedor['giro'])) : "" ?>">
+	<input type="text" size="30" id="giro_proveedor<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? ucwords(strtolower(htmlentities($this->proveedor['giro']))) : "" ?>">
 	<div style="float: left; width: 35%;"><b style="width: 25%;">Cotización (opcional)</b></div>
 	<input type="text" size="30" autocomplete="off" id="cotizacion<?php echo $opcion ?>" value="<?php echo $this->datos_nota['cotizacion'] ? $this->datos_nota['cotizacion'] : "" ?>">
 </div>
@@ -58,10 +60,8 @@ $proveedor = explode('_',$this->datos_nota['proveedor']);
 			<th align="center" width='20%'>Motivo</th>
 			<th align="center">Motivo modificación</th>
 			<th align="center">Adjunto</th>
-		<?php if (NotaHelper::isTestSite()){ ?>
 			<th align="center">Valor unitario</th>
 			<th align="center">Subtotal</th>
-		<?php } ?>
 		</tr>
 	<?php 
 		$items_orden = 0;
@@ -100,7 +100,6 @@ $proveedor = explode('_',$this->datos_nota['proveedor']);
 				</a>
 			<?php } ?>
 			</td>
-			<?php if (NotaHelper::isTestSite()){ ?>
 				<td>
 					<input type="number" min="0" step="1" id="valor_unitario<?php echo $opcion.'_'.$j ?>" onchange="actualiza_parcial('<?php echo $opcion.'_'.$j ?>')" type="text" style="width: 60px" value="<?php echo $i['valor'] ? $i['valor'] : '' ?>">
 					<div style="display: none;" id="parcial<?php echo $opcion.'_'.$j ?>"><?php echo $i['valor'] ? number_format($i['valor'],0,'','.') : '' ?></div>
@@ -108,17 +107,14 @@ $proveedor = explode('_',$this->datos_nota['proveedor']);
 				<td id="parcial_texto<?php echo $opcion.'_'.$j ?>"><?php echo $i['valor'] ? number_format($i['cantidad']*$i['valor'],0,'','.') : '' ?></td>
 				<input type="hidden" id="valor_numerico<?php echo $opcion.'_'.$j ?>" value="<?php echo $i['valor'] ?>">
 				<input type="hidden" id="subtotal_numerico<?php echo $opcion.'_'.$j ?>" value="<?php echo $i['cantidad']*$i['valor'] ?>">
-			<?php } ?>
 		</tr>
 		<?php } ?>
 	<?php } ?>
-	<?php if (NotaHelper::isTestSite()){ ?>
 		<?php if ($total){ ?>
 			<tr>
 				<td align='right' colspan='6'><b>Total</b></td>
 				<td id="total"><b><?php echo number_format($total,0,'','.') ?></b></td>
 			</tr>
-		<?php } ?>
 			<input type="hidden" id="total<?php echo $opcion ?>" value="<?php echo $total ? number_format($total,0,'','.') : '' ?>">
 			<input type="hidden" id="total_numerico<?php echo $opcion ?>" value="<?php echo $total ?>">
 	<?php } ?>
@@ -191,7 +187,7 @@ $proveedor = explode('_',$this->datos_nota['proveedor']);
 	</div>
 </div>
 <?php if (NotaHelper::isTestSite()){ ?>
-	<a href="/portal/media/notas_pedido/Orden_compra.pdf" target="_blank">OC_____</a>
+	<a href="/portal/media/notas_pedido/Orden_compra.pdf" target="_blank">OC test</a>
 <?php } ?>
 
 <?php 
