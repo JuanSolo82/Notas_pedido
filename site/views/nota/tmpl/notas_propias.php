@@ -37,9 +37,7 @@ $num_filas=0;
 </div>
 
 <input type="hidden" id="pagina" value="1" size='5'>
-<?php //if (NotaHelper::isTestSite()){ 
-	if ($user->authorise('capitan.sin_jefe','com_nota') || $user->authorise('capitan.jefe','com_nota')){
-	?>
+
 <div class='fila_completa centrar' style='margin-bottom: 20px;'>
 	<div class='barra_nombre' style='width: 50%;'>
 		<h3 class="titulo_item">Búsqueda por ítem</h3>
@@ -53,7 +51,7 @@ $num_filas=0;
 		<input type='button' class="boton_simple" onclick="buscar_notas_propias()" value="Buscar">
 	</div>
 </div>
-<?php } ?>
+
 <div id='lista_propias' style="position: relative; float: left; width: 100%; opacity: 1;"></div>
 <div id='lista'>
 	<h3>Página 1</h3>

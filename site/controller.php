@@ -5,6 +5,7 @@ defined('_JEXEC') or die('Restricted access');
 // import Joomla controller library
 jimport('joomla.application.component.controller');
 require_once(JPATH_COMPONENT_SITE.'/assets/helper.php');
+require_once(JPATH_COMPONENT_SITE.'/assets/constants.php');
  
 /**
  * Nota Component Controller
@@ -203,10 +204,18 @@ class NotaController extends JController{
 		$items_nota = $model->getItems($id_remitente);
 		$jinput->set("datos_nota", $datos_nota);
 		$jinput->set("items_nota", $items_nota);
-		if (!NotaHelper::isTestSite())
+		if (NotaHelper::isTestSite()){
+			$this->replicar_sql($id_remitente);
+		}else{
 			if (!$user->authorise('adquisiciones.jefe','com_nota') || $user->username!='jmarinan')
 				$this->preparar_correo($id_remitente, $nombre_tripulante);
+		}
 		parent::display();
+	}
+
+	function replicar_sql($id_remitente){
+		$model = $this->getModel('replicacion');
+		
 	}
 
 	function preparar_correo($id_remitente, $nombre_tripulante=""){

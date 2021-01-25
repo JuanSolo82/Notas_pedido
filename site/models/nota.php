@@ -75,10 +75,7 @@ class NotaModelNota extends JModelItem{
 		if ($user->authorise('core.admin', 'com_nota')){
 			$usuario = $this->getDatos_user($user->id);
 			if ($usuario['id_nivel']==2){
-				if ($id_adepto==4)
-					$valores = "1,1,1,1,0";
-				else
-					$valores = "1,1,1,0,0";
+				$valores = "1,1,1,1,0";
 			}else{
 				$valores = "1,0,0,0,0";
 			}
@@ -825,7 +822,7 @@ class NotaModelNota extends JModelItem{
 		return array();
 	}
 	function getListaProveedor($str, $rut=""){
-		$handle = mssql_connect("flexline.tabsa.lan","sa","Tabsa123") or die("Cannot connect to server");
+		$handle = mssql_connect("flexline.corp.tabsa.cl","sa","Tabsa123") or die("Cannot connect to server");
 		$db = mssql_select_db('BDFlexline', $handle) or die("Cannot select database");
 		$query = "select CtaCte, CodLegal as rut, RazonSocial, giro 
 					from flexline.CtaCte 
@@ -854,7 +851,7 @@ class NotaModelNota extends JModelItem{
 		return $ar;
 	}
 	function getProveedor($str, $rut){
-		$handle = mssql_connect("flexline.tabsa.lan","sa","Tabsa123") or die("Cannot connect to server");
+		$handle = mssql_connect("flexline.corp.tabsa.cl","sa","Tabsa123") or die("Cannot connect to server");
 		$db = mssql_select_db('BDFlexline', $handle) or die("Cannot select database");
 		$query = "select CtaCte, CodLegal as rut, RazonSocial, giro 
 					from flexline.CtaCte 

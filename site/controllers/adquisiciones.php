@@ -382,10 +382,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$cotizacion		= $jinput->get('cotizacion', 'no', 'string');
 		$model	= $this->getModel('nota');
 		$model2 = $this->getModel('adquisiciones');
-		$datos_proveedor = $model->getProveedor($proveedor, $rut_proveedor);
-		/*if (sizeof($datos_proveedor)){
-			$giro_proveedor = $datos_proveedor['giro'];
-		}*/
+		//$datos_proveedor = $model->getProveedor($proveedor, $rut_proveedor);
 		$datos_nota = $model->getDetalle_nota($id_remitente);
 		$items = $model->getItems($id_remitente);
 		$datos_oc = $model2->getDetalle_orden($id_remitente, $opcion);

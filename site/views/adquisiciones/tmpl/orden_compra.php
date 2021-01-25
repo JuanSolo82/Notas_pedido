@@ -14,7 +14,7 @@ foreach ($this->items as $i)
 
 $user = JFactory::getUser();
 ?>
-<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?nock=10"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?black=010"></script>
 <script type="text/javascript" src="/portal/components/com_nota/assets/js/adquisiciones.js?tim=5544"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <br>

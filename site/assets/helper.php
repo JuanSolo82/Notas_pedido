@@ -96,4 +96,35 @@ class NotaHelper {
 			$mailer->addAttachment($adjunto);
 		$mailer->Send();
 	}
+	public static function getMssqlQuery($query, $db_handle = false) {
+		if ( substr($query,-1)!=';' ) $query .= ';';
+		// si no hay una conexion preestablecida, crearla
+		if (!$db_handle) {
+			// Connect to mssql server
+			$handle = mssql_connect(SQL_HOST,SQL_USER,SQL_PASS) or die("Cannot connect to server");
+			// Select a database
+			//$db = mssql_select_db((R2Helper::isTestSite() ? SQL_DB_BAK : SQL_DB), $handle) or die("Cannot select database");
+			$db = mssql_select_db(SQL_DB, $handle) or die("Cannot select database");
+		}
+		else $handle = $db_handle;
+		// Execute a query
+		$result = mssql_query($query, $handle);
+		if (!$result AND NotaHelper::isTestSite()) print_r($query.'] ');
+		$listado = array();
+		if ($result===FALSE) $listado = false;
+		elseif ($result===TRUE) $listado = true;
+		else {
+			while($row = mssql_fetch_array($result)) {
+				foreach($row as &$column) {
+					if ( is_string($column)) $column = mb_convert_encoding( $column, 'UTF-8', 'ISO-8859-1' );
+				}
+				$listado[] = $row;
+			}
+		}
+		// Close the connection
+		if (!$db_handle) {
+			mssql_close($handle);
+		}
+		return $listado;
+	}
 }

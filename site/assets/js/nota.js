@@ -576,7 +576,6 @@ function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
         success: function(){
             window.open('/portal/media/notas_pedido/Orden_compra'+id_remitente+'-'+opcion+'.pdf', 'nombre'); 
             $("#generada_oc"+opcion).css("display", "block");
-            //window.open('/portal/media/notas_pedido/Orden_compra.pdf');
         }
     });
 }
