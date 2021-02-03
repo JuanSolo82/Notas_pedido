@@ -293,9 +293,9 @@ class NotaModelNota extends JModelItem{
 			90 => "40",
 			74 => "11,38", // yaghan
 			75 => "34,10", 
-			76 => "30,22",
+			76 => "30,22,99",
 			77 => "41",
-			106 => "107", // anan 
+			106 => "107", // anan  
 			108 => "109,110,111,112,113,114" // Kaweskar, 109 sala máquinas borrado
 		);
 		$query = "select nr.id as id_remitente, nr.fecha, od.nombre as depto_origen, nrev.enviado_empleado as empleado, nrev.autorizado_capitan as capitan, ";
@@ -311,7 +311,6 @@ class NotaModelNota extends JModelItem{
 		if ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota'))
 			$query .= " and od.id in (".$deptos[$datos_user['id_depto']].") ";
 		$query .= " order by nr.id desc ";
-
 		// tipos de orden según privilegio
 		if ($user->authorise('jefe.depto', 'com_nota'))
 			$query .= ", nrev.autorizado_jefe ";
