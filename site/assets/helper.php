@@ -46,6 +46,7 @@ class NotaHelper {
 	}
 
 	public static function mail($subject, $body, $email){
+		$user = JFactory::getUser();
 		$mailer = JFactory::getMailer();
 		$config = JFactory::getConfig();
 		$sender = array( 
@@ -53,13 +54,14 @@ class NotaHelper {
 			$config->getValue( 'config.fromname' )
 		);
 		$mailer->setSender($sender);
-		$recipient = array('jmarinan@tabsa.cl');
 		if (NotaHelper::isTestSite()){
+			$recipient = array('jmarinan@tabsa.cl');
 			$body .= "<br><br>^ Correo de prueba ^<br>";
 			$body .= "destinatarios reales: ";
 			$body .= "[";
 			foreach ($email as $e){
 				$body .= $e['email'].', ';
+				print_r($e['email']);
 			}
 			$body .= "]";
 		}else{
@@ -74,7 +76,7 @@ class NotaHelper {
 		$mailer->setSubject($subject);
 		$mailer->isHTML(true);
 		$mailer->setBody($body);
-		$mailer->Send();
+		$res = $mailer->Send();
 	}
 
 	public function mailAdjunto($subject, $body, $email, $adjunto=''){

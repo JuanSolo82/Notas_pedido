@@ -121,6 +121,7 @@ class NotaController extends JController{
 		parent::display();
 	}
 	function nota_guardada(){
+		$user = JFactory::getUser();
 		JRequest::checkToken() or jexit('token inválido');
 		$jinput = JFactory::getApplication()->input;
 		$jinput->set('view', 'nota');
@@ -207,8 +208,10 @@ class NotaController extends JController{
 		if (NotaHelper::isTestSite()){
 			$this->replicar_sql($id_remitente);
 		}else{
-			if (!$user->authorise('adquisiciones.jefe','com_nota') || $user->username!='jmarinan')
+			//$this->preparar_correo($id_remitente, $nombre_tripulante);
+			if (!$user->authorise('adquisiciones.jefe','com_nota') && !$user->authorise('jefe.depto','com_nota')){
 				$this->preparar_correo($id_remitente, $nombre_tripulante);
+			}
 		}
 		parent::display();
 	}
