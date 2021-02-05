@@ -165,6 +165,7 @@ class NotaController extends JController{
 		$datos_depto		= $model->getDatos_depto($id_depto_costo);
 
 		$items = '';
+		$cantidad = 0;
 		for ($i=1;$i<=15;$i++){
 			$cantidad 		.= $jinput->get("cantidad".$i, 0, 'float').";";
 			if (!$cantidad) break;
@@ -209,9 +210,15 @@ class NotaController extends JController{
 			$this->replicar_sql($id_remitente);
 		}else{
 			//$this->preparar_correo($id_remitente, $nombre_tripulante);
+			if ($user->authorise('empleado.depto','com_nota') || ($user->authorise('jefe.depto','com_nota') && $id_adepto!=$datos_user["id_depto"])){
+				$this->preparar_correo($id_remitente, $nombre_tripulante);
+			}else{
+				print_r("no correo");
+			}
+			/*
 			if (!$user->authorise('adquisiciones.jefe','com_nota') && !$user->authorise('jefe.depto','com_nota')){
 				$this->preparar_correo($id_remitente, $nombre_tripulante);
-			}
+			}*/
 		}
 		parent::display();
 	}
@@ -257,8 +264,9 @@ class NotaController extends JController{
 		}
 		$body .= "</div>";
 		$email = $model->getMail_jefe($id_remitente);
+		if ($user->username=='amendez') print_r($email);
 		/*if ($email['email']=='jmarinan@tabsa.cl')
-			$body .= "<br>[error]";*/
+			$body .= "<br>[error]";*/ //37150
 		NotaHelper::mail($subject,$body,$email);
 	}
 	function anular_nota(){

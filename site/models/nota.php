@@ -482,7 +482,7 @@ class NotaModelNota extends JModelItem{
 		$user = JFactory::getUser();
 		$db = JFactory::getDbo();
 		$email = array('email' => 'jmarinan@tabsa.cl');
-		if ($user->authorise('tripulante', 'com_nota') && !$user->authorise('capitan.jefe', 'com_nota') && !$user->authorise('capita.sin_jefe', 'com_nota')){ 
+		if ($user->authorise('tripulante', 'com_nota') && !$user->authorise('capitan.jefe', 'com_nota') && !$user->authorise('capitan.sin_jefe', 'com_nota')){ 
 			// entonces enviar correo a capitan de la respectiva nave
 			$nave = substr($user->username,1);
 			$query = "select u.email from jml_users u, nota_user nu where nu.id_nivel=3 and nu.id_user=u.id and u.username like '%".$nave."'";
@@ -535,8 +535,17 @@ class NotaModelNota extends JModelItem{
 						$email[] =  $u;
 				}
 			}			
+		}elseif ($user->authorise("empleado.depto","com_nota")){
+			$query = "SELECT nu.id_depto, jefe.email FROM nota_user nu
+						join (select u.email, nu.id_depto, u.block from jml_users u, nota_user nu where u.id=nu.id_user and nu.id_nivel=2) jefe on jefe.id_depto=nu.id_depto
+						WHERE nu.id_user=".$user->id;
+			$db->setQuery($query);
+			$db->query();
+			$usuarios = $db->loadAssocList();
+			foreach ($usuarios as $u){
+				$email[] =  $u;
+			}
 		}
-
 		return $email;
 	}
 	function getPendientes(){
