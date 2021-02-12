@@ -44,6 +44,12 @@ $f = explode('-', $this->detalle_nota['fecha']);
 </div>
 <div class='centrar'>
 	<div class='fila_completa bordear centrar' style='width: 90%;'>
+		<div class="col-3 titulo_item"><?php echo ($user->authorise('tripulante', 'com_nota') && !$user->authorise('core.admin', 'com_nota')) ? 'Nave' : 'Departamento origen' ?></div>
+		<div class="col-7"><?php echo $this->detalle_nota['depto_origen']; ?></div>
+	</div>
+</div>
+<div class='centrar'>
+	<div class='fila_completa bordear centrar' style='width: 90%;'>
 		<div class="col-3 titulo_item">Fecha de creación</div>
 		<div class="col-7"><?php echo $f[2].'-'.$f[1].'-'.$f[0]; ?></div>
 	</div>
