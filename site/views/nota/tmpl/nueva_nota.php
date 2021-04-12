@@ -60,9 +60,7 @@ $user = JFactory::getUser();
 				<div class="col-7">
 					<select id='centro_costo' name='centro_costo'>
 					<?php foreach ($this->centros_costos as $c){ ?>
-						<?php //if ($this->datos_user['id_area']==$c['id_area']){ ?>
-							<option value='<?php echo $c['id'] ?>' <?php echo ($c['id']==$this->datos_user['id_depto'] ? 'selected' : '') ?>><?php echo $c['nombre'] ?></option>
-						<?php //} ?>
+						<option value='<?php echo $c['id'] ?>' <?php echo ($c['id']==$this->datos_user['id_depto'] ? 'selected' : '') ?>><?php echo $c['nombre'] ?></option>
 					<?php } ?>
 					</select>
 				</div>
@@ -132,10 +130,10 @@ $user = JFactory::getUser();
 				<div class="col-3 titulo_item">Proveedor (opcional)</div>
 				<div class="col-4">
 					<input type='text' id='proveedor_escogido' name='proveedor_escogido' size='40'
-						 onkeypress="cargar_proveedor(this.value)" placeholder="Nombre proveedor">
+						 onkeypress="cargar_proveedor(this.value)" placeholder="Nombre proveedor" autocomplete='off'>
 					<div id='proveedor'></div>
-					<input type="text" name="rut_proveedor" id="rut_proveedor" placeholder="Rut">
-					<input type="text" name="giro_proveedor" id="giro_proveedor" placeholder="Giro">
+					<input type="text" name="rut_proveedor" id="rut_proveedor" placeholder="Rut" autocomplete='off'>
+					<input type="text" name="giro_proveedor" id="giro_proveedor" placeholder="Giro" autocomplete='off'>
 				</div>
 				<div class="col-3" id='rut_texto'></div>
 			</div>

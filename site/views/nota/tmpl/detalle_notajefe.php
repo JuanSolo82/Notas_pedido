@@ -50,6 +50,12 @@ $f = explode('-', $this->detalle_nota['fecha']);
 </div>
 <div class='centrar'>
 	<div class='fila_completa bordear centrar' style='width: 90%;'>
+		<div class="col-3 titulo_item">Centro de costo</div>
+		<div class="col-7"><?php echo $this->detalle_nota['depto_costo']; ?></div>
+	</div>
+</div>
+<div class='centrar'>
+	<div class='fila_completa bordear centrar' style='width: 90%;'>
 		<div class="col-3 titulo_item">Fecha de creación</div>
 		<div class="col-7"><?php echo $f[2].'-'.$f[1].'-'.$f[0]; ?></div>
 	</div>

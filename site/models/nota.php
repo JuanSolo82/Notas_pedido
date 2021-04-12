@@ -635,7 +635,7 @@ class NotaModelNota extends JModelItem{
 				join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and 
 					nrev.autorizado_capitan=1 and autorizado_jefe=1 and 
 					nr.id_adepto=".$datos_user['id_depto'];
-		$query .= " order by nr.id desc ";
+		$query .= " order by nrev.autorizado_depto, nr.id desc ";
 		if ($pagina) 
 			$query .= ' limit '.(($pagina-1)*10).', 10';
 		else

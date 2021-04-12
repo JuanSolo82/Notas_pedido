@@ -28,6 +28,23 @@ $user = JFactory::getUser();
 	</tr>
 </table>
 <br>
+<?php if (NotaHelper::isTestSite()){ ?>
+<div class='fila_completa centrar' style='margin-bottom: 20px;'>
+Beta
+	<div class='barra_nombre' style='width: 50%;'>
+		<h3 class="titulo_item">Búsqueda por ítem</h3>
+		<input type='text' id='parametro' name='parametro' autocomplete="off">
+		<input type='button' class="boton_simple"  onclick="buscar_notas_propias()" value="Buscar">
+		<input style="float: right;" type='button' onclick="limpiar_busqueda()" value="Limpiar" class="boton_simple" >
+	</div>
+	<div class='barra_nombre' style='width: 50%;'>
+		<h3 class="titulo_item">Búsqueda por proveedor</h3>
+		<input type='text' id='proveedor' name='proveedor' autocomplete="off">
+		<input type='button' class="boton_simple" onclick="buscar_notas_propias()" value="Buscar">
+	</div>
+</div>
+<?php } ?>
+
 <div style="height: 60px">
 <div class="prev_next" id="anterior" onclick="anterior_previo_depto(2)">
 	<img src='/portal/components/com_nota/assets/img/previous.png' /> Anterior
@@ -36,6 +53,7 @@ $user = JFactory::getUser();
 	<img src='/portal/components/com_nota/assets/img/next.png' /> Siguiente
 </div>
 </div>
+
 <input type="hidden" id="pagina" value="1" size='5'>
 
 <div id='notas_depto'>

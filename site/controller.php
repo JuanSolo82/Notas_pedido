@@ -209,16 +209,11 @@ class NotaController extends JController{
 		if (NotaHelper::isTestSite()){
 			$this->replicar_sql($id_remitente);
 		}else{
-			//$this->preparar_correo($id_remitente, $nombre_tripulante);
 			if ($user->authorise('empleado.depto','com_nota') || ($user->authorise('jefe.depto','com_nota') && $id_adepto!=$datos_user["id_depto"])){
 				$this->preparar_correo($id_remitente, $nombre_tripulante);
 			}else{
 				print_r("no correo");
 			}
-			/*
-			if (!$user->authorise('adquisiciones.jefe','com_nota') && !$user->authorise('jefe.depto','com_nota')){
-				$this->preparar_correo($id_remitente, $nombre_tripulante);
-			}*/
 		}
 		parent::display();
 	}
