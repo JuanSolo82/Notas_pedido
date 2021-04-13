@@ -951,4 +951,32 @@ class NotaModelNota extends JModelItem{
 		}
 		return array();
 	}
+
+	function notas_area($pagina=0, $parametro=""){
+		$db = JFactory::getDbo();
+		$user = JFactory::getUser();
+		$datos_user = $this->getDatos_user($user->id);
+		$query = "select nr.id, nr.fecha, od.nombre as depto, u.name as usuario, nrev.enviado_empleado as empleado";
+		$query .= ", nrev.autorizado_capitan as capitan,nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto";
+		$query .= ", nrev.aprobado_adquisiciones as adquisiciones";
+		$query .= " from nota_remitente nr join nota_revision nrev on nrev.id_nota_remitente=nr.id";
+		$query .= " join nota_user nu on nu.id_user=nr.id_user";
+		$query .= " join jml_users u on u.id=nu.id_user";
+		$query .= " join oti_departamento od on od.id=nu.id_depto and od.id_area=".$datos_user['id_area'];
+		if ($parametro!=""){
+			$query .= " join nota_item ni on ni.id_remitente=nr.id and ni.item like '%".$parametro."%' order by nr.fecha desc ";
+		}else{
+			$query .= " order by nr.fecha desc ";
+			if ($pagina) 
+				$query .= ' limit '.(($pagina-1)*10).', 10';
+			else
+				$query .= ' limit 0, 10';
+		}
+		$db->setQuery($query);
+		$db->query();
+		if ($db->getNumRows()){
+			return $db->loadAssocList();
+		}
+		return array();
+	}
 }

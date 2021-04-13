@@ -475,6 +475,15 @@ class NotaController extends JController{
 		$jinput->set( 'layout', 'reporte_naves' );
 		parent::display();
 	}
+	function notas_area(){
+		$jinput = JFactory::getApplication()->input;
+		$jinput->set('view', 'nota');
+		$jinput->set( 'layout', 'notas_area' );
+		$model = $this->getModel('nota');
+		$notas_area = $model->notas_area();
+		$jinput->set("notas_area", $notas_area);
+		parent::display();
+	}
 	/*
 	Consulta timis para buscar notas por nombre de item aproximado
 	 select nr.id as nota, nr.fecha, ni.cantidad, ni.item, u.name as usuario, nrem.nombre as tripulante, od.nombre as depto_origen, cc.centro_costo 

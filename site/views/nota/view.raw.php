@@ -55,4 +55,11 @@ class NotaViewNota extends JView {
 		$this->pagina 		= $jinput->get("pagina", 1, "int");
 		parent::display($tpl);
 	}
+	public function rango_area(){
+		$jinput	 = JFactory::getApplication()->input;
+		$this->setLayout('rango_area.raw');
+		$this->pagina = $jinput->get("pagina",0,"int");
+		$this->notas_area = $jinput->get("notas_area",array(),"array");
+		parent::display();
+	}
 }

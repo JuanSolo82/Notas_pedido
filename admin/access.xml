@@ -19,5 +19,6 @@
 		<action name="tripulante.maquina" title="Destino notas Mantenimiento" description="Restringe departamento de destino Operaciones" />
 		<action name="centro_costo" title="Escoger centro de costo" description="El empleado puede escoger centro de costo" />
 		<action name="depto_compra" title="Departamento compra" description="El empleado puede escoger el departamento que se hace cargo de la compra" />
+		<action name="resumen_area" title="Resumen notas área" description="Revisar resumen de notas salidas del área al que pertenece" />
 	</section>
 </access>

@@ -162,7 +162,7 @@ function anterior_previo(direccion){
     $("#pagina").val(pagina);
 }
 
-function anterior_previo_depto(direccion){
+function anterior_previo_depto(direccion, notas_area=0){
     var pagina = parseInt($("#pagina").val());
     if (direccion==1)
         pagina++;
@@ -170,19 +170,34 @@ function anterior_previo_depto(direccion){
         pagina--; 
     if (pagina<0)
         return;
-    $.ajax({
-        url: 'index.php?option=com_nota&task=carga.depto_rango&format=raw',
-        type: 'post',
-        data: {pagina: pagina},
-        success: function(data){
-            //$("#lista").hide();
-            $("#notas_depto").html(data);
-        }
-    });
-    $("#notas_depto").css({'opacity':'0.5'});
-    setTimeout(function(){
-        $("#notas_depto").css({'opacity':'1'});
-    },500);
+    if (notas_area){
+        $.ajax({
+                url: 'index.php?option=com_nota&task=carga.rango_area&format=raw',
+                type: 'post',
+                data: {pagina: pagina},
+                success: function(data){
+                    $("#notas_area").html(data);
+                }
+            });
+            $("#notas_area").css({'opacity':'0.5'});
+            setTimeout(function(){
+                $("#notas_area").css({'opacity':'1'});
+            },500);
+    }else{
+        $.ajax({
+            url: 'index.php?option=com_nota&task=carga.depto_rango&format=raw',
+            type: 'post',
+            data: {pagina: pagina},
+            success: function(data){
+                $("#notas_depto").html(data);
+            }
+        });
+        $("#notas_depto").css({'opacity':'0.5'});
+        setTimeout(function(){
+            $("#notas_depto").css({'opacity':'1'});
+        },500);
+    }
+    
     $("#pagina").val(pagina);
 }
 
@@ -864,4 +879,25 @@ function buscar_item(ind, item, id_user){
 function escoger_item(ind,item){
     $("#descripcion"+ind).val(item);
     $("#items"+ind).fadeOut(500);
+}
+
+function buscar_nota_area(){
+    var parametro = $("#parametro").val().trim();
+    if (parametro!=''){
+        $("#notas_area").html("<div class='loader'></div>");
+        $.ajax({
+                url: 'index.php?option=com_nota&task=carga.rango_area&format=raw',
+                type: 'post',
+                data: {parametro: parametro},
+                success: function(data){
+                    $("#notas_area").html(data);
+                }
+            });
+            $("#notas_area").css({'opacity':'0.5'});
+            setTimeout(function(){
+                $("#notas_area").css({'opacity':'1'});
+            },500);
+    }else{
+        console.log('complete el campo de búsqueda');
+    }
 }

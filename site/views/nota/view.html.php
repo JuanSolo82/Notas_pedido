@@ -66,6 +66,9 @@ class NotaViewNota extends JView{
 			$this->hasta	= $jinput->get("hasta", "", "string");
 			$this->reporte	= $jinput->get("reporte", array(), "array");
 		}
+		if ($layout=="notas_area"){
+			$this->notas_area = $jinput->get("notas_area", array(), "array");
+		}
         parent::display($tpl);
 	}
 	
@@ -92,8 +95,9 @@ class NotaViewNota extends JView{
 			if (!$user->authorise('capitan.jefe', 'com_nota') && !$user->authorise('capitan.sin_jefe', 'com_nota'))
 				$menu .= $this->getBoton('Notas enviadas al departamento', 'article-add', 'notas_depto','',1);
 		}
-		if ($user->authorise('jefe.delgada', 'com_nota') || $user->authorise('jefe.natales', 'com_nota'))
+		if ($user->authorise('jefe.delgada', 'com_nota') || $user->authorise('jefe.natales', 'com_nota')){
 			$menu .= $this->getBoton('Notas de naves', 'cpanel', 'notas_naves', '',1);
+		}
 		if ($user->authorise('adquisiciones.jefe', 'com_nota')){
 			$menu .= $this->getBoton('Notas recibidas', 'category', '','adquisiciones');		
 		}
@@ -107,7 +111,8 @@ class NotaViewNota extends JView{
 		if ($user->authorise('facturacion', 'com_nota')){
 			$menu .= $this->getBoton('Buscar OC', 'article-add','reportes.facturados', 'reportes');
 		}
-
+		if ($user->authorise('resumen_area','com_nota'))
+			$menu .= $this->getBoton('Resumen notas enviadas', 'contacts-categories', 'notas_area');
 		return $menu;
 	}
 	function getBoton($label, $icono, $task='', $modulo='', $notificacion=0) {

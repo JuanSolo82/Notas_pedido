@@ -233,4 +233,16 @@ class NotaControllerCarga extends JControllerForm
 		$html .= "</ul>";
 		echo $html;
 	}
+	function rango_area(){
+		$jinput = JFactory::getApplication()->input;
+		$view = $this->getView('nota','raw');
+		$model = $this->getModel('nota');
+		$parametro  = $jinput->get("parametro", "", "string");
+		$pagina		= $parametro=="" ? $jinput->get("pagina", 1,"int") : 0;
+		$notas_area = $model->notas_area($pagina, $parametro);
+		$jinput->set("notas_area", $notas_area);
+		$jinput->set("notas", $notas_area);
+		$jinput->set("pagina", $pagina);
+		$view->rango_area();
+	}
 }
