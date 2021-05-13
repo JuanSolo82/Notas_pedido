@@ -111,7 +111,7 @@ class NotaHelper {
 		else $handle = $db_handle;
 		// Execute a query
 		$result = mssql_query($query, $handle);
-		if (!$result AND NotaHelper::isTestSite()) print_r($query.'] ');
+		if (!$result AND NotaHelper::isTestSite()) print_r($query);
 		$listado = array();
 		if ($result===FALSE) $listado = false;
 		elseif ($result===TRUE) $listado = true;

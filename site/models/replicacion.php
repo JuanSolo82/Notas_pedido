@@ -10,9 +10,23 @@ require_once(JPATH_COMPONENT_SITE.'/assets/constants.php');
  * Nota Model
  */
 class NotaModelReplicacion extends JModelItem{
-	public function setNota($id_remitente){
-		$query = "";
+	public function setNota($id_remitente,$id_adepto,$id_user,$id_prioridad,$id_depto_compra,$id_depto_costo,$proveedor,$ley_navarino,$id_tipo_pedido,$cotizacion){
+		$proveedor = utf8_encode(NotaHelper::msquote($proveedor));
+		$cotizacion = utf8_encode(NotaHelper::msquote($cotizacion));
+		$query = "insert into notas (id,id_adepto,id_user,id_prioridad,id_depto_compra,id_depto_costo,proveedor,ley_navarino,id_tipo_pedido,cotizacion) 
+					values(".$id_remitente.",".$id_adepto.",".$id_user.",".$id_prioridad.",".$id_depto_compra.",".$id_depto_costo.",
+							".$proveedor.",".$ley_navarino.",".$id_tipo_pedido.",".$cotizacion.")";
+		print_r($query);
 		$row = NotaHelper::getMssqlQuery($query);
+	}
+
+	public function setItems($id_remitente, $cantidad, $item, $motivo, $opcion_oc, $valor, $nombre_archivo){
+		$item = utf8_encode(NotaHelper::msquote($item));
+		$motivo = utf8_encode(NotaHelper::msquote($motivo));
+		$nombre_archivo = utf8_encode(NotaHelper::msquote($nombre_archivo));
+		$query = "insert into items (id_nota,cantidad,item,motivo,opcion_oc,valor,adjunto) 
+					values(".$id_remitente.",".$cantidad.",".$item.",".$motivo.",".$opcion_oc.",".$valor.",".$nombre_archivo.")";
+		NotaHelper::getMssqlQuery($query);
 	}
 	
 }

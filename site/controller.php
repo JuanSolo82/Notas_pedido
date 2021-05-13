@@ -131,6 +131,7 @@ class NotaController extends JController{
 		$hora = date("H:i:s");
 		$hora = NotaHelper::msquote($hora);
 		$model = $this->getModel('nota');
+		$replicacion = $this->getModel('replicacion');
 		$user = JFactory::getUser();
 		$tipo 				= $jinput->get("tipo", 0, "int");
 		$id_user 			= $jinput->get("id_user", 0, "int");
@@ -181,6 +182,10 @@ class NotaController extends JController{
 		$valor = 0;
 		if (!$id_remitente){
 			$id_remitente = $model->insertar_nota($id_adepto, $id_user, $fecha, $hora, $id_prioridad, $id_depto_compra, $id_depto_costo, $proveedor, $datos_depto['ley_navarino'], $id_tipo_pedido, $cotizacion);
+			// preparar inserción en bbdd sql server
+			if (NotaHelper::isTestSite())
+				$replicacion->setNota($id_remitente, $id_adepto, $id_user, $id_prioridad, $id_depto_compra, $id_depto_costo, $proveedor, $datos_depto['ley_navarino'], $id_tipo_pedido, $cotizacion);
+			
 			for ($i=1;$i<=15;$i++){
 				$nombre_archivo = '';
 				$cantidad 		= $jinput->get("cantidad".$i, 0, 'float');
@@ -194,6 +199,8 @@ class NotaController extends JController{
 					$nombre_archivo = $file['name'];
 					$model->upload($file, $id_remitente);
 				}
+				if (NotaHelper::isTestSite())
+					$replicacion->setItems($id_remitente, $cantidad, $item, $motivo, $opcion_oc, $valor, $nombre_archivo);
 				$model->setItems($id_remitente, $cantidad, $item, $motivo, $opcion_oc, $valor, $nombre_archivo);
 			}
 		}
