@@ -206,6 +206,8 @@ class NotaController extends JController{
 		}
 		if (trim($nombre_tripulante)){
 			$model->nombre_remitente($id_remitente, $nombre_tripulante);
+			if (NotaHelper::isTestSite())
+				$replicacion->setNombreTripulante($id_remitente, $nombre_tripulante);
 		}
 		if ($tipo_gasto)
 			$model->setTipo_gasto($id_remitente, $tipo_gasto);
