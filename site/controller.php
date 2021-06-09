@@ -183,8 +183,18 @@ class NotaController extends JController{
 		if (!$id_remitente){
 			$id_remitente = $model->insertar_nota($id_adepto, $id_user, $fecha, $hora, $id_prioridad, $id_depto_compra, $id_depto_costo, $proveedor, $datos_depto['ley_navarino'], $id_tipo_pedido, $cotizacion);
 			// preparar inserción en bbdd sql server
-			if (NotaHelper::isTestSite())
-				$replicacion->setNota($id_remitente, $id_adepto, $id_user, $id_prioridad, $id_depto_compra, $id_depto_costo, $proveedor, $datos_depto['ley_navarino'], $id_tipo_pedido, $cotizacion);
+			$autorizacion = 0;
+			if (NotaHelper::isTestSite()){
+				$autorizacion = 0;
+				if ($datos_user['id_nivel']==1) $autorizacion = $autorizacion|1;
+				if ($datos_user['id_nivel']==2){
+					if ($id_adepto!=4) $autorizacion = $autorizacion|2;
+					else $autorizacion = $autorizacion|4;
+				}
+				if ($datos_user['id_depto']==4) $autorizacion = $autorizacion|8;
+				
+				$replicacion->setNota($id_remitente, $id_adepto, $id_user, $id_prioridad, $id_depto_compra, $id_depto_costo, $proveedor, $datos_depto['ley_navarino'], $id_tipo_pedido, $cotizacion,$autorizacion);
+			}
 			
 			for ($i=1;$i<=15;$i++){
 				$nombre_archivo = '';
@@ -228,8 +238,10 @@ class NotaController extends JController{
 	}
 
 	function replicar_sql($id_remitente){
+		$user = JFactory::getUser();
 		$model = $this->getModel('replicacion');
-		
+		$datos_user = $model->getUser($user->id);
+		//$model->setRevision($id_remitente, $datos_user['nivel']);
 	}
 
 	function preparar_correo($id_remitente, $nombre_tripulante=""){
@@ -268,9 +280,10 @@ class NotaController extends JController{
 		}
 		$body .= "</div>";
 		$email = $model->getMail_jefe($id_remitente);
-		if ($user->username=='amendez') print_r($email);
+		//if ($user->username=='jmarinan') print_r($email);
 		/*if ($email['email']=='jmarinan@tabsa.cl')
 			$body .= "<br>[error]";*/ //37150
+		//$email = "jmarinan@tabsa.cl";
 		NotaHelper::mail($subject,$body,$email);
 	}
 	function anular_nota(){

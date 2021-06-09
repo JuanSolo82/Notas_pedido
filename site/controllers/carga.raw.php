@@ -46,6 +46,26 @@ class NotaControllerCarga extends JControllerForm
 		$nombre = "";
 		if (!$generico)
 			$nombre = $user->name;
+			
+		// actualización de tabla sql server
+		echo "Carga";
+		return "query";
+		if (NotaHelper::isTestSite()){
+			$replicacion = $this->getModel('replicacion');
+			$autorizacion = 0;
+			if ($autorizado_capitan>0)
+				$autorizacion = $autorizacion|2;
+			if ($autorizado_jefe>0)
+				$autorizacion = $autorizacion|4;
+			if ($autorizado_depto>0)
+				$autorizacion = $autorizacion|8;
+			if ($aprobado_adquisiciones>0)
+				$autorizacion = $autorizacion|16;
+			print_r($autorizacion.'?');
+			$query = $replicacion->actualizaRevision($autorizacion,$id_remitente);
+			print_r($query);
+			return $query;
+		}
 	}
 	function resultado_busqueda(){
 		$jinput = JFactory::getApplication()->input;

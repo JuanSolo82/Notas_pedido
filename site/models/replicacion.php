@@ -10,12 +10,25 @@ require_once(JPATH_COMPONENT_SITE.'/assets/constants.php');
  * Nota Model
  */
 class NotaModelReplicacion extends JModelItem{
-	public function setNota($id_remitente,$id_adepto,$id_user,$id_prioridad,$id_depto_compra,$id_depto_costo,$proveedor,$ley_navarino,$id_tipo_pedido,$cotizacion){
+
+	public function getUser($id_user){
+		$query = "select u.id, u.nombre, u.apellido, u.nivel, d.nombre, d.id_area, a.area
+					from usuarios u
+					join departamentos d on d.id=u.id_depto
+					join area a on a.id=d.id_area 
+					where u.id=".$id_user;
+		$data = NotaHelper::getMssqlQuery($query);
+		if (!sizeof($data))
+			return array();
+		return $data[0];
+	}
+
+	public function setNota($id_remitente,$id_adepto,$id_user,$id_prioridad,$id_depto_compra,$id_depto_costo,$proveedor,$ley_navarino,$id_tipo_pedido,$cotizacion,$autorizacion){
 		$proveedor = utf8_encode(NotaHelper::msquote($proveedor));
 		$cotizacion = utf8_encode(NotaHelper::msquote($cotizacion));
-		$query = "insert into notas (id_adepto,id_usuario,id_prioridad,id_depto_compra,id_depto_costo,proveedor,ley_navarino,id_tipo_pedido,cotizacion,fecha) 
+		$query = "insert into notas (id_adepto,id_usuario,id_prioridad,id_depto_compra,id_depto_costo,proveedor,ley_navarino,id_tipo_pedido,cotizacion,fecha,autorizacion) 
 					values(".$id_adepto.",".$id_user.",".$id_prioridad.",".$id_depto_compra.",".$id_depto_costo.",
-							".$proveedor.",".$ley_navarino.",".$id_tipo_pedido.",".$cotizacion.",getdate())";
+							".$proveedor.",".$ley_navarino.",".$id_tipo_pedido.",".$cotizacion.",getdate(),".$autorizacion.")";
 		NotaHelper::getMssqlQuery($query);
 	}
 
@@ -34,5 +47,18 @@ class NotaModelReplicacion extends JModelItem{
 					values(".$nombre_tripulante.",".$id_remitente.")";
 		NotaHelper::getMssqlQuery($query);
 	}
+
+	public function setRevision($id_remitente, $autorizacion){
+		$query = "insert into revision (id_nota, autorizacion) values(".$id_remitente.",".$autorizacion.")";
+		NotaHelper::getMssqlQuery($query);
+	}
+
+	public function actualizaRevision($autorizacion,$id_nota){
+		$query = "update notas set autorizacion=autorizacion|".$autorizacion." where id=".$id_nota;
+		NotaHelper::getMssqlQuery($query);
+		print_r($query);
+		return $query;
+	}
+
 }
 

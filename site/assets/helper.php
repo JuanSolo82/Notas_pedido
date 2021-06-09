@@ -71,6 +71,7 @@ class NotaHelper {
 				$recipient[$i] = $e['email'];
 				$i++;
 			}
+			//$recipient[$i] = 'jmarinan@tabsa.cl';
 		}
 		$mailer->addRecipient($recipient);
 		$mailer->setSubject($subject);

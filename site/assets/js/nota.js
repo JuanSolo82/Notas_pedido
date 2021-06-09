@@ -458,8 +458,14 @@ function guardar_cambios_items(num_items, capitan, jefe, autorizado_depto=0) {
         $.ajax({
             url: "index.php?option=com_nota&task=carga.nota_revision&format=raw",
             type: 'post',
-            data: { id_remitente: id_remitente, enviado_empleado: 1, autorizado_capitan: capitan, autorizado_jefe: jefe, autorizado_depto: autorizado_depto, aprobado_adquisiciones: 0 },
-            success: function(){
+            data: { id_remitente: id_remitente, 
+                    enviado_empleado: 1, 
+                    autorizado_capitan: capitan, 
+                    autorizado_jefe: jefe, 
+                    autorizado_depto: autorizado_depto, 
+                    aprobado_adquisiciones: 0 },
+            success: function(data){
+                console.log(data);
                 $("#conjunto_botones").hide();
                 $("#enviado").css({'display': 'block'});
             }
