@@ -69,6 +69,9 @@ class NotaViewNota extends JView{
 		if ($layout=="notas_area"){
 			$this->notas_area = $jinput->get("notas_area", array(), "array");
 		}
+		if ($layout=="editar_naves"){
+			$this->naves = $jinput->get("naves",array(),"array");
+		}
         parent::display($tpl);
 	}
 	
@@ -113,6 +116,8 @@ class NotaViewNota extends JView{
 		}
 		if ($user->authorise('resumen_area','com_nota'))
 			$menu .= $this->getBoton('Resumen notas enviadas', 'contacts-categories', 'notas_area');
+		if ($user->authorise('procedimientos','com_nota'))
+			$menu .= $this->getBoton('Editar naves', 'media', 'editar_naves');
 		return $menu;
 	}
 	function getBoton($label, $icono, $task='', $modulo='', $notificacion=0) {

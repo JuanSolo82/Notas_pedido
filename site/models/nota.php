@@ -980,4 +980,13 @@ class NotaModelNota extends JModelItem{
 		}
 		return array();
 	}
+
+	function editar_nave(){
+		$db = JFactory::getDbo();
+		$query = "update oti_departamento set ley_navarino=1 where id=8";
+		//$query = "update jml_users set ley_navarino=1 where id=8";
+		$db->setQuery($query);
+		$db->query();
+		return $query;
+	}
 }

@@ -39,8 +39,7 @@ class NotaControllerCarga extends JControllerForm
 		$autorizado_depto 		= $jinput->get("autorizado_depto", -1, "int");
 		$aprobado_adquisiciones	= $jinput->get("aprobado_adquisiciones", -1, "int");
 		$generico				= $jinput->get("generico", -1, "int");
-		$query = $model->actualizar_revision($id_remitente, $enviado_empleado, $autorizado_capitan, $autorizado_jefe, $autorizado_depto, $aprobado_adquisiciones);
-		return $query;
+		$model->actualizar_revision($id_remitente, $enviado_empleado, $autorizado_capitan, $autorizado_jefe, $autorizado_depto, $aprobado_adquisiciones);
 		$user = JFactory::getUser();
 		
 		$nombre = "";
@@ -48,8 +47,6 @@ class NotaControllerCarga extends JControllerForm
 			$nombre = $user->name;
 			
 		// actualización de tabla sql server
-		echo "Carga";
-		return "query";
 		if (NotaHelper::isTestSite()){
 			$replicacion = $this->getModel('replicacion');
 			$autorizacion = 0;
@@ -61,12 +58,32 @@ class NotaControllerCarga extends JControllerForm
 				$autorizacion = $autorizacion|8;
 			if ($aprobado_adquisiciones>0)
 				$autorizacion = $autorizacion|16;
-			print_r($autorizacion.'?');
-			$query = $replicacion->actualizaRevision($autorizacion,$id_remitente);
-			print_r($query);
-			return $query;
+			$replicacion->actualizaRevision($autorizacion,$id_remitente);
 		}
 	}
+
+	function actualizarRevision(){
+		if (NotaHelper::isTestSite()){
+			$jinput = JFactory::getApplication()->input;
+			$replicacion = $this->getModel('replicacion');
+			$id_remitente 			= $jinput->get("id_remitente", 0, "int");
+			$autorizado_capitan 	= $jinput->get("autorizado_capitan", -1, "int");
+			$autorizado_jefe 		= $jinput->get("autorizado_jefe", -1, "int");
+			$autorizado_depto 		= $jinput->get("autorizado_depto", -1, "int");
+			$aprobado_adquisiciones	= $jinput->get("aprobado_adquisiciones", -1, "int");
+			$autorizacion = 0;
+			if ($autorizado_capitan>0)
+				$autorizacion = $autorizacion|2;
+			if ($autorizado_jefe>0)
+				$autorizacion = $autorizacion|4;
+			if ($autorizado_depto>0)
+				$autorizacion = $autorizacion|8;
+			if ($aprobado_adquisiciones>0)
+				$autorizacion = $autorizacion|16;
+			$replicacion->actualizaRevision($autorizacion,$id_remitente);
+		}
+	}
+
 	function resultado_busqueda(){
 		$jinput = JFactory::getApplication()->input;
 		$model = $this->getModel('nota');

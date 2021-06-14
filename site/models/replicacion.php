@@ -57,7 +57,6 @@ class NotaModelReplicacion extends JModelItem{
 		$query = "update notas set autorizacion=autorizacion|".$autorizacion." where id=".$id_nota;
 		NotaHelper::getMssqlQuery($query);
 		print_r($query);
-		return $query;
 	}
 
 }

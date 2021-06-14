@@ -98,7 +98,6 @@ $(document).ready(function() {
 
 function aprobar_naves(id_remitente, items){
     for (var i=1;i<=items;i++){
-        console.log($("#id_oculto"+i).val()+'?');
         $.ajax({
             url: 'index.php?option=com_nota&task=editar_item',
             type: 'post',
@@ -130,8 +129,14 @@ function aprobar_naves(id_remitente, items){
         method: 'post',
         data: {id_remitente: id_remitente, proveedor_escogido: proveedor_escogido, rut_proveedor: rut_proveedor, giro_proveedor: giro_proveedor},
         success: function(data){
-            //console.log(data);
+            console.log(data);
         }
+    });
+    // replicar en bbdd sql server
+    $.ajax({
+        url: "index.php?option=com_nota&task=carga.actualizarRevision&format=raw",
+        type: 'post',
+        data: { id_remitente: id_remitente, autorizado_jefe: 1 }
     });
 }
 
@@ -598,6 +603,11 @@ function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
             window.open('/portal/media/notas_pedido/Orden_compra'+id_remitente+'-'+opcion+'.pdf', 'nombre'); 
             $("#generada_oc"+opcion).css("display", "block");
         }
+    });
+    $.ajax({
+        url: "index.php?option=com_nota&task=carga.actualizarRevision&format=raw",
+        type: 'post',
+        data: { id_remitente: id_remitente, aprobado_adquisiciones: 1 }
     });
 }
 

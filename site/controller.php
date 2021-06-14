@@ -428,7 +428,6 @@ class NotaController extends JController{
 		$proveedor		= $jinput->get("proveedor_escogido", "", "string");
 		$rut_proveedor	= $jinput->get("rut_proveedor", "", "string");
 		$giro_proveedor	= $jinput->get("giro_proveedor", "", "string");
-		print_r("((((((((("+$proveedor);
 		if (strlen($proveedor)){
 			$this->setProveedor($id_remitente, $proveedor, $rut_proveedor, $giro_proveedor);
 		}
@@ -505,6 +504,22 @@ class NotaController extends JController{
 		$notas_area = $model->notas_area();
 		$jinput->set("notas_area", $notas_area);
 		parent::display();
+	}
+
+	function editar_naves(){
+		$jinput = JFactory::getApplication()->input;
+		$jinput->set('view', 'nota');
+		$jinput->set( 'layout', 'editar_naves' );
+		$model = $this->getModel('nota');
+		$naves = $model->getNaves();
+		$jinput->set("naves", $naves);
+		parent::display();
+	}
+
+	function editar_nave(){
+		$model = $this->getModel('nota');
+		$query = $model->editar_nave();
+		print_r($query);
 	}
 	/*
 	Consulta timis para buscar notas por nombre de item aproximado
