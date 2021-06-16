@@ -917,3 +917,54 @@ function buscar_nota_area(){
         console.log('complete el campo de búsqueda');
     }
 }
+
+function editar_regimen(id_nave){
+    console.log(id_nave);
+    $("#vigencia"+id_nave).hide();
+    $("#fechas"+id_nave).show();
+    /**
+     * $("#desde").click(function(){
+        $("#desde").datepicker({
+            changeMonth: true,
+            numberOfMonths: 3,
+            maxDate: '0'
+        }).focus();
+    });
+    $("#desde").change(function(){
+        $("#hasta").val("");
+        $("#hasta").prop('disabled', false);
+        $("#hasta").css('background', 'white');
+    });
+    $("#hasta").click(function(){
+        var fecha = $("#desde").val().split('-');
+        $("#hasta").datepicker({
+            changeMonth: true,
+            numberOfMonths: 3,
+            minDate: new Date(fecha[2],fecha[1]-1,fecha[0]),
+            maxDate: '0'
+        }).focus();
+    });
+     */
+}
+
+function definir_fechas(id_nave, desde=0){
+    console.log(desde);
+    if (desde){
+        $("#desde"+id_nave).datepicker({
+            changeMonth: true,
+            numberOfMonths: 3,
+            maxDate: '0'
+        }).focus();
+        $("#hasta").val("");
+        $("#hasta").prop('disabled', false);
+        $("#hasta").css('background', 'white');
+    }else{
+        var fecha = $("#desde"+id_nave).val().split('-');
+        $("#hasta"+id_nave).datepicker({
+            changeMonth: true,
+            numberOfMonths: 3,
+            minDate: new Date(fecha[2],fecha[1]-1,fecha[0]),
+            maxDate: '0'
+        }).focus();
+    }
+}

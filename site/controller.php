@@ -511,7 +511,7 @@ class NotaController extends JController{
 		$jinput->set('view', 'nota');
 		$jinput->set( 'layout', 'editar_naves' );
 		$model = $this->getModel('nota');
-		$naves = $model->regimen_naves();
+		$naves = $model->getLista_naves();
 		$jinput->set("naves", $naves);
 		parent::display();
 	}

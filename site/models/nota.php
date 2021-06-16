@@ -1002,4 +1002,16 @@ class NotaModelNota extends JModelItem{
 			return $db->loadAssocList();
 		return array();
 	}
+
+	function getLista_naves(){
+		$db = JFactory::getDbo();
+		$query = "select nn.id, nn.nave, nn.ley_navarino 
+				from nota_naves nn 
+				where nn.id!=13 order by nn.nave";
+		$db->setQuery($query);
+		$db->query();
+		if ($db->getNumRows())
+			return $db->loadAssocList();
+		return array();
+	}
 }
