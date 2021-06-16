@@ -21,14 +21,20 @@ $user = JFactory::getUser();
 <br>
 <table class='tabla_listado'>
 	<tr>
-		<th width='5%'>#</th>
-		<th width='5%'>Nº</th>
-		<th width='20%'>Fecha</th>
-		<th width='60%'>Estado de avance</th>
-		<th width='10%'>Revisión</th>
+		<th>Nave</th>
+		<th>Subarea</th>
+		<th>Revisión</th>
 	</tr>
+
+<?php foreach ($this->naves as $n){ ?>
+	<tr>
+		<td><?php echo $n['nave'] ?></td>
+		<td><?php echo $n['nombre'] ?></td>
+		<td></td>
+	</tr>
+<?php } ?>
 </table>
-<?php print_r($this->naves); ?>
+
 <div class='centrar'>
 	<a href='<?php echo JRoute::_('index.php?option=com_nota'); ?>'>
 	<div class='boton' id='volver'>

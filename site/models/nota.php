@@ -989,4 +989,17 @@ class NotaModelNota extends JModelItem{
 		$db->query();
 		return $query;
 	}
+
+	function regimen_naves(){
+		$db = JFactory::getDbo();
+		$query = "select nn.id, nn.nave, nd.id_nave, nd.id_depto, od.nombre
+				from nota_naves nn
+				join nota_naveDepto nd on nd.id_nave=nn.id 
+				left join oti_departamento od on od.id=nd.id_depto";
+		$db->setQuery($query);
+		$db->query();
+		if ($db->getNumRows())
+			return $db->loadAssocList();
+		return array();
+	}
 }
