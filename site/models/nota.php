@@ -1005,13 +1005,35 @@ class NotaModelNota extends JModelItem{
 
 	function getLista_naves(){
 		$db = JFactory::getDbo();
-		$query = "select nn.id, nn.nave, nn.ley_navarino 
+		$fecha_actual = date('Y-m-d');
+		$query = "select nn.id, nn.nave, nn.ley_navarino, vn.id as id_vigencia, vn.inicio, vn.fin, vn.ley_navarino as navarino_programado
 				from nota_naves nn 
-				where nn.id!=13 order by nn.nave";
+				left join nota_vigenciaNavarino vn on vn.id_nave=nn.id";
+		$query .= " and '".$fecha_actual."' <= vn.fin";
+		$query .= " where nn.id!=13 order by nn.nave";
 		$db->setQuery($query);
 		$db->query();
 		if ($db->getNumRows())
 			return $db->loadAssocList();
 		return array();
+	}
+
+	function setNavarino($id_nave, $inicio, $fin, $ley_navarino){
+		$user = JFactory::getUser();
+		$inicio = NotaHelper::fechamysql($inicio,2);
+		$fin = NotaHelper::fechamysql($fin,2);
+		$db = JFactory::getDbo();
+		$query = "insert into nota_vigenciaNavarino(id_nave,ley_navarino,inicio,fin,id_user) 
+					values (".$id_nave.", ".$ley_navarino.",'".$inicio."','".$fin."',".$user->id.")";
+		$db->setQuery($query);
+		$db->query();
+	}
+
+	function actualizar_navarino($id_nave,$ley_navarino){
+		$db = JFactory::getDbo();
+		$query = "update nota_naves set ley_navarino=".$ley_navarino." where id=".$id_nave;
+		$db->setQuery($query);
+		$db->query();
+		print_r($query);
 	}
 }

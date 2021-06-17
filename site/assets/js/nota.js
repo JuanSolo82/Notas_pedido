@@ -919,41 +919,18 @@ function buscar_nota_area(){
 }
 
 function editar_regimen(id_nave){
-    console.log(id_nave);
     $("#vigencia"+id_nave).hide();
     $("#fechas"+id_nave).show();
-    /**
-     * $("#desde").click(function(){
-        $("#desde").datepicker({
-            changeMonth: true,
-            numberOfMonths: 3,
-            maxDate: '0'
-        }).focus();
-    });
-    $("#desde").change(function(){
-        $("#hasta").val("");
-        $("#hasta").prop('disabled', false);
-        $("#hasta").css('background', 'white');
-    });
-    $("#hasta").click(function(){
-        var fecha = $("#desde").val().split('-');
-        $("#hasta").datepicker({
-            changeMonth: true,
-            numberOfMonths: 3,
-            minDate: new Date(fecha[2],fecha[1]-1,fecha[0]),
-            maxDate: '0'
-        }).focus();
-    });
-     */
+    $("#editar_regimen"+id_nave).hide();
+    $("#guardar_regimen"+id_nave).show();
 }
 
 function definir_fechas(id_nave, desde=0){
-    console.log(desde);
     if (desde){
         $("#desde"+id_nave).datepicker({
             changeMonth: true,
             numberOfMonths: 3,
-            maxDate: '0'
+            minDate: '0'
         }).focus();
         $("#hasta").val("");
         $("#hasta").prop('disabled', false);
@@ -963,8 +940,30 @@ function definir_fechas(id_nave, desde=0){
         $("#hasta"+id_nave).datepicker({
             changeMonth: true,
             numberOfMonths: 3,
-            minDate: new Date(fecha[2],fecha[1]-1,fecha[0]),
-            maxDate: '0'
+            minDate: new Date(fecha[2],fecha[1]-1,fecha[0])
         }).focus();
     }
+}
+
+function guardar_regimen(id_nave){
+    var desde = $("#desde"+id_nave).val();
+    var hasta = $("#hasta"+id_nave).val();
+    var ley_navarino = $("#navarino_actual"+id_nave+" option:selected").val();
+    console.log(ley_navarino);
+    $.ajax({
+        url: 'index.php?option=com_nota&task=setNavarino',
+        type: 'post',
+        data: {id_nave: id_nave, desde: desde, hasta: hasta, ley_navarino: ley_navarino},
+        success: function(data){
+            $("#vigencia"+id_nave).html((ley_navarino ? '<b>Régimen especial</b>' : '<b>Régimen general</b>')+" desde "+desde+" hasta "+hasta);
+        }
+    });
+    ocultar_ediciones(id_nave);
+}
+
+function ocultar_ediciones(id_nave){
+    $("#vigencia"+id_nave).show();
+    $("#fechas"+id_nave).hide();
+    $("#editar_regimen"+id_nave).show();
+    $("#guardar_regimen"+id_nave).hide();
 }

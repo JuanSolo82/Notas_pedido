@@ -512,14 +512,46 @@ class NotaController extends JController{
 		$jinput->set( 'layout', 'editar_naves' );
 		$model = $this->getModel('nota');
 		$naves = $model->getLista_naves();
+		$fecha_actual = strtotime(date('Y-m-d'));
+		$i=0;
+		foreach ($naves as $n){
+			$naves[$i]['activo'] = 1;
+			if ($fecha_actual<=strtotime($n['fin'])){
+				if ($fecha_actual<strtotime($n['inicio']))
+					$naves[$i]['activo'] = 0;
+			}else{
+				$naves[$i]['activo'] = 0;
+			}
+			$i++;
+		}
 		$jinput->set("naves", $naves);
 		parent::display();
 	}
 
-	function editar_nave(){
+	function setNavarino(){
+		$jinput = JFactory::getApplication()->input;
 		$model = $this->getModel('nota');
-		$query = $model->editar_nave();
-		print_r($query);
+		$id_nave 		= $jinput->get('id_nave',0,'int');
+		$desde			= $jinput->get('desde','','string');
+		$hasta 			= $jinput->get('hasta','','string');
+		$ley_navarino 	= $jinput->get('ley_navarino',-1,'int');
+		$model->setNavarino($id_nave, $desde, $hasta, $ley_navarino);
+
+		// verificar si la edición debe hacerse desde el mismo día de efectuado
+		$this->revision_navarino();
+	}
+	function revision_navarino(){
+		$model = $this->getModel('nota');
+		$fecha_actual = strtotime(date('Y-m-d'));
+		$naves = $model->getLista_naves();
+		foreach ($naves as $n){
+			if ($fecha_actual>=strtotime($n['inicio']) && $fecha_actual<=strtotime($n['fin'])){
+				// actualizar ley navarino
+				$model->actualizar_navarino($n['id'],$n['navarino_programado']);
+			}else{
+				print_r($n['id'].', '.$n['inicio'].' '.$n['fin'].'<br>');
+			}
+		}
 	}
 	/*
 	Consulta timis para buscar notas por nombre de item aproximado

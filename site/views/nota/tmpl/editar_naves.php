@@ -22,8 +22,8 @@ $user = JFactory::getUser();
 <table class='tabla_listado'>
 	<tr>
 		<th width="15%">Nave</th>
-		<th width="15%">Régimen especial</th>
-		<th>Período de duración</th>
+		<th width="20%">Régimen especial actual</th>
+		<th>Período programado</th>
 		<th width="5%" align="center">Editar</th>
 	</tr>
 
@@ -38,14 +38,29 @@ $user = JFactory::getUser();
 			</span>
 		</td>
 		<td>
-			<span id="vigencia<?php echo $n['id'] ?>"></span>
+			<span id="vigencia<?php echo $n['id'] ?>">
+				<?php echo $n['id_vigencia'] 
+					? '<b>'.($n['navarino_programado'] ? 'Régimen especial ' : 'Régimen general ' ).'</b> desde '.NotaHelper::fechamysql($n['inicio']).' hasta '.NotaHelper::fechamysql($n['fin']) 
+					: 'Indefinido' ?>
+			</span>
 			<div id="fechas<?php echo $n['id'] ?>" style="display: none">
-				<input type="text" onclick="definir_fechas(<?php echo $n['id'] ?>,1)" id="desde<?php echo $n['id'] ?>" size="10"> hasta <input type="text" onclick="definir_fechas(<?php echo $n['id'] ?>)" id="hasta<?php echo $n['id'] ?>" size="10">
+				<select id="navarino_actual<?php echo $n['id'] ?>">
+					<option value='1' <?php echo $n['ley_navarino'] ? 'selected' : '' ?>>Régimen especial</option>
+					<option value='0' <?php echo !$n['ley_navarino'] ? 'selected' : '' ?>>Régimen general</option>
+				</select>&nbsp;
+				Desde 
+				<input type="text" onclick="definir_fechas(<?php echo $n['id'] ?>,1)" id="desde<?php echo $n['id'] ?>" size="10" autocomplete="off"> 
+				hasta <input type="text" onclick="definir_fechas(<?php echo $n['id'] ?>)" id="hasta<?php echo $n['id'] ?>" size="10" autocomplete="off">
+				<input type="button" value="cancelar" id="cancelar<?php echo $n['id'] ?>" onclick="ocultar_ediciones(<?php echo $n['id'] ?>)" style="cursor: pointer; float: right;">
 			</div>
+			<?php echo "activo: ".$n['activo'] ?>
 		</td>
 		<td>
-			<a onclick="editar_regimen(<?php echo $n['id'] ?>)">
+			<a onclick="editar_regimen(<?php echo $n['id'] ?>)" id="editar_regimen<?php echo $n['id'] ?>">
 			<img src='/portal/administrator/templates/hathor/images/menu/icon-16-edit.png' />
+			</a>
+			<a onclick="guardar_regimen(<?php echo $n['id'] ?>)" id="guardar_regimen<?php echo $n['id'] ?>" style="display: none;">
+			<img src='/portal/administrator/templates/hathor/images/menu/icon-16-save.png' />
 			</a>
 		</td>
 	</tr>
