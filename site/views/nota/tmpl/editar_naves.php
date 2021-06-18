@@ -53,7 +53,6 @@ $user = JFactory::getUser();
 				hasta <input type="text" onclick="definir_fechas(<?php echo $n['id'] ?>)" id="hasta<?php echo $n['id'] ?>" size="10" autocomplete="off">
 				<input type="button" value="cancelar" id="cancelar<?php echo $n['id'] ?>" onclick="ocultar_ediciones(<?php echo $n['id'] ?>)" style="cursor: pointer; float: right;">
 			</div>
-			<?php echo "activo: ".$n['activo'] ?>
 		</td>
 		<td>
 			<a onclick="editar_regimen(<?php echo $n['id'] ?>)" id="editar_regimen<?php echo $n['id'] ?>">
