@@ -545,14 +545,17 @@ class NotaController extends JController{
 		$fecha_actual = strtotime(date('Y-m-d'));
 		$naves = $model->getLista_naves();
 		foreach ($naves as $n){
-			if ($fecha_actual>=strtotime($n['inicio']) && $fecha_actual<=strtotime($n['fin'])){
-				// actualizar ley navarino
-				$model->actualizar_navarino($n['id'],$n['navarino_programado']);
-			}else{
-				print_r($n['id'].', '.$n['inicio'].' '.$n['fin'].'<br>');
+			if ($n['id_vigencia']){
+				if ($fecha_actual>=strtotime($n['inicio'])){
+					if ($fecha_actual<=strtotime($n['fin']))
+						$model->actualizar_navarino($n['id'],$n['navarino_programado']);
+					else
+						$model->actualizar_navarino($n['id'],($n['navarino_programado'] ? 0 : 1));
+				}
 			}
 		}
 	}
+
 	/*
 	Consulta timis para buscar notas por nombre de item aproximado
 	 select nr.id as nota, nr.fecha, ni.cantidad, ni.item, u.name as usuario, nrem.nombre as tripulante, od.nombre as depto_origen, cc.centro_costo 

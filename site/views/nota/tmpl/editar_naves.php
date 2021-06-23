@@ -12,7 +12,7 @@ JHtml::_('behavior.modal');
 $i=1;
 $user = JFactory::getUser();
 ?>
-<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?maco=46"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?check=1"></script>
 <input type="hidden" id="vista" value="<?php echo $this->layout; ?>">
 
 <div class='fila_completa centrar' style='margin-bottom: 20px;'>
@@ -22,6 +22,7 @@ $user = JFactory::getUser();
 <table class='tabla_listado'>
 	<tr>
 		<th width="15%">Nave</th>
+		<th width="3%">Id</th>
 		<th width="20%">Régimen especial actual</th>
 		<th>Período programado</th>
 		<th width="5%" align="center">Editar</th>
@@ -30,6 +31,7 @@ $user = JFactory::getUser();
 <?php foreach ($this->naves as $n){ ?>
 	<tr>
 		<td><?php echo $n['nave'] ?></td>
+		<td><?php echo $n['id'] ?></td>
 		<td>
 			<span id="estado<?php echo $n['id'] ?>">
 				<?php echo $n['ley_navarino'] 

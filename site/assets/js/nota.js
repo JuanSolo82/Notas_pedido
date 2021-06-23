@@ -948,7 +948,17 @@ function definir_fechas(id_nave, desde=0){
 function guardar_regimen(id_nave){
     var desde = $("#desde"+id_nave).val();
     var hasta = $("#hasta"+id_nave).val();
-    var ley_navarino = $("#navarino_actual"+id_nave+" option:selected").val();
+    if (desde.lenght==0 || hasta.length==0){
+        alert("ingrese todos los valores");
+        return;
+    }
+    var f1     = new Date();
+    f1 = f1.getFullYear()+'-'+(f1.getMonth()+1)+'-'+f1.getDate();
+    var hoy = new Date(f1);
+    var inicio = desde.split('-');
+    var f2 = new Date(inicio[2]+'-'+inicio[1]+'-'+inicio[0]);
+    
+    var ley_navarino = parseInt($("#navarino_actual"+id_nave+" option:selected").val());
     console.log(ley_navarino);
     $.ajax({
         url: 'index.php?option=com_nota&task=setNavarino',
@@ -958,6 +968,12 @@ function guardar_regimen(id_nave){
             $("#vigencia"+id_nave).html((ley_navarino ? '<b>Régimen especial</b>' : '<b>Régimen general</b>')+" desde "+desde+" hasta "+hasta);
         }
     });
+    if (hoy>=f2){
+        if (ley_navarino)
+            $("#estado"+id_nave).html("<img src='/portal/administrator/templates/hathor/images/menu/icon-16-checkin.png' />");
+        else
+            $("#estado"+id_nave).html("<img src='/portal/administrator/templates/hathor/images/menu/icon-16-delete.png' />");
+    }
     ocultar_ediciones(id_nave);
 }
 

@@ -1006,11 +1006,11 @@ class NotaModelNota extends JModelItem{
 	function getLista_naves(){
 		$db = JFactory::getDbo();
 		$fecha_actual = date('Y-m-d');
-		$query = "select nn.id, nn.nave, nn.ley_navarino, vn.id as id_vigencia, vn.inicio, vn.fin, vn.ley_navarino as navarino_programado
-				from nota_naves nn 
-				left join nota_vigenciaNavarino vn on vn.id_nave=nn.id";
-		$query .= " and '".$fecha_actual."' <= vn.fin";
-		$query .= " where nn.id!=13 order by nn.nave";
+		$query = "select nn.id, nn.nave, nn.ley_navarino, nv.ley_navarino as navarino_programado, nv.inicio, nv.fin, nv.id as id_vigencia
+					from nota_naves nn left join (select id, id_nave, ley_navarino, inicio, fin 
+						from nota_vigenciaNavarino 
+						where id in(select max(id) from nota_vigenciaNavarino group by id_nave)) nv 
+					on nv.id_nave=nn.id where nn.id!=13";
 		$db->setQuery($query);
 		$db->query();
 		if ($db->getNumRows())
@@ -1035,5 +1035,13 @@ class NotaModelNota extends JModelItem{
 		$db->setQuery($query);
 		$db->query();
 		print_r($query);
+
+		// actualizar tablas utilizadas para obtención de régimen especial
+		$query = "update oti_departamento od 
+					inner join nota_naveDepto nd on nd.id_depto=od.id 
+					set od.ley_navarino=".$ley_navarino." 
+					where nd.id_nave=".$id_nave;
+		$db->setQuery($query);
+		$db->query();
 	}
 }
