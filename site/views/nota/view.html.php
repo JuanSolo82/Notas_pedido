@@ -102,7 +102,8 @@ class NotaViewNota extends JView{
 			$menu .= $this->getBoton('Notas de naves', 'cpanel', 'notas_naves', '',1);
 		}
 		if ($user->authorise('adquisiciones.jefe', 'com_nota')){
-			$menu .= $this->getBoton('Notas recibidas', 'category', '','adquisiciones');		
+			$menu .= $this->getBoton('Notas recibidas', 'category', '','adquisiciones');
+			$menu .= $this->getBoton('Editar naves', 'media', 'editar_naves');
 		}
 		if ($user->authorise('core.admin', 'com_nota')){
 			$menu .= $this->getBoton('Gestion de usuarios', 'user', 'gestion_usuarios','');
@@ -116,8 +117,7 @@ class NotaViewNota extends JView{
 		}
 		if ($user->authorise('resumen_area','com_nota'))
 			$menu .= $this->getBoton('Resumen notas enviadas', 'contacts-categories', 'notas_area');
-		if ($user->authorise('procedimientos','com_nota'))
-			$menu .= $this->getBoton('Editar naves', 'media', 'editar_naves');
+		
 		return $menu;
 	}
 	function getBoton($label, $icono, $task='', $modulo='', $notificacion=0) {

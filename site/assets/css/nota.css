@@ -384,3 +384,28 @@ a {
       transform: rotate(360deg);
     }
 }
+
+.badge{
+	display: inline-block;
+    padding: .35em .65em;
+    font-size: 1em;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
+}
+.badge-green{
+	color:#fff!important;
+	background-color:#4CAF50!important
+}
+.badge-red{
+	color:#fff!important;
+	background-color:#f44336!important
+}
+.badge-blue{
+	color:#fff!important;
+	background-color:#2196F3!important
+}

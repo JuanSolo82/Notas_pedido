@@ -12,7 +12,7 @@ JHtml::_('behavior.modal');
 $i=1;
 $user = JFactory::getUser();
 ?>
-<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?check=1"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?check_css=85"></script>
 <input type="hidden" id="vista" value="<?php echo $this->layout; ?>">
 
 <div class='fila_completa centrar' style='margin-bottom: 20px;'>
@@ -35,8 +35,8 @@ $user = JFactory::getUser();
 		<td>
 			<span id="estado<?php echo $n['id'] ?>">
 				<?php echo $n['ley_navarino'] 
-					? "<img src='/portal/administrator/templates/hathor/images/menu/icon-16-checkin.png' />" 
-					: "<img src='/portal/administrator/templates/hathor/images/menu/icon-16-delete.png' />" ?>
+					? "<span class='badge badge-green'>Régimen especial</span>" 
+					: "<span class='badge badge-blue'>Régimen general</span>" ?>
 			</span>
 		</td>
 		<td>
@@ -47,8 +47,8 @@ $user = JFactory::getUser();
 			</span>
 			<div id="fechas<?php echo $n['id'] ?>" style="display: none">
 				<select id="navarino_actual<?php echo $n['id'] ?>">
-					<option value='1' <?php echo $n['ley_navarino'] ? 'selected' : '' ?>>Régimen especial</option>
-					<option value='0' <?php echo !$n['ley_navarino'] ? 'selected' : '' ?>>Régimen general</option>
+					<option value='1' <?php echo !$n['ley_navarino'] ? 'selected' : '' ?>>Régimen especial</option>
+					<option value='0' <?php echo $n['ley_navarino'] ? 'selected' : '' ?>>Régimen general</option>
 				</select>&nbsp;
 				Desde 
 				<input type="text" onclick="definir_fechas(<?php echo $n['id'] ?>,1)" id="desde<?php echo $n['id'] ?>" size="10" autocomplete="off"> 
