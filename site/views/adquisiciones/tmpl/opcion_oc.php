@@ -42,7 +42,7 @@ foreach ($this->items as $item){ ?>
 		<td>
 			<div id="guardado<?php echo $j ?>" style="display: none;"></div>
 			<select id="opciones_oc<?php echo $j ?>">
-			<?php for ($i=1;$i<=7;$i++){ ?>
+			<?php for ($i=1;$i<=10;$i++){ ?>
 				<option value="<?php echo $i ?>" <?php echo ($item['opcion_oc']==$i) ? "selected" : "" ?>><?php echo $i ?></option>
 			<?php } ?>
 			</select>

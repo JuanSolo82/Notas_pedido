@@ -179,12 +179,9 @@ $user = JFactory::getUser();
 			<?php } ?>
 			<td>
 				<select id='opcion<?php echo $i ?>' name='opcion<?php echo $i ?>'>
-					<option value='1'>1</option>
-					<option value='2'>2</option>
-					<option value='3'>3</option>
-					<option value='4'>4</option>
-					<option value='5'>5</option>
-					<option value='6'>6</option>
+				<?php for ($j=1;$j<=10;$j++){ ?>
+					<option value='<?php echo $j ?>'><?php echo $j ?></option>
+				<?php } ?>
 				</select>
 			</td>
 			<td><input type='file' id='archivo<?php echo $i ?>' name='archivo<?php echo $i ?>'></td>

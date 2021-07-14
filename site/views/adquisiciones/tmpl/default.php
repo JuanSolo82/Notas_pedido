@@ -16,7 +16,7 @@ JHTML::script('bootstrap.js', 'components/com_nota/assets/bootstrap/js/');
 <div class='centrar'>
 	<div class='boton'><?php echo $this->getBoton('Tramitar órdenes de compra', 'featured', 'lista_notas',1) ?></div>
 	<div class='boton'><?php echo $this->getBoton('Buscar OC', 'featured', 'buscar_oc') ?></div>
-	<div class='boton'><?php echo $this->getBoton('Regenerar OC', 'featured', 'regenerar_oc') ?></div>
+	<!--<div class='boton'><?php echo $this->getBoton('Regenerar OC', 'featured', 'regenerar_oc') ?></div>-->
 </div>
 <div class="centrar">
 	<a href="<?php echo JRoute::_('index.php?option=com_nota'); ?>">
