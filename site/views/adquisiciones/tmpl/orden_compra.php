@@ -14,7 +14,7 @@ foreach ($this->items as $i)
 
 $user = JFactory::getUser();
 ?>
-<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?black=010"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?Lor=010"></script>
 <script type="text/javascript" src="/portal/components/com_nota/assets/js/adquisiciones.js?tim=5544"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <br>
@@ -30,9 +30,18 @@ $user = JFactory::getUser();
 	<label for="ley_navarino" style="cursor: pointer;"><b>Afecta a Ley Navarino</b></label>
 </div>
 <br>
-<fieldset class="contenido" style="width: 50%; border: 1px solid red;" id="dialogo_anulacion">
-<b>Eliminar nota de pedido: </b><input type="text" placeholder="comentario" id='comentario' autocomplete="off"> <button onclick="anular_nota(<?php echo $this->id_remitente ?>)">Eliminar nota</button>
-</fieldset>
+<div style="float: left; width: 45%; margin: 10px;">
+	<fieldset class="contenido" style="width: 90%; border: 1px solid red;" id="dialogo_anulacion">
+		<b>Eliminar nota de pedido: </b><input type="text" placeholder="comentario" id='comentario' autocomplete="off">
+		<button onclick="anular_nota(<?php echo $this->id_remitente ?>)">Eliminar nota</button>
+	</fieldset>
+</div>
+<?php if (NotaHelper::isTestSite() && sizeof($opciones)>1){ ?>
+<div style="float: left; width: 45%; margin: 10px;">
+	<button class="boton_simple" style="width: 150px;" onclick="emision_masiva(1,<?php echo sizeof($opciones) ?>)">Emitir todo</button>
+</div>
+<?php } ?>
+
 <input type="hidden" value="<?php echo sizeof($opciones) ?>" id="num_opciones">
 <?php 
 foreach ($opciones as $opcion){ ?>
@@ -190,15 +199,10 @@ $proveedor = explode('_',$this->datos_nota['proveedor']);
 	<a href="/portal/media/notas_pedido/Orden_compra.pdf" target="_blank">OC test</a>
 <?php } ?>
 
-<?php 
-$url = JRoute::_('index.php?option=com_nota&task=adquisiciones.generar_orden&format=pdf&tmpl=component&id_remitente='.$this->id_remitente.'&opcion='.$opcion); 
-?>
-	<!--<a onclick="preparar_oc('<?php echo $url ?>', <?php echo $this->id_remitente ?>, <?php echo $opcion ?>, <?php echo $j ?>)">-->
-	<a onclick="cargar_pdf(<?php echo $this->id_remitente ?>,0, <?php echo $opcion ?>, <?php echo sizeof($opciones) ?>)">
-		<div class='boton'><img src='/portal/administrator/templates/hathor/images/header/icon-48-print.png' /><br>Imprimir</div>
-	</a>
-	<!--<input type='button' onclick="cargar_pdf(<?php echo $this->id_remitente ?>)" value="boton">-->
-	<br>
+<a onclick="cargar_pdf(<?php echo $this->id_remitente ?>,0, <?php echo $opcion ?>, <?php echo sizeof($opciones) ?>)">
+	<div class='boton'><img src='/portal/administrator/templates/hathor/images/header/icon-48-print.png' /><br>Imprimir</div>
+</a>
+<br>
 </div>
 
 <?php $j=0; ?>

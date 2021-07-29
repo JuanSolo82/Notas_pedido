@@ -563,6 +563,24 @@ function actualizar_ln(id_remitente){
         data: {id_remitente: id_remitente, ley_navarino: ley_navarino}
     });
 }
+
+function emision_masiva(id_remitente, ordenes){
+    $.ajax({
+        url: 'index.php?option=com_nota&task=adquisiciones.generarOrdenes',
+        timeout: 1500,
+        method: 'post',
+        data: {id_remitente: id_remitente,
+                proveedor: proveedor, 
+                rut_proveedor: rut_proveedor,
+                giro_proveedor: giro_proveedor,
+                cotizacion: cotizacion},
+        success: function(){
+            window.open('/portal/media/notas_pedido/Orden_compra'+id_remitente+'-'+opcion+'.pdf', 'nombre'); 
+            $("#generada_oc"+opcion).css("display", "block");
+        }
+    });
+}
+
 function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
     var proveedor       = $('#proveedor_escogido'+opcion).val();
     var rut_proveedor   = $("#rut_proveedor"+opcion).val();

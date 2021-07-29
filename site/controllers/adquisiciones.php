@@ -136,121 +136,64 @@ class NotaControllerAdquisiciones extends JControllerForm
 	}
 
 	public function regenerar_oc(){
-
 		$jinput = JFactory::getApplication()->input;
-
 		$user = JFactory::getUser();
-
 		if ($user->authorise('adquisiciones.jefe', 'com_nota')){
-
 			$jinput->set('view', 'adquisiciones');
-
 			$jinput->set('layout', 'regenerar_oc');
-
 			$orden_compra = $jinput->get('orden_compra', 0, 'int');
-
 			$model = $this->getModel('adquisiciones');
 
-
-
 			$datos_oc 	= $model->getOrden_compra($orden_compra);
-
 			$datos_nota = $model->getDatosNotaOc($orden_compra);
-
 			$jinput->set('orden_compra', $orden_compra);
-
 			$jinput->set('datos_oc', $datos_oc);
-
 			$jinput->set('datos_nota', $datos_nota);
-
 		}else{
-
 			$msg = JFactory::getApplication();
-
 			$msg->enqueueMessage("No posee permisos para esta vista", 'error');
-
 			$jinput->set('view', '');
-
 			$jinput->set('layout', '');
-
 		}
-
 		parent::display();
-
 	}
 
 	public function orden_compra(){
-
 		$jinput = JFactory::getApplication()->input;
-
 		$jinput->set('view', 'adquisiciones');
-
 		$jinput->set('layout', 'orden_compra');
-
 		$model = $this->getModel("adquisiciones");
-
 		$model2 = $this->getModel("nota");
-
 		$id_remitente = $jinput->get('id_remitente', 0, 'int');
-
 		$datos_nota = $model2->getDetalle_nota($id_remitente);
-
 		$proveedor = array();
-
 		if ($datos_nota['proveedor']){
-
 			$p = explode('_', $datos_nota['proveedor']);
-
 			$proveedor['RazonSocial'] = $p[0];
-
 			$proveedor['rut'] = $p[1];
-
 			$proveedor['giro'] = $p[2];
-
 		}
-
 		$items = $model2->getItems($id_remitente);
-
 		$opciones = array();
-
 		foreach ($items as $i){
-
 			$opciones[$i['opcion_oc']] = $i['opcion_oc'];
-
 		}
-
 		$orden = array();
-
 		foreach ($opciones as $o){
-
 			$oc = $model->getDetalle_orden($id_remitente, $o);
-
 			if (sizeof($oc))
-
 				$orden[$o] = 1;
-
 			else 
-
 				$orden[$o] = 0;
-
 		}
-
-		
 
 		$jinput->set("items", $items);
-
 		$jinput->set('id_remitente',$id_remitente);
-
 		$jinput->set("datos_nota", $datos_nota);
-
 		$jinput->set("orden", $orden);
-
 		$jinput->set("proveedor", $proveedor);
-
 		$model = $this->getModel('adquisiciones');
-
 		parent::display();
-
 	}
 
 	public function nueva_reserva(){
@@ -583,354 +526,178 @@ class NotaControllerAdquisiciones extends JControllerForm
 	}
 
 	function nota_html($datos, $items){
-
 		$meses = array('01' => 'enero', '02' => 'febrero', '03' => 'marzo', '04' => 'abril', '05' => 'mayo',
-
 				'06' => 'junio', '07' => 'julio', '08' => 'agosto', '09' => 'septiembre', '10' => 'octubre', '11' => 'noviembre', '12' => 'diciembre');
 
-
-
 		$f = explode("-", $datos['fecha']);
-
 		$fecha_creacion = $f[2].' de '.$meses[$f[1]].' de '.$f[0];
-
 		$html = "<style>".$this->estilos()."</style>";
-
 		$html .= '<div style="font-family: sans-serif;">';
-
 		$html .= '
-
 			<div class="inferior">
-
 				Nota de pedido n'.htmlentities('°').' '.$datos['id_remitente'].'
-
 			</div>';
-
 		$html .= "
-
 			<table class='tabla_items' border=1 cellspacing=0 cellpadding=2>
-
 				<tr>
-
 					<td width='35%'><b>Departamento destino</b></td>
-
 					<td>".htmlentities($datos['depto_destino'])."</td>
-
 				</tr>
-
 				<tr>
-
 					<td width='35%'><b>Departamento origen</b></td>
-
 					<td>".htmlentities($datos['depto_origen'])."</td>
-
 				</tr>
-
 				<tr>
-
 					<td width='35%'><b>Emisor</b></td>
-
 					<td>".(htmlentities($datos['nombre_remitente']) ? htmlentities($datos['nombre_remitente']) : htmlentities($datos['nombre_usuario']))."</td>
-
 				</tr>
-
 				<tr>
-
 					<td width='35%'><b>Prioridad</b></td>
-
 					<td>".$datos['prioridad']."</td>
-
 				</tr>
-
 				<tr>
-
 					<td width='35%'><b>Fecha emisi&oacute;n</b></td>
-
 					<td>".$fecha_creacion."</td>
-
 				</tr>
-
 			</table><br>
-
 		";
-
 		$html .= "<div class='inferior'>Detalle de pedido</div>";
-
 		$html .= '<table class="tabla_items" border=1 cellspacing=0 cellpadding=2>
-
 			<tr>
-
 				<td width="5%"><b>#</b></td>
-
 				<td width="5%"><b>Cantidad</b></td>
-
 				<td width="40%"><b>Item</b></td>
-
 				<td width="40%"><b>Observaciones</b></td>
-
 			</tr>';
-
 			$j=1;
-
 		foreach ($items as $i){
-
 			$cantidad = $i['cantidad'] ? $i['cantidad'] : $i['nueva_cantidad'];
-
 			if ($cantidad){
-
 				$html .= '
-
 				<tr>
-
 					<td>'.$j++.'</td>
-
 					<td>'.$i['cantidad'].'</td>
-
 					<td>'.htmlentities($i['item']).'</td>
-
 					<td>'.htmlentities($i['motivo']).'</td>
-
 				</tr>';
-
 			}
-
 		}
-
 		$html .= '</table>';
-
 		$html .= "</div>";
 
-
-
 		return $html;
-
 	}
-
 	function estilos(){
-
 		$style = "
-
 		.centrar {
-
 			display: flex;
-
 			justify-content: center;
-
 			position: relative;
-
 			width: 100%;
-
 			float: left;
-
 		}
-
 		.caja_orden{
-
 			font-family: 'Questrial', sans-serif;
-
 		}
-
 		.encabezados_oc {
-
 			width: 50%;
-
 			justify-content: center; 
-
 			text-align: center;
-
 		}
-
 		.datos_entrega {
-
 			position: relative;
-
 			width: 100%;
-
 			float: left;
-
 			margin: 10px;
-
 		}
-
 		.superior {
-
 			margin-top: 30px;
-
 			color: darkslategray;
-
 			padding: 5px;
-
 			text-align: center;
-
 			font-weight: bold;
-
 			font-size: 20px;
-
 		}
-
 		.inferior {
-
 			text-align: center;
-
 			font-weight: bold;
-
 			size: 15px;
-
 		}
-
 		.tabla_items {
-
 			width: 100%;
-
 			margin-top: 30px;
-
 		}
-
 		.tabla_items td, .tabla_items tr {
-
 			font-size: 8pt;
-
 		}
-
 		.pie_firma{
-
 			position: absolute; 
-
 			bottom: 20px; 
-
 			width: 40%; 
-
 			display: flex;
-
 			justify-content: center;
-
 		}
-
 		.beneficio{
-
 			width: 100%;
-
 			float: left;
-
 			font-style: italic;
-
 			font-family: sans-serif;
-
 			font-weight: bold;
-
 			font-size: 14px;
-
 			margin-top: 10px;
-
 			margin-bottom: 20px;
-
 			border: solid black 1px;
-
 			padding: 10px;
-
 		}
-
 		";
-
 		return $style;
-
 	}
-
-
 
 	private function enviarOrdenCorreo($id_remitente, $adjunto="") {
-
 		$model = $this->getModel('nota');
-
 		$detalle_nota = $model->getDetalle_nota($id_remitente);
-
 		$subject = '[TABSA] Orden de compra';
-
 		$body = '<link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">';
-
 		$body .= "
-
 		<style>
-
 		.borde{
-
 			border-radius: 25px;
-
 			border: 2px solid #4AA5FF;
-
 			padding: 20px; 
-
 			font-family: 'Open Sans', sans-serif;
-
 			width: 50%;
-
 			margin: 20px;
-
 		}
-
 		</style>
-
 		<div class='borde'>";
-
 		$body .= "<h3>Se ha generado su orden de compra</h3><br>";
-
 		$body .= "<p>Se adjunta la copia de orden de compra generada a partir de la nota 
-
 					de pedido nº ".$id_remitente."</p>";
-
 		$body .= "</div>";
-
 		if (NotaHelper::isTestSite())
-
 			NotaHelper::mailAdjunto($subject, $body, 'jmarinan@tabsa.cl', $adjunto);
-
 		else
-
 			NotaHelper::mail("[TABSA] Orden de compra", $body, $detalle_nota['email']);
-
 		
-
 	}
-
 /* ===================================================== */
-
 /* ======================= EMAILS ====================== */
-
 	private function enviarEmailReservaExitosa($destinatario, $datos_reserva) {
-
 		$aux_primero_loop = true;
-
 		$txt_ids = '';
-
 		$cant_reservas = 0;
-
 		foreach($datos_reserva['ar_reservas'] as $tipo=>$reserva) {
-
 			if (!$reserva) continue;
-
 			// solo procesar los items que sean un id de reserva
-
 			if ($tipo=='es_nueva') continue;
-
 			if ($aux_primero_loop) $aux_primero_loop = false;
-
 			else $txt_ids .= ', ';
-
 			$txt_ids .= $reserva;
-
 			$cant_reservas++;
-
 		}
-
 		$plural = ($cant_reservas>1)?'s':'';
-
 		$subject = '[TABSA] Nueva'.$plural.' reserva'.$plural.' ' . $txt_ids;
-
 		$body = R2FormatosEmail::generarBodyReservaExitosa($datos_reserva);
-
 		R2Helper::enviarEmail($destinatario, $subject, $body, 'reservas@tabsa.cl', true, true);
-
 	}
-
 }
-
