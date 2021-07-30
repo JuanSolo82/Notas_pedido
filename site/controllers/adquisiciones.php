@@ -157,7 +157,6 @@ class NotaControllerAdquisiciones extends JControllerForm
 		}
 		parent::display();
 	}
-
 	public function orden_compra(){
 		$jinput = JFactory::getApplication()->input;
 		$jinput->set('view', 'adquisiciones');
@@ -186,7 +185,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 			else 
 				$orden[$o] = 0;
 		}
-
+		
 		$jinput->set("items", $items);
 		$jinput->set('id_remitente',$id_remitente);
 		$jinput->set("datos_nota", $datos_nota);
@@ -195,121 +194,64 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$model = $this->getModel('adquisiciones');
 		parent::display();
 	}
-
 	public function nueva_reserva(){
-
 		$jinput = JFactory::getApplication()->input;
-
 		$jinput->set('view', 'externa');
-
 		$jinput->set( 'layout', 'nueva_reserva' );
-
 		$cantidad_pasajeros = $jinput->get('cantidad_pasajeros', 0, 'int');
-
 		$fecha_salida 		= $jinput->get('fecha_salida', '', 'string');
-
 		$origen				= $jinput->get('origen', '', 'string');
-
 		$destino			= $jinput->get('destino', 0, 'int');
-
 		$tipo_vehiculo		= $jinput->get('tipo_vehiculo', 0, 'int');
-
 		$jinput->set('cantidad_pasajeros', $cantidad_pasajeros);
-
 		$jinput->set('fecha_salida', $fecha_salida);
-
 		$jinput->set('origen', $origen);
-
 		$jinput->set('destino', $destino);
-
 		$jinput->set('tipo_vehiculo', $tipo_vehiculo);
-
 		parent::display();
-
 	}
-
 	public function buscar_oc(){
-
 		$jinput = JFactory::getApplication()->input;
-
 		$user = JFactory::getUser();
-
 		if ($user->authorise('adquisiciones.jefe', 'com_nota') || $user->authorise('facturacion', 'com_nota')){
-
 			$jinput->set('view', 'adquisiciones');
-
 			$jinput->set('layout', 'buscar_oc');
-
 			$orden_compra 	= $jinput->get('orden_compra', 0, 'int');
-
 			$nota_pedido 	= $jinput->get('nota_pedido', 0, 'int');
-
 			$model = $this->getModel('adquisiciones');
 
-
-
 			$items_oc = array();
-
 			$datos 		= $model->getDatosNotaOc($orden_compra, $nota_pedido);
-
 			foreach ($datos as $d){
-
 				$items_oc[$d['orden_compra']] = $model->getItems_oc($d['orden_compra']);
-
 			}
-
 			
-
 			$jinput->set('orden_compra', $orden_compra);
-
 			$jinput->set('nota_pedido', $nota_pedido);
-
 			$jinput->set('items_oc', $items_oc);
-
 			$jinput->set('datos', $datos);
-
 		}else{
-
 			$msg = JFactory::getApplication();
-
 			$msg->enqueueMessage("No posee permisos para esta vista", 'error');
-
 			$jinput->set('view', '');
-
 			$jinput->set('layout', '');
-
 		}
-
 		parent::display();
-
 	}
 
-
-
 	function menuprincipal() {
-
 		$jinput = JFactory::getApplication()->input;
-
 		$jinput->set('view', 'r2');
-
 		$jinput->set( 'layout', 'default' );
-
 		parent::display(); 
-
 	}
 
 	public function actualiza_ley_navarino(){
-
 		$jinput = JFactory::getApplication()->input;
-
 		$model = $this->getModel('adquisiciones');
-
 		$id_remitente	= $jinput->get('id_remitente', 0, 'int');
-
 		$ley_navarino	= $jinput->get('ley_navarino', 0, 'int');
-
 		$model->actualizarLeyNavarino($id_remitente, $ley_navarino);
-
 	}
 
 	public function generarOrden(){
@@ -528,7 +470,6 @@ class NotaControllerAdquisiciones extends JControllerForm
 	function nota_html($datos, $items){
 		$meses = array('01' => 'enero', '02' => 'febrero', '03' => 'marzo', '04' => 'abril', '05' => 'mayo',
 				'06' => 'junio', '07' => 'julio', '08' => 'agosto', '09' => 'septiembre', '10' => 'octubre', '11' => 'noviembre', '12' => 'diciembre');
-
 		$f = explode("-", $datos['fecha']);
 		$fecha_creacion = $f[2].' de '.$meses[$f[1]].' de '.$f[0];
 		$html = "<style>".$this->estilos()."</style>";
@@ -587,6 +528,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 
 		return $html;
 	}
+
 	function estilos(){
 		$style = "
 		.centrar {
@@ -632,7 +574,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 		}
 		.pie_firma{
 			position: absolute; 
-			bottom: 20px; 
+			bottom: 20px;
 			width: 40%; 
 			display: flex;
 			justify-content: center;
@@ -699,5 +641,57 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$subject = '[TABSA] Nueva'.$plural.' reserva'.$plural.' ' . $txt_ids;
 		$body = R2FormatosEmail::generarBodyReservaExitosa($datos_reserva);
 		R2Helper::enviarEmail($destinatario, $subject, $body, 'reservas@tabsa.cl', true, true);
+	}
+
+	public function generarOrdenes(){
+		$jinput = JFactory::getApplication()->input;
+		$id_remitente	= $jinput->get('id_remitente', 0, 'int');
+		$proveedor 		= $jinput->get('proveedor', '', 'string');
+		$rut_proveedor	= $jinput->get('rut_proveedor', '', 'string');
+		$giro_proveedor	= $jinput->get('giro_proveedor', '', 'string');
+		$solo_imprimir	= $jinput->get('solo_imprimir', 0, 'int');
+		$cotizacion		= $jinput->get('cotizacion', '', 'string');
+		$model	= $this->getModel('nota');
+		$model2 = $this->getModel('adquisiciones');
+		
+		$opcion = 1;
+		$datos_nota = $model->getDetalle_nota($id_remitente);
+		$items = $model->getItems($id_remitente);
+		$datos_oc = $model2->getDetalle_orden($id_remitente, $opcion);
+		if (sizeof($datos_oc)) $solo_imprimir = 1;
+		/*if (!$solo_imprimir){
+			$model2->setOrden($id_remitente, $opcion, $num_opciones, $proveedor."_".$rut_proveedor."_".$giro_proveedor, $rut_proveedor, $giro_proveedor, $cotizacion);
+		}
+		$datos_oc = $model2->getDetalle_orden($id_remitente, $opcion);
+		$p = explode('_', $datos_oc['proveedor']);
+		$proveedor = $p[0];
+		$rut_proveedor = $p[1];
+		$giro_proveedor = $p[2];
+        $document = JFactory::getDocument();
+		$meses = array('01' => 'enero', '02' => 'febrero', '03' => 'marzo', '04' => 'abril', '05' => 'mayo',
+				'06' => 'junio', '07' => 'julio', '08' => 'agosto', '09' => 'septiembre', '10' => 'octubre', '11' => 'noviembre', '12' => 'diciembre');
+		$url = JPATH_SITE.'/media/notas_pedido/Orden_compra'.$id_remitente.'-'.$opcion.'.pdf';
+		// QR
+		$filename = JPATH_SITE.'/media/notas_pedido/qr_ordenes/qr_'.$datos_oc['id'].'.png';
+		$matrixPointSize = 3;
+		$errorCorrectionLevel = 'L';
+		
+		// Por mientras para pruebas se usarán los elementos en producción (extensión hecha ahí)
+		 
+		$tqr = "http://www.tabsa.cl/portal/index.php/es/validar-nota?ordenCompra=".$id_remitente;
+		//$tqr = JUri::base().'index.php/es/validar-nota?ordenCompra='.$id_remitente;
+
+		if (NotaHelper::isTestSite())
+			QRcode::png($tqr, $filename, $errorCorrectionLevel, $matrixPointSize, 2);
+
+		require_once(JPATH_LIBRARIES.'/joomla/document/pdf/pdf.php');
+		$html = $this->orden_html($datos_nota, $items, $opcion, $datos_oc, $proveedor, $rut_proveedor, $giro_proveedor);
+		$pdf = new JDocumentpdf();
+		$pdf->guardar_oc($url, $html);*/
+
+		// envío de correo con adjunto
+		/*f (!NotaHelper::isTestSite())
+			$this->enviarOrdenCorreo($id_remitente, JPATH_SITE.'/media/notas_pedido/Orden_compra.pdf');
+		*/
 	}
 }

@@ -38,7 +38,7 @@ $user = JFactory::getUser();
 </div>
 <?php if (NotaHelper::isTestSite() && sizeof($opciones)>1){ ?>
 <div style="float: left; width: 45%; margin: 10px;">
-	<button class="boton_simple" style="width: 150px;" onclick="emision_masiva(1,<?php echo sizeof($opciones) ?>)">Emitir todo</button>
+	<button class="boton_simple" style="width: 150px;" onclick="emision_masiva(<?php echo $this->id_remitente ?>)">Emitir todo</button>
 </div>
 <?php } ?>
 

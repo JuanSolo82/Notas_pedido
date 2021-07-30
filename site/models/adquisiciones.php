@@ -198,4 +198,9 @@ class NotaModelAdquisiciones extends JModelItem{
 			$db->query();
 		}
 	}
+
+	function getOpciones($id_remitente){
+		$db = JFactory::getDbo();
+		$query = "";
+	}
 }
