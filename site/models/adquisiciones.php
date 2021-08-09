@@ -198,10 +198,16 @@ class NotaModelAdquisiciones extends JModelItem{
 		}
 	}
 
+<<<<<<< HEAD
 	function revision_adquisiciones($id_remitente){
 		$db = JFactory::getDbo();
 		$query = "update nota_revision set autorizado_depto=1, aprobado_adquisiciones=1 where id_nota_remitente=".$id_remitente;
 		$db->setQuery($query);
 		$db->query();
+=======
+	function getOpciones($id_remitente){
+		$db = JFactory::getDbo();
+		$query = "";
+>>>>>>> 198b8a3525bfacf8e6680cbd6777c0c1b4502858
 	}
 }
