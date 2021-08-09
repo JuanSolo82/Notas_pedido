@@ -564,9 +564,13 @@ function actualizar_ln(id_remitente){
     });
 }
 
-function emision_masiva(id_remitente, ordenes){
+function emision_masiva(id_remitente){
+    var proveedor = '';
+    var rut_proveedor = '';
+    var giro_proveedor = '';
+    var cotizacion = '';
     $.ajax({
-        url: 'index.php?option=com_nota&task=adquisiciones.generarOrdenes',
+        url: 'index.php?option=com_nota&task=adquisiciones.emision_masiva',
         timeout: 1500,
         method: 'post',
         data: {id_remitente: id_remitente,
@@ -575,8 +579,15 @@ function emision_masiva(id_remitente, ordenes){
                 giro_proveedor: giro_proveedor,
                 cotizacion: cotizacion},
         success: function(){
-            window.open('/portal/media/notas_pedido/Orden_compra'+id_remitente+'-'+opcion+'.pdf', 'nombre'); 
-            $("#generada_oc"+opcion).css("display", "block");
+            window.open('/portal/media/notas_pedido/Orden_compra'+id_remitente+'.pdf', 'nombre');
+        }
+    });
+    $.ajax({
+        url: "index.php?option=com_nota&task=carga.actualizarRevision&format=raw",
+        type: 'post',
+        data: { id_remitente: id_remitente, aprobado_adquisiciones: 1 },
+        success: function(){
+            console.log("revision");
         }
     });
 }

@@ -73,7 +73,6 @@ class NotaModelAdquisiciones extends JModelItem{
 						values(".$id_remitente.", ".$user->id.", ".$opcion.", '".$fecha."', '".$hora."', '".$proveedor."',1, '".$cotizacion."')";
 			$db->setQuery($query);
 			$db->query();
-			print_r($query);
 		}else{
 			$query = "update nota_ordenDeCompra set activo=0 where id_remitente=".$id_remitente." and opcion_oc=".$opcion;
 			$db->setQuery($query);
@@ -197,5 +196,12 @@ class NotaModelAdquisiciones extends JModelItem{
 			$db->setQuery($query);
 			$db->query();
 		}
+	}
+
+	function revision_adquisiciones($id_remitente){
+		$db = JFactory::getDbo();
+		$query = "update nota_revision set autorizado_depto=1, aprobado_adquisiciones=1 where id_nota_remitente=".$id_remitente;
+		$db->setQuery($query);
+		$db->query();
 	}
 }
