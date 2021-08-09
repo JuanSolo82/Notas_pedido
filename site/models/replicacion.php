@@ -59,5 +59,28 @@ class NotaModelReplicacion extends JModelItem{
 		print_r($query);
 	}
 
+	public function setOrdenCompra($id_remitente, $opcion, $proveedor='', $rut_proveedor='', $giro_proveedor='', $cotizacion='',$usuario=array()){
+		// se busca usuario en sql server
+		$query = "select * from usuarios where id=".$usuario['id'];
+		$data = NotaHelper::getMssqlQuery($query);
+		if (!sizeof($data)){ // si no existe se inserta
+			$nombre = explode(' ',$usuario['nombre_usuario']);
+			$query = "insert into usuarios(id,nombre,apellido,pass,nivel,id_depto) 
+						values(".$usuario['id'].",'".$nombre[0]."','".$nombre[1]."','".$usuario['username']."', ".$usuario['id_nivel'].",".$usuario['id_depto'].")";
+			NotaHelper::getMssqlQuery($query);
+		}
+
+		$query = "select count(*) from orden_compra where id_nota=".$id_remitente." and opcion_oc=".$opcion;
+		$data = NotaHelper::getMssqlQuery($query);
+		if (!sizeof($data)){ // no existe por lo tanto se inserta
+			$query = "insert into orden_compra(id_nota,id_usuario,opcion_oc,fecha,proveedor,activo,cotizacion) 
+						values(".$id_remitente.",".$usuario['id'].",".$opcion.",getdate(),'".$proveedor."_".$rut_proveedor."_".$giro_proveedor."',1,'".$cotizacion."')";
+			NotaHelper::getMssqlQuery($query);
+		}
+		$query = "insert into orden_compra(id_nota,id_usuario,opcion_oc,fecha,proveedor,activo,cotizacion) 
+						values(".$id_remitente.",".$usuario['id'].",".$opcion.",getdate(),'".$proveedor."_".$rut_proveedor."_".$giro_proveedor."',1,'".$cotizacion."')";
+		echo($query.'_'.sizeof($data));
+	}
+
 }
 

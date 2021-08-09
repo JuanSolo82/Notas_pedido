@@ -258,6 +258,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 
 	public function generarOrden(){
 		$jinput = JFactory::getApplication()->input;
+		$user = JFactory::getUser();
 		$id_remitente	= $jinput->get('id_remitente', 0, 'int');
 		$orden_compra	= $jinput->get('orden_compra', 0, 'int');
 		$opcion 		= $jinput->get('opcion', 1, 'int');
@@ -269,13 +270,18 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$cotizacion		= $jinput->get('cotizacion', 'no', 'string');
 		$model	= $this->getModel('nota');
 		$model2 = $this->getModel('adquisiciones');
+		$replicacion = $this->getModel('replicacion');
 		//$datos_proveedor = $model->getProveedor($proveedor, $rut_proveedor);
+		$usuario = $model->getDatos_user($user->id);
 		$datos_nota = $model->getDetalle_nota($id_remitente);
 		$items = $model->getItems($id_remitente);
 		$datos_oc = $model2->getDetalle_orden($id_remitente, $opcion);
 		if (sizeof($datos_oc)) $solo_imprimir = 1;
 		if (!$solo_imprimir){
 			$model2->setOrden($id_remitente, $opcion, $num_opciones, $proveedor."_".$rut_proveedor."_".$giro_proveedor, $rut_proveedor, $giro_proveedor, $cotizacion);
+			// sql server
+			$query = $replicacion->setOrdenCompra($id_remitente, $opcion, $proveedor, $rut_proveedor, $giro_proveedor, $cotizacion,$usuario);
+			print_r($query.'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
 		}
 		$datos_oc = $model2->getDetalle_orden($id_remitente, $opcion);
 		$p = explode('_', $datos_oc['proveedor']);
@@ -325,23 +331,32 @@ class NotaControllerAdquisiciones extends JControllerForm
 	}
 	function emision_masiva(){
 		$jinput = JFactory::getApplication()->input;
+		$user = JFactory::getUser();
 		$id_remitente	= $jinput->get('id_remitente', 0, 'int');
 		$opciones = array();
 		$datos_oc = array();
 		$pagina = '';
 		$model	= $this->getModel('nota');
 		$model2 = $this->getModel('adquisiciones');
+		$replicacion = $this->getModel('replicacion');
 		$datos_nota = $model->getDetalle_nota($id_remitente);
+		$usuario = $model->getDatos_user($user->id);
 		$items = $model->getItems($id_remitente);
 		foreach ($items as $i)
 			$opciones[$i['opcion_oc']]=$i['opcion_oc'];
 		
+		$proveedor='';
+		$rut_proveedor='';
+		$giro_proveedor='';
+		$cotizacion='';
 		foreach ($opciones as $o){
 			$model2->setOrden($id_remitente, $o, sizeof($opciones), "","","","");
-			$datos_oc = $model2->getDetalle_orden($id_remitente, $o);
+			$datos_oc = $model2->getDetalle_orden($id_remitente, $o, $proveedor, $rut_proveedor, $giro_proveedor, $cotizacion);
 			$pagina .= $this->orden_html($datos_nota,$items,$o,$datos_oc,'','','');
 			$pagina .= '<div style="page-break-after: always;"></div>';
 			$this->generarQR($id_remitente,$datos_oc['id']);
+			// sql server
+			$replicacion->setOrdenCompra($id_remitente, $o, $proveedor, $rut_proveedor, $giro_proveedor, $cotizacion,$usuario);
 		}
 		
 		$url = JPATH_SITE.'/media/notas_pedido/Orden_compra'.$id_remitente.'.pdf';

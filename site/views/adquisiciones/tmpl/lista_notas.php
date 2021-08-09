@@ -5,7 +5,6 @@ JHTML::stylesheet('bootstrap.css', 'components/com_nota/assets/bootstrap/css/');
 JHTML::stylesheet('nota.css', 'components/com_nota/assets/css/');
 JHTML::script('jquery.min.js', 'components/com_nota/assets/js/');
 JHTML::script('jquery-ui.min.js', 'components/com_nota/assets/js/');
-JHTML::script('nota.js', 'components/com_nota/assets/js/');
 JHTML::script('adquisiciones.js', 'components/com_nota/assets/js/');
 JHTML::script('bootstrap.js', 'components/com_nota/assets/bootstrap/js/');
 JHTML::stylesheet('bootstrap.css', 'components/com_nota/assets/bootstrap/css/');
@@ -13,6 +12,7 @@ JHtml::_('behavior.modal');
 $cont=0;
 ?>
 <br>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?Lor=010"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <div class='centrar' style="margin-bottom: 30px;">
 <div class='barra_nombre' style='width: 95%;'>Notas pendientes de generar OC</div>

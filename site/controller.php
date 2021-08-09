@@ -184,17 +184,15 @@ class NotaController extends JController{
 			$id_remitente = $model->insertar_nota($id_adepto, $id_user, $fecha, $hora, $id_prioridad, $id_depto_compra, $id_depto_costo, $proveedor, $datos_depto['ley_navarino'], $id_tipo_pedido, $cotizacion);
 			// preparar inserción en bbdd sql server
 			$autorizacion = 0;
-			if (NotaHelper::isTestSite()){
-				$autorizacion = 0;
-				if ($datos_user['id_nivel']==1) $autorizacion = $autorizacion|1;
-				if ($datos_user['id_nivel']==2){
-					if ($id_adepto!=4) $autorizacion = $autorizacion|2;
-					else $autorizacion = $autorizacion|4;
-				}
-				if ($datos_user['id_depto']==4) $autorizacion = $autorizacion|8;
-				
-				$replicacion->setNota($id_remitente, $id_adepto, $id_user, $id_prioridad, $id_depto_compra, $id_depto_costo, $proveedor, $datos_depto['ley_navarino'], $id_tipo_pedido, $cotizacion,$autorizacion);
+			$autorizacion = 0;
+			if ($datos_user['id_nivel']==1) $autorizacion = $autorizacion|1;
+			if ($datos_user['id_nivel']==2){
+				if ($id_adepto!=4) $autorizacion = $autorizacion|2;
+				else $autorizacion = $autorizacion|4;
 			}
+			if ($datos_user['id_depto']==4) $autorizacion = $autorizacion|8;
+			$replicacion->setNota($id_remitente, $id_adepto, $id_user, $id_prioridad, $id_depto_compra, $id_depto_costo, $proveedor, $datos_depto['ley_navarino'], $id_tipo_pedido, $cotizacion,$autorizacion);
+			// fin inserción registro nota sql server
 			
 			for ($i=1;$i<=15;$i++){
 				$nombre_archivo = '';
@@ -209,14 +207,14 @@ class NotaController extends JController{
 					$nombre_archivo = $file['name'];
 					$model->upload($file, $id_remitente);
 				}
-				if (NotaHelper::isTestSite())
-					$replicacion->setItems($id_remitente, $cantidad, $item, $motivo, $opcion_oc, $valor, $nombre_archivo);
+				// copia de registro en sql server
+				$replicacion->setItems($id_remitente, $cantidad, $item, $motivo, $opcion_oc, $valor, $nombre_archivo);
 				$model->setItems($id_remitente, $cantidad, $item, $motivo, $opcion_oc, $valor, $nombre_archivo);
 			}
 		}
 		if (trim($nombre_tripulante)){
 			$model->nombre_remitente($id_remitente, $nombre_tripulante);
-			if (NotaHelper::isTestSite())
+			//if ($user->username=='eflota')
 				$replicacion->setNombreTripulante($id_remitente, $nombre_tripulante);
 		}
 		if ($tipo_gasto)
@@ -228,7 +226,7 @@ class NotaController extends JController{
 		if (NotaHelper::isTestSite()){
 			$this->replicar_sql($id_remitente);
 		}else{
-			if ($user->authorise('empleado.depto','com_nota') || ($user->authorise('jefe.depto','com_nota') && $id_adepto!=$datos_user["id_depto"])){
+			if ($user->authorise('empleado.depto','com_nota') || ($user->authorise('jefe.depto','com_nota') && $id_adepto!=$datos_user["id_depto"]) && $user->username!='eflota'){
 				$this->preparar_correo($id_remitente, $nombre_tripulante);
 			}else{
 				print_r("no correo");
