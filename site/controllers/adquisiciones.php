@@ -277,6 +277,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$items = $model->getItems($id_remitente);
 		$datos_oc = $model2->getDetalle_orden($id_remitente, $opcion);
 		if (sizeof($datos_oc)) $solo_imprimir = 1;
+		print_r($solo_imprimir.'?????????????????????');
 		if (!$solo_imprimir){
 			$model2->setOrden($id_remitente, $opcion, $num_opciones, $proveedor."_".$rut_proveedor."_".$giro_proveedor, $rut_proveedor, $giro_proveedor, $cotizacion);
 			// sql server

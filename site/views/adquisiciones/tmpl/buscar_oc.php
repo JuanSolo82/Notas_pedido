@@ -50,7 +50,11 @@ $cont=0;
 	</div>
 </div>
 <br><br>
+<div class='fila_completa'>
+    <button onclick="emision_masiva(<?php echo $this->datos[0]['id'] ?>)">Emitir todo (beta)</button>
+</div>
 <?php foreach ($this->datos as $d){ ?>
+    
 <div class='fila_completa'>
 <div class='col-2'>
 	<div class="boton" onclick="cargar_pdf(<?php echo $this->datos[0]['id'] ?>, <?php echo $d['orden_compra'] ?>,<?php echo $d['opcion_oc'] ?>,1)">

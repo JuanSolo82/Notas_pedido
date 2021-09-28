@@ -13,7 +13,7 @@ require_once(JPATH_COMPONENT_SITE.'/assets/helper.php');
 
 	define('SQL_HOST', 'ventas.tabsa.cl'); // 10.0.0.21
 
-	define('SQL_USER', 'pos');
-	define('SQL_PASS', 'p0s.Dv3nt4');
+	define('SQL_USER', 'compra');
+	define('SQL_PASS', '[Samurai100%Letal?=');
 	define('SQL_DB', NotaHelper::isTestSite() ? 'Compras_dev' : 'Compras');
 

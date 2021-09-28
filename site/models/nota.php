@@ -481,7 +481,7 @@ class NotaModelNota extends JModelItem{
 	function getMail_jefe($id_remitente=0){
 		$user = JFactory::getUser();
 		$db = JFactory::getDbo();
-		$email = array('email' => 'jmarinan@tabsa.cl');
+		$email = array();
 		if ($user->authorise('tripulante', 'com_nota') && !$user->authorise('capitan.jefe', 'com_nota') && !$user->authorise('capitan.sin_jefe', 'com_nota')){ 
 			// entonces enviar correo a capitan de la respectiva nave
 			$nave = substr($user->username,1);
@@ -498,14 +498,28 @@ class NotaModelNota extends JModelItem{
 			$db->query();
 			$email = $db->loadAssocList();
 		} elseif($user->authorise('capitan.jefe', 'com_nota')){
-			$query = "select id,email from jml_users";
+            $id_area=0;
+            $query = "select od.id_area 
+                        from oti_departamento od, nota_user nu 
+                        where od.id=nu.id_depto and nu.id_user=".$user->id;
+            $db->setQuery($query);
+            $db->query();
+            $id_area = $db->loadResult();
+
+			$query = "select u.id, od.id as id_depto, u.email, u.name 
+                        from jml_users u, nota_user nu, oti_departamento od 
+                    where u.id=nu.id_user and nu.id_depto=od.id ";
+            if ($id_area==5)
+                $query .= " and od.id_area=".$id_area;
 			$db->setQuery($query);
 			$db->query();
 			$usuarios = $db->loadAssocList();
 			foreach($usuarios as $u){
 				$usuario = JFactory::getUser($u['id']);
-				if ($usuario->authorise("jefe.delgada", "com_nota") && !$usuario->authorise("core.admin", "com_nota"))
-					$email[] =  $u;
+                if (!$usuario->authorise("core.admin", "com_nota") && !$usuario->block){
+                    if (($usuario->authorise("jefe.delgada", "com_nota") && $u['id_depto']==51) || ($usuario->authorise("jefe.natales", "com_nota") && $id_area==5))
+					    $email[] =  $u;
+                }
 			}
 		} elseif ($user->authorise("jefe.delgada","com_nota")){
 			$query = "select u.id, u.email 
@@ -536,15 +550,22 @@ class NotaModelNota extends JModelItem{
 				}
 			}			
 		}elseif ($user->authorise("empleado.depto","com_nota")){
-			$query = "SELECT nu.id_depto, jefe.email FROM nota_user nu
+            if ($user->authorise('resumen_area','com_nota')){ // los funcionarios de oficina de PD que no son tripulantes
+                $query = "select u.id, u.name, u.email, u.block 
+                            from jml_users u 
+                            join nota_user nu on nu.id_user=u.id and nu.id_depto=51 and nu.id_nivel=2 and u.block=0 
+                            where u.id<290";
+            }else{
+                $query = "SELECT nu.id_depto, jefe.email FROM nota_user nu
 						join (select u.email, nu.id_depto, u.block from jml_users u, nota_user nu where u.id=nu.id_user and nu.id_nivel=2) jefe on jefe.id_depto=nu.id_depto
 						WHERE nu.id_user=".$user->id;
+            }
 			$db->setQuery($query);
 			$db->query();
 			$usuarios = $db->loadAssocList();
 			foreach ($usuarios as $u){
 				$email[] =  $u;
-			}
+			} 
 		}
 		
 		return $email;

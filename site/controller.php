@@ -191,7 +191,8 @@ class NotaController extends JController{
 				else $autorizacion = $autorizacion|4;
 			}
 			if ($datos_user['id_depto']==4) $autorizacion = $autorizacion|8;
-			$replicacion->setNota($id_remitente, $id_adepto, $id_user, $id_prioridad, $id_depto_compra, $id_depto_costo, $proveedor, $datos_depto['ley_navarino'], $id_tipo_pedido, $cotizacion,$autorizacion);
+			//if ($user->username=='eflota')
+				$replicacion->setNota($id_remitente, $id_adepto, $id_user, $id_prioridad, $id_depto_compra, $id_depto_costo, $proveedor, $datos_depto['ley_navarino'], $id_tipo_pedido, $cotizacion,$autorizacion);
 			// fin inserción registro nota sql server
 			
 			for ($i=1;$i<=15;$i++){
@@ -214,8 +215,7 @@ class NotaController extends JController{
 		}
 		if (trim($nombre_tripulante)){
 			$model->nombre_remitente($id_remitente, $nombre_tripulante);
-			//if ($user->username=='eflota')
-				$replicacion->setNombreTripulante($id_remitente, $nombre_tripulante);
+			$replicacion->setNombreTripulante($id_remitente, $nombre_tripulante);
 		}
 		if ($tipo_gasto)
 			$model->setTipo_gasto($id_remitente, $tipo_gasto);
@@ -232,6 +232,7 @@ class NotaController extends JController{
 				print_r("no correo");
 			}
 		}
+        $email = $model->getMail_jefe($id_remitente);
 		parent::display();
 	}
 
@@ -280,8 +281,7 @@ class NotaController extends JController{
 		$email = $model->getMail_jefe($id_remitente);
 		//if ($user->username=='jmarinan') print_r($email);
 		/*if ($email['email']=='jmarinan@tabsa.cl')
-			$body .= "<br>[error]";*/ //37150
-		//$email = "jmarinan@tabsa.cl";
+			$body .= "<br>[error]";*/ 
 		NotaHelper::mail($subject,$body,$email);
 	}
 	function anular_nota(){
@@ -540,15 +540,19 @@ class NotaController extends JController{
 	}
 	function revision_navarino(){
 		$model = $this->getModel('nota');
+		$replicacion = $this->getModel('replicacion');
 		$fecha_actual = strtotime(date('Y-m-d'));
 		$naves = $model->getLista_naves();
 		foreach ($naves as $n){
 			if ($n['id_vigencia']){
 				if ($fecha_actual>=strtotime($n['inicio'])){
-					if ($fecha_actual<=strtotime($n['fin']))
+					if ($fecha_actual<=strtotime($n['fin'])){
 						$model->actualizar_navarino($n['id'],$n['navarino_programado']);
-					else
+						
+					}
+					else{
 						$model->actualizar_navarino($n['id'],($n['navarino_programado'] ? 0 : 1));
+					}
 				}
 			}
 		}

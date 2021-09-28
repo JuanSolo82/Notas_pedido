@@ -70,17 +70,35 @@ class NotaModelReplicacion extends JModelItem{
 			NotaHelper::getMssqlQuery($query);
 		}
 
-		$query = "select count(*) from orden_compra where id_nota=".$id_remitente." and opcion_oc=".$opcion;
+		$query = "select count(*) as cantidad from orden_compra where id_nota=".$id_remitente." and opcion_oc=".$opcion;
 		$data = NotaHelper::getMssqlQuery($query);
-		if (!sizeof($data)){ // no existe por lo tanto se inserta
-			$query = "insert into orden_compra(id_nota,id_usuario,opcion_oc,fecha,proveedor,activo,cotizacion) 
+		if (sizeof($data)){
+			print_r($data);
+			print_r('//');
+			if (!$data[0]['cantidad']){ // no existe registro -> se inserta por única vez
+				$query = "insert into orden_compra(id_nota,id_usuario,opcion_oc,fecha,proveedor,activo,cotizacion) 
 						values(".$id_remitente.",".$usuario['id'].",".$opcion.",getdate(),'".$proveedor."_".$rut_proveedor."_".$giro_proveedor."',1,'".$cotizacion."')";
-			NotaHelper::getMssqlQuery($query);
+				NotaHelper::getMssqlQuery($query);
+			}else
+				$query = "sin insercion";
 		}
-		$query = "insert into orden_compra(id_nota,id_usuario,opcion_oc,fecha,proveedor,activo,cotizacion) 
-						values(".$id_remitente.",".$usuario['id'].",".$opcion.",getdate(),'".$proveedor."_".$rut_proveedor."_".$giro_proveedor."',1,'".$cotizacion."')";
-		echo($query.'_'.sizeof($data));
+		print_r($query);
 	}
+/*
+	function actualizar_navarino($id_nave,$ley_navarino){
+		$db = JFactory::getDbo();
+		$query = "update nota_naves set ley_navarino=".$ley_navarino." where id=".$id_nave;
+		$db->setQuery($query);
+		$db->query();
+		print_r($query);
+
+		$query = "update oti_departamento od 
+					inner join nota_naveDepto nd on nd.id_depto=od.id 
+					set od.ley_navarino=".$ley_navarino." 
+					where nd.id_nave=".$id_nave;
+		$db->setQuery($query);
+		$db->query();
+	}*/
 
 }
 
