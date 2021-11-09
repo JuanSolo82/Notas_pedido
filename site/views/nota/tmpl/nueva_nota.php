@@ -156,7 +156,7 @@ $user = JFactory::getUser();
 			<th width='8%'>Cantidad</th>
 			<th width='25%'>Descripción</th>
 			<th width='20%'>Motivo</th>
-		<?php if ($user->authorise('adquisiciones.jefe','com_nota')){ ?>
+		<?php if ($user->authorise('adquisiciones.jefe','com_nota') || $user->authorise('valor_item','com_nota')){ ?>
 			<th width='12%'>Valor unitario</th>
 		<?php } ?>
 			<th width='10%'>Distribución</th>
@@ -166,15 +166,12 @@ $user = JFactory::getUser();
 		<tr>
 			<td><input class='entrada' id='cantidad<?php echo $i ?>' name='cantidad<?php echo $i ?>' type='number' size='2' required type="number" min="0" step=".1" style='width: 70px;'></td>
 			<td>
-				<input class='entrada' id='descripcion<?php echo $i ?>' name='descripcion<?php echo $i ?>' type='text' style='width: 90%;' autocomplete='on'
-				<?php /*if ($user->username=='mjaman'){ ?>
-					onkeypress="buscar_item(<?php echo $i ?>,this.value,<?php echo $this->datos_user['id'] ?>)"		
-				<?php }*/ ?>
-				>
-					<div id='items<?php echo $i ?>'></div>
+				<input class='entrada' id='descripcion<?php echo $i ?>' name='descripcion<?php echo $i ?>' type='text' style='width: 90%;' autocomplete='on'>
+					<div id='items<?php echo $i ?>'>
+				</div>
 			</td>
 			<td><input class='entrada' id='motivo<?php echo $i ?>' name='motivo<?php echo $i ?>' type='text' style='width: 90%;'></td>
-			<?php if ($user->authorise('adquisiciones.jefe','com_nota')){ ?>
+			<?php if ($user->authorise('adquisiciones.jefe','com_nota') || $user->authorise('valor_item','com_nota')){ ?>
 				<td><input class='entrada' id='valor<?php echo $i ?>' name='valor<?php echo $i ?>' type='text' style='width: 90%;'></td>
 			<?php } ?>
 			<td>

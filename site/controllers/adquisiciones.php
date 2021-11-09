@@ -277,12 +277,10 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$items = $model->getItems($id_remitente);
 		$datos_oc = $model2->getDetalle_orden($id_remitente, $opcion);
 		if (sizeof($datos_oc)) $solo_imprimir = 1;
-		print_r($solo_imprimir.'?????????????????????');
 		if (!$solo_imprimir){
 			$model2->setOrden($id_remitente, $opcion, $num_opciones, $proveedor."_".$rut_proveedor."_".$giro_proveedor, $rut_proveedor, $giro_proveedor, $cotizacion);
 			// sql server
 			$query = $replicacion->setOrdenCompra($id_remitente, $opcion, $proveedor, $rut_proveedor, $giro_proveedor, $cotizacion,$usuario);
-			print_r($query.'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
 		}
 		$datos_oc = $model2->getDetalle_orden($id_remitente, $opcion);
 		$p = explode('_', $datos_oc['proveedor']);
@@ -469,24 +467,35 @@ class NotaControllerAdquisiciones extends JControllerForm
 						<td>'.$i['cantidad'].'</td>
 						<td>'.htmlentities($i['item']).'</td>
 						<td>'.htmlentities($i['motivo']).'</td>';
-				if ($i['valor']){
-					$html .= '<td align="right">'.number_format($i['valor'],0,'','.').'</td>';
-					$html .= '<td align="right">'.number_format($i['valor']*$cantidad,0,'','.').'</td>';
-					$total += $i['valor']*$cantidad;
-				}
-				$html .= '</tr>';
+					if ($i['valor']){
+						$html .= '<td align="right">'.number_format($i['valor'],0,'','.').'</td>';
+						$html .= '<td align="right">'.number_format($i['valor']*$cantidad,0,'','.').'</td>';
+						$total += $i['valor']*$cantidad;
+					}
+					$html .= '</tr>';
 				}
 			}
 		}
+		
+		$html .= '</table><br>';
 		if ($items[0]['valor']){
-			$html .= "<tr>";
-			$html .= "<td align='right' colspan='5'>Total</td>";
-			$html .= "<td align='right'>".number_format($total,0,'','.')."</td>";
+			//$html .= "<div style='position: relative; float: right; right: 20px;'>";
+			$html .= "<table style='font-size: 10px; width: 100%;' border=1 cellspacing=0 cellpadding=2>";
+			$html .= "<tr style='border: 1px solid grey;'>";
+			$html .= "<td align='right'>Neto $</td>";
+			$html .= "<td width='10%' align='right'>".number_format(floor($total/1.19),0,'','.')."</td>";
 			$html .= "</tr>";
+			$html .= "<tr>";
+			$html .= "<td align='right'>IVA $</td>";
+			$html .= "<td align='right'>".number_format($total-floor($total/1.19),0,'','.')."</td>";
+			$html .= "</tr>";
+			$html .= "<tr>";
+			$html .= "<td align='right'>Total $</td>";
+			$html .= "<td align='right'>".number_format($total,0,'','.')."</td>";
+			$html .= "</tr></table>";
+			//$html .= '</div>';
 		}
-
-		$html .= '</table>';
-		$html .= '<br><br>
+		$html .= '<br>
 			<div class="beneficio">';
 			if ($datos['ley_navarino']){
 				if ($datos['id_tipo_pedido']==1)

@@ -567,7 +567,6 @@ class NotaModelNota extends JModelItem{
 				$email[] =  $u;
 			} 
 		}
-		
 		return $email;
 	}
 	function getPendientes(){

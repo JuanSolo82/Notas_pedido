@@ -20,5 +20,6 @@
 		<action name="centro_costo" title="Escoger centro de costo" description="El empleado puede escoger centro de costo" />
 		<action name="depto_compra" title="Departamento compra" description="El empleado puede escoger el departamento que se hace cargo de la compra" />
 		<action name="resumen_area" title="Resumen notas área" description="Revisar resumen de notas salidas del área al que pertenece" />
+		<action name="valor_item" title="Valor para cada ítem" description="Permite ingresar el valor de los ítems ingresados" />
 	</section>
 </access>
