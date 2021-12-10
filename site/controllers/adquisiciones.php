@@ -268,20 +268,26 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$num_opciones	= $jinput->get('opciones', 1, 'int');
 		$solo_imprimir	= $jinput->get('solo_imprimir', 0, 'int');
 		$cotizacion		= $jinput->get('cotizacion', 'no', 'string');
+        $exenta         = $jinput->get('exenta',0,'int');
 		$model	= $this->getModel('nota');
 		$model2 = $this->getModel('adquisiciones');
 		$replicacion = $this->getModel('replicacion');
 		//$datos_proveedor = $model->getProveedor($proveedor, $rut_proveedor);
 		$usuario = $model->getDatos_user($user->id);
-		$datos_nota = $model->getDetalle_nota($id_remitente);
+		
 		$items = $model->getItems($id_remitente);
 		$datos_oc = $model2->getDetalle_orden($id_remitente, $opcion);
+        $replicacion->setNotaExenta($id_remitente, $exenta);
+        
+        
 		if (sizeof($datos_oc)) $solo_imprimir = 1;
 		if (!$solo_imprimir){
 			$model2->setOrden($id_remitente, $opcion, $num_opciones, $proveedor."_".$rut_proveedor."_".$giro_proveedor, $rut_proveedor, $giro_proveedor, $cotizacion);
 			// sql server
+            $model2->setNotaExenta($id_remitente, $exenta);
 			$query = $replicacion->setOrdenCompra($id_remitente, $opcion, $proveedor, $rut_proveedor, $giro_proveedor, $cotizacion,$usuario);
 		}
+        $datos_nota = $model->getDetalle_nota($id_remitente);
 		$datos_oc = $model2->getDetalle_orden($id_remitente, $opcion);
 		$p = explode('_', $datos_oc['proveedor']);
 		$proveedor = $p[0];
@@ -343,7 +349,6 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$items = $model->getItems($id_remitente);
 		foreach ($items as $i)
 			$opciones[$i['opcion_oc']]=$i['opcion_oc'];
-		
 		$proveedor='';
 		$rut_proveedor='';
 		$giro_proveedor='';
@@ -377,6 +382,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 
 		$f = explode("-", $datos['fecha']);
 		$fecha_creacion = $f[2].' de '.$meses[$f[1]].' de '.$f[0].', '.$datos_oc['hora'];
+
 		$file_logo = JPATH_SITE.'/images/logo.png';
 		$html = "<style>".$this->estilos()."</style>";
 		$html .= '<div style="font-family: sans-serif;">
@@ -479,22 +485,29 @@ class NotaControllerAdquisiciones extends JControllerForm
 		
 		$html .= '</table><br>';
 		if ($items[0]['valor']){
-			//$html .= "<div style='position: relative; float: right; right: 20px;'>";
-			$html .= "<table style='font-size: 10px; width: 100%;' border=1 cellspacing=0 cellpadding=2>";
-			$html .= "<tr style='border: 1px solid grey;'>";
-			$html .= "<td align='right'>Neto $</td>";
-			$html .= "<td width='10%' align='right'>".number_format(floor($total/1.19),0,'','.')."</td>";
-			$html .= "</tr>";
-			$html .= "<tr>";
-			$html .= "<td align='right'>IVA $</td>";
-			$html .= "<td align='right'>".number_format($total-floor($total/1.19),0,'','.')."</td>";
-			$html .= "</tr>";
-			$html .= "<tr>";
-			$html .= "<td align='right'>Total $</td>";
-			$html .= "<td align='right'>".number_format($total,0,'','.')."</td>";
-			$html .= "</tr></table>";
-			//$html .= '</div>';
+            if ($datos['exenta']){
+                $html .= "<table style='font-size: 10px; width: 100%;' border=1 cellspacing=0 cellpadding=2>";
+                $html .= "<tr>";
+                $html .= "<td align='right' width='90%'>Total $</td>";
+                $html .= "<td align='right'>".number_format($total,0,'','.')."</td>";
+                $html .= "</tr></table>";
+            }else{
+                $html .= "<table style='font-size: 10px; width: 100%;' border=1 cellspacing=0 cellpadding=2>";
+                $html .= "<tr style='border: 1px solid grey;'>";
+                $html .= "<td align='right'>Neto $</td>";
+                $html .= "<td width='10%' align='right'>".number_format(floor($total/1.19),0,'','.')."</td>";
+                $html .= "</tr>";
+                $html .= "<tr>";
+                $html .= "<td align='right'>IVA $</td>";
+                $html .= "<td align='right'>".number_format($total-floor($total/1.19),0,'','.')."</td>";
+                $html .= "</tr>";
+                $html .= "<tr>";
+                $html .= "<td align='right'>Total $</td>";
+                $html .= "<td align='right'>".number_format($total,0,'','.')."</td>";
+                $html .= "</tr></table>";
+            }
 		}
+        
 		$html .= '<br>
 			<div class="beneficio">';
 			if ($datos['ley_navarino']){
@@ -703,4 +716,12 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$body = R2FormatosEmail::generarBodyReservaExitosa($datos_reserva);
 		R2Helper::enviarEmail($destinatario, $subject, $body, 'reservas@tabsa.cl', true, true);
 	}
+
+    function setNotaExenta(){
+        $jinput = JFactory::getApplication()->input;
+        $id_remitente = $jinput->get('id_remitente',0,'int');
+        $exenta = $jinput->get('exenta',-1,'int');
+        $model = $this->getModel('adquisiciones');
+
+    }
 }

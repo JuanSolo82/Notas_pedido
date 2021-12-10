@@ -599,6 +599,8 @@ function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
     var giro_proveedor  = $("#giro_proveedor"+opcion).val();
     var cotizacion      = $("#cotizacion"+opcion).val();
     var items_orden = $("#items_orden"+opcion).val();
+    var exenta = $("#exento").prop('checked') ? 1 : 0;
+
     for (var i=1;i<=items_orden;i++){
         $.ajax({
             url: 'index.php?option=com_nota&task=editar_item',
@@ -627,7 +629,8 @@ function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
                 rut_proveedor: rut_proveedor,
                 giro_proveedor: giro_proveedor,
                 opciones: opciones,
-                cotizacion: cotizacion},
+                cotizacion: cotizacion,
+                exenta: exenta},
         success: function(data){
             console.log(data);
             window.open('/portal/media/notas_pedido/Orden_compra'+id_remitente+'-'+opcion+'.pdf', 'nombre'); 

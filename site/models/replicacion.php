@@ -84,21 +84,10 @@ class NotaModelReplicacion extends JModelItem{
 		}
 		print_r($query);
 	}
-/*
-	function actualizar_navarino($id_nave,$ley_navarino){
-		$db = JFactory::getDbo();
-		$query = "update nota_naves set ley_navarino=".$ley_navarino." where id=".$id_nave;
-		$db->setQuery($query);
-		$db->query();
-		print_r($query);
 
-		$query = "update oti_departamento od 
-					inner join nota_naveDepto nd on nd.id_depto=od.id 
-					set od.ley_navarino=".$ley_navarino." 
-					where nd.id_nave=".$id_nave;
-		$db->setQuery($query);
-		$db->query();
-	}*/
-
+    function setNotaExenta($id_remitente, $exenta){
+        $query = "update notas set exenta=".($exenta ? 1 : 0)." where id=".$id_remitente;
+        NotaHelper::getMssqlQuery($query);
+    }
 }
 

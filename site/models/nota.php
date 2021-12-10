@@ -201,7 +201,7 @@ class NotaModelNota extends JModelItem{
 					od.nombre as depto_origen, nr.fecha, nr.proveedor, nr.id_depto_costo, nr.cotizacion,
 					nnr.nombre as nombre_remitente, nu.id_depto as id_depto_origen, nr.id_user,
 					nr.id_adepto, nrev.autorizado_jefe, nrev.autorizado_capitan, nrev.autorizado_depto, nrev.aprobado_adquisiciones, 
-					np.descripcion as prioridad, dc.depto_compra, na.aprobado, na.anotacion, na.fecha_anotacion 
+					np.descripcion as prioridad, dc.depto_compra, na.aprobado, na.anotacion, na.fecha_anotacion, ne.exenta
 				from nota_remitente nr join jml_users u on u.id=nr.id_user 
 					join nota_user nu on nu.id_user=u.id 
 					join oti_departamento od on od.id=nu.id_depto 
@@ -217,6 +217,7 @@ class NotaModelNota extends JModelItem{
 							from nota_anotacion na, nota_remitente nrem 
 							where na.id_remitente=nrem.id and nrem.id=".$id_remitente." 
 							order by na.id desc limit 1) na on na.id_remitente=nr.id 
+                    left join nota_exenta ne on ne.id_remitente=nr.id
 				where nr.id=".$id_remitente;
 		$db->setQuery($query);
 		$db->query();
@@ -700,7 +701,8 @@ class NotaModelNota extends JModelItem{
 					od.nombre as depto_origen, nr.fecha, nr.proveedor, nr.id_depto_costo, 
 					nnr.nombre as nombre_remitente, nu.id_depto as id_depto_origen, nr.id_user, nr.proveedor,
 					nr.id_adepto, nrev.autorizado_jefe, nrev.autorizado_capitan, nrev.autorizado_depto, nrev.aprobado_adquisiciones, 
-					np.descripcion as prioridad, noc.id as orden_compra, noc.proveedor as proveedor_oc, noc.opcion_oc, nf.factura 
+					np.descripcion as prioridad, noc.id as orden_compra, noc.proveedor as proveedor_oc, noc.opcion_oc, nf.factura,
+                    ne.exenta 
 				from nota_remitente nr 
 					join jml_users u on u.id=nr.id_user 
 					join nota_user nu on nu.id_user=u.id 
@@ -708,7 +710,8 @@ class NotaModelNota extends JModelItem{
 					left join nota_nombreRemitente nnr on nnr.id_remitente=nr.id 
 					join nota_revision nrev on nrev.id_nota_remitente=nr.id 
 					join nota_prioridad np on np.id=nr.id_prioridad 
-					left join nota_ordenDeCompra noc on noc.id_remitente=nr.id ";
+					left join nota_ordenDeCompra noc on noc.id_remitente=nr.id 
+                    left join nota_exenta ne on ne.id_remitente=nr.id ";
 		if ($orden_compra)
 			$query .= " and noc.id=".$orden_compra;
 		$query .= " left join nota_factura nf on nf.id_ordenDeCompra=noc.id ";

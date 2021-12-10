@@ -192,7 +192,6 @@ class NotaModelAdquisiciones extends JModelItem{
 			}
 			$str = substr($str,0, strlen($str)-1);
 			$query = "update nota_revision set aprobado_adquisiciones=2 where id_nota_remitente in (".$str.")";
-			print_r($query);
 			$db->setQuery($query);
 			$db->query();
 		}
@@ -204,4 +203,19 @@ class NotaModelAdquisiciones extends JModelItem{
 		$db->setQuery($query);
 		$db->query();
 	}
+
+    function setNotaExenta($id_remitente, $exenta){
+        $db = JFactory::getDbo();
+        $query = "select id from nota_exenta where id_remitente=".$id_remitente;
+        $db->setQuery($query);
+		$db->query();
+        if (!$db->getNumRows()){
+			$query = "insert into nota_exenta(id_remitente, exenta) values(".$id_remitente.", ".$exenta.")";
+		}else{
+            $query = "update nota_exenta set exenta=".$exenta." where id_remitente=".$id_remitente;
+        }
+        $db->setQuery($query);
+		$db->query();
+        return $query;
+    }
 }

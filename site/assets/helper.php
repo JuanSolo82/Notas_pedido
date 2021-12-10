@@ -3,7 +3,7 @@ defined('_JEXEC') or die('Restricted access');
 
 class NotaHelper {
 	public static function isTestSite() {
-		if (JURI::base() == 'http://192.168.10.150/portal/') return true;
+		if (JURI::base() == 'http://192.168.20.150/portal/') return true;
 		else return false;
 	}
 

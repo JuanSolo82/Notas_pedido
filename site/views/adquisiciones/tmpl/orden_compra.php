@@ -29,6 +29,10 @@ $user = JFactory::getUser();
 	<input style="float: left; margin-right: 25px; cursor: pointer;" type="checkbox" id="ley_navarino" name="ley_navarino" <?php echo $this->datos_nota['ley_navarino'] ? "checked" : "" ?> onchange="actualizar_ln(<?php echo $this->id_remitente ?>)">
 	<label for="ley_navarino" style="cursor: pointer;"><b>Afecta a Ley Navarino</b></label>
 </div>
+<div style="margin: 20px; float: left; width: 100%; font-family: 'Questrial', sans-serif;">
+	<input style="float: left; margin-right: 25px; cursor: pointer;" type="checkbox" id="exento" name="exento">
+	<label for="exento" style="cursor: pointer;"><b>Exenta de IVA</b></label>
+</div>
 <br>
 <div style="float: left; width: 45%; margin: 10px;">
 	<fieldset class="contenido" style="width: 90%; border: 1px solid red;" id="dialogo_anulacion">

@@ -192,7 +192,9 @@ class NotaController extends JController{
 			}
 			if ($datos_user['id_depto']==4) $autorizacion = $autorizacion|8;
 			//if ($user->username=='eflota')
-				$replicacion->setNota($id_remitente, $id_adepto, $id_user, $id_prioridad, $id_depto_compra, $id_depto_costo, $proveedor, $datos_depto['ley_navarino'], $id_tipo_pedido, $cotizacion,$autorizacion);
+			$replicacion->setNota($id_remitente, $id_adepto, $id_user, $id_prioridad, $id_depto_compra, $id_depto_costo, $proveedor, $datos_depto['ley_navarino'], $id_tipo_pedido, $cotizacion,$autorizacion);
+            $replicacion->setNotaExenta($id_remitente, 0);
+            
 			// fin inserción registro nota sql server
 			
 			for ($i=1;$i<=15;$i++){

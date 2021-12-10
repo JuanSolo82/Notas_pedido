@@ -30,7 +30,7 @@ $user = JFactory::getUser();
 					<input type="text" id="nombre_tripulante" name="nombre_tripulante" autocomplete="off">
 				</div>
 			</div>
-		</div>
+		</div> 
 	<?php } ?>
 	<div class='centrar'>
 	<div class='fila_completa bordear centrar' style='width: 90%;'>
