@@ -230,15 +230,18 @@ class NotaModelNota extends JModelItem{
 		$lista['depto_costo'] = $datos_depto['nombre'];
 		return $lista;
 	}
-	function getItems($id_remitente){
+	function getItems($id_remitente, $opcion_oc=0){
 		$db = JFactory::getDbo();
 		//$query = "select id, cantidad, item, motivo, opcion_oc, adjunto from nota_item where id_remitente=".$id_remitente;
-		$query = "select ni.id, ni.cantidad, ni.item, ni.motivo, ni.opcion_oc, ni.valor, ni.adjunto, nm.nueva_cantidad, nm.id_nueva_cantidad, nm.id_tipoModificacion 
+		$query = "select ni.id, ni.cantidad, ni.item, ni.motivo, ni.opcion_oc, ni.valor, ni.adjunto, nm.nueva_cantidad, 
+                        nm.id_nueva_cantidad, nm.id_tipoModificacion 
 					from nota_item ni 
-					join nota_remitente nr on nr.id=ni.id_remitente and nr.id=".$id_remitente." 
-					left join (select nm.id as id_nueva_cantidad, nm.id_item,nm.nueva_cantidad, nm.id_tipoModificacion 
-								from nota_modificada nm, nota_item ni 
-								where ni.id=nm.id_item order by nm.id desc limit 1) nm on nm.id_item=ni.id";
+					join nota_remitente nr on nr.id=ni.id_remitente and nr.id=".$id_remitente;
+        $query .= " left join (select nm.id as id_nueva_cantidad, nm.id_item,nm.nueva_cantidad, nm.id_tipoModificacion 
+					from nota_modificada nm, nota_item ni 
+					where ni.id=nm.id_item order by nm.id desc limit 1) nm on nm.id_item=ni.id";
+        if ($opcion_oc)
+            $query .= " where ni.opcion_oc=".$opcion_oc;
 		$db->setQuery($query);
 		$db->query();
 		$lista = $db->loadAssocList();
@@ -710,12 +713,13 @@ class NotaModelNota extends JModelItem{
 					left join nota_nombreRemitente nnr on nnr.id_remitente=nr.id 
 					join nota_revision nrev on nrev.id_nota_remitente=nr.id 
 					join nota_prioridad np on np.id=nr.id_prioridad 
-					left join nota_ordenDeCompra noc on noc.id_remitente=nr.id 
-                    left join nota_exenta ne on ne.id_remitente=nr.id ";
-		if ($orden_compra)
-			$query .= " and noc.id=".$orden_compra;
+					left join nota_ordenDeCompra noc on noc.id_remitente=nr.id ";
+        /*if ($orden_compra)
+            $query .= " and noc.id=".$orden_compra;*/
+        $query .=   "left join nota_exenta ne on ne.id_remitente=nr.id ";
+		
 		$query .= " left join nota_factura nf on nf.id_ordenDeCompra=noc.id ";
-		$query .= " where nr.id=".$id_remitente;
+		$query .= " where nr.id=".$id_remitente." and noc.id=".$orden_compra;
 		$db->setQuery($query);
 		$db->query();
 		$lista = $db->loadAssoc();

@@ -90,11 +90,12 @@ class NotaControllerReportes extends JControllerForm
 		$jinput->set('layout', 'facturar_orden');
 		$id_remitente = $jinput->get("id_nota", 0, 'int');
 		$orden_compra = $jinput->get("orden_compra", 0, "int");
+        $opcion_oc = $jinput->get("opcion_oc", 0, "int");
 
 		$model 			= $this->getModel('nota');
 		$detalle_nota 	= $model->getDetalle_nota_orden($id_remitente, $orden_compra);
 		$datos_user 	= $model->getDatos_user($detalle_nota['id_user']);
-		$items			= $model->getItems($id_remitente);
+		$items			= $model->getItems($id_remitente,$opcion_oc); 
 		$jinput->set("id_remitente", $id_remitente);
 		$jinput->set('detalle_nota', $detalle_nota);
 		$jinput->set('items', $items);

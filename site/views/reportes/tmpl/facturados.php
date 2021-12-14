@@ -50,7 +50,7 @@ JHTML::_('behavior.modal');
 		<th width="10%">Orden de compra</th>
 		<th>Centro de costo</th>
 		<th width="10%">Factura</th>
-		<th width="10%">Proveedor</th>
+		<th width="10%">Proveedor</th> 
 		<th width="10%" align="center">Detalle</th>
 	</tr>
 <?php foreach ($this->lista_notas as $n){ ?>
@@ -66,9 +66,10 @@ JHTML::_('behavior.modal');
 			<a onclick="SqueezeBox.fromElement(this, {
 						handler:'iframe', 
 						size: {x: 1000, y: 600}, 
-						url:'<?php echo JRoute::_('index.php?option=com_nota&view=nota&task=reportes.facturar_orden&id_nota='.$n['id'].'&orden_compra='.($n['orden_compra'] ? $n['orden_compra'] : 0).'&tmpl=component'); ?>',
+						url:'<?php echo JRoute::_('index.php?option=com_nota&view=nota&task=reportes.facturar_orden&id_nota='.$n['id'].'&orden_compra='.($n['orden_compra'] ? $n['orden_compra'] : 0).'&opcion_oc='.($n['opcion_oc'] ? $n['opcion_oc'] : 0).'&tmpl=component'); ?>',
 						//onClose:function(){window.location.reload();} 
 						onClose: function(){
+                            console.log(<?php echo $n['orden_compra'] ?>);
 							getFactura(<?php echo $n['orden_compra'] ?>);
 						}
 					})"><img src="/portal/administrator/templates/hathor/images/menu/icon-16-edit.png" /></a>
