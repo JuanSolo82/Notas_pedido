@@ -770,7 +770,7 @@ class NotaModelNota extends JModelItem{
 		$user = JFactory::getUser();
 		$datos_user = $this->getDatos_user($user->id);
 		$query = "select nr.id, nr.fecha, od.nombre as depto_origen, u.name as usuario, nrev.enviado_empleado as empleado, nrev.autorizado_capitan as capitan, 
-					nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto, nrev.aprobado_adquisiciones as adquisiciones 
+					nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto, nrev.autorizado_operaciones as operaciones, nrev.aprobado_adquisiciones as adquisiciones 
 				from nota_remitente nr 
 				join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan=1  
 				join nota_user nu on nu.id_user=nr.id_user join jml_users u on u.id=nu.id_user 
@@ -793,6 +793,7 @@ class NotaModelNota extends JModelItem{
 			$query .= ' where nr.fecha between "'.NotaHelper::fechamysql($desde,2).'" and "'.NotaHelper::fechamysql($hasta,2).'" ';
 		}
 		$query .= " order by nr.id desc ";
+        print_r($query);
 		if ($deptos==''){
 			if ($parametro!=''){
 

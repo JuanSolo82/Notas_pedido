@@ -86,37 +86,41 @@ class NotaViewNota extends JView{
 		//$menu = ".".$user->authorise('jefe.depto', 'com_nota').','.$user->authorise('empleado.depto', 'com_nota').'.';
 		$menu .= $this->getBoton('Nueva nota', 'article-add', 'nueva_nota','');
 		$menu .= $this->getBoton('Notas propias', 'article', 'notas_propias','');
-		
-		if (($user->authorise('jefe.depto', 'com_nota') 
-			|| $user->authorise('capitan.jefe', 'com_nota') 
-			|| $user->authorise('capitan.sin_jefe', 'com_nota')) 
-			&& !$user->authorise('empleado.depto', 'com_nota')){
-			$txt = "Notas recibidas del departamento";
-			if ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota'))
-				$txt = "Notas de la nave";
-			$menu .= $this->getBoton($txt, 'download', 'notas_jefe','',1);
-			if (!$user->authorise('capitan.jefe', 'com_nota') && !$user->authorise('capitan.sin_jefe', 'com_nota'))
-				$menu .= $this->getBoton('Notas enviadas al departamento', 'article-add', 'notas_depto','',1);
-		}
-		if ($user->authorise('jefe.delgada', 'com_nota') || $user->authorise('jefe.natales', 'com_nota')){
-			$menu .= $this->getBoton('Notas de naves', 'cpanel', 'notas_naves', '',1);
-		}
-		if ($user->authorise('adquisiciones.jefe', 'com_nota')){
-			$menu .= $this->getBoton('Notas recibidas', 'category', '','adquisiciones');
-			$menu .= $this->getBoton('Editar naves', 'media', 'editar_naves');
-		}
-		if ($user->authorise('core.admin', 'com_nota')){
-			$menu .= $this->getBoton('Gestion de usuarios', 'user', 'gestion_usuarios','');
-		}
-		if ($user->authorise('procedimientos', 'com_nota') || $user->authorise('adquisiciones.jefe', 'com_nota')){
-			//$menu .= $this->getBoton('Reportes', 'levels', 'busqueda_notas','reportes');
-			$menu .= $this->getBoton('Reportes', 'levels', 'reportes.busqueda_notas','');
-		}
-		if ($user->authorise('facturacion', 'com_nota')){
-			$menu .= $this->getBoton('Buscar OC', 'article-add','reportes.facturados', 'reportes');
-		}
-		if ($user->authorise('resumen_area','com_nota'))
-			$menu .= $this->getBoton('Resumen notas enviadas', 'contacts-categories', 'notas_area');
+		if ($user->authorise('gerencia_operaciones','com_nota')){
+            $menu .= $this->getBoton('Notas de operaciones', 'cpanel', 'notas_naves');
+        }else{
+            if (($user->authorise('jefe.depto', 'com_nota') 
+                || $user->authorise('capitan.jefe', 'com_nota') 
+                || $user->authorise('capitan.sin_jefe', 'com_nota')) 
+                && !$user->authorise('empleado.depto', 'com_nota')){
+                $txt = "Notas recibidas del departamento";
+                if ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota'))
+                    $txt = "Notas de la nave";
+                $menu .= $this->getBoton($txt, 'download', 'notas_jefe','',1);
+                if (!$user->authorise('capitan.jefe', 'com_nota') && !$user->authorise('capitan.sin_jefe', 'com_nota'))
+                    $menu .= $this->getBoton('Notas enviadas al departamento', 'article-add', 'notas_depto','',1);
+            }
+            
+            if ($user->authorise('jefe.delgada', 'com_nota') || $user->authorise('jefe.natales', 'com_nota')){
+                $menu .= $this->getBoton('Notas de naves', 'cpanel', 'notas_naves', '',1);
+            }
+            if ($user->authorise('adquisiciones.jefe', 'com_nota')){
+                $menu .= $this->getBoton('Notas recibidas', 'category', '','adquisiciones');
+                $menu .= $this->getBoton('Editar naves', 'media', 'editar_naves');
+            }
+            if ($user->authorise('core.admin', 'com_nota')){
+                $menu .= $this->getBoton('Gestion de usuarios', 'user', 'gestion_usuarios','');
+            }
+            if ($user->authorise('procedimientos', 'com_nota') || $user->authorise('adquisiciones.jefe', 'com_nota')){
+                //$menu .= $this->getBoton('Reportes', 'levels', 'busqueda_notas','reportes');
+                $menu .= $this->getBoton('Reportes', 'levels', 'reportes.busqueda_notas','');
+            }
+            if ($user->authorise('facturacion', 'com_nota')){
+                $menu .= $this->getBoton('Buscar OC', 'article-add','reportes.facturados', 'reportes');
+            }
+            if ($user->authorise('resumen_area','com_nota'))
+                $menu .= $this->getBoton('Resumen notas enviadas', 'contacts-categories', 'notas_area');
+        }
 		
 		return $menu;
 	}

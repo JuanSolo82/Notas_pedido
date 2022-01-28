@@ -21,5 +21,6 @@
 		<action name="depto_compra" title="Departamento compra" description="El empleado puede escoger el departamento que se hace cargo de la compra" />
 		<action name="resumen_area" title="Resumen notas área" description="Revisar resumen de notas salidas del área al que pertenece" />
 		<action name="valor_item" title="Valor para cada ítem" description="Permite ingresar el valor de los ítems ingresados" />
+        <action name="gerencia_operaciones" title="Gestión de notas operaciones" description="Permite aprobar notas aprobadas por jefes de operaciones" />
 	</section>
 </access>
