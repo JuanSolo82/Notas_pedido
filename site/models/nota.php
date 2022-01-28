@@ -772,28 +772,40 @@ class NotaModelNota extends JModelItem{
 		$query = "select nr.id, nr.fecha, od.nombre as depto_origen, u.name as usuario, nrev.enviado_empleado as empleado, nrev.autorizado_capitan as capitan, 
 					nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto, nrev.autorizado_operaciones as operaciones, nrev.aprobado_adquisiciones as adquisiciones 
 				from nota_remitente nr 
-				join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan=1  
-				join nota_user nu on nu.id_user=nr.id_user join jml_users u on u.id=nu.id_user 
+				join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan=1 ";
+		if ($user->authorise('gerencia_operaciones','com_nota'))
+			$query .= " and nrev.autorizado_depto=1 ";
+		$query .= " join nota_user nu on nu.id_user=nr.id_user join jml_users u on u.id=nu.id_user 
 				join oti_departamento od on od.id=nu.id_depto ";
 		if ($deptos!=''){
 			$query .= ' and od.id in ('.$deptos.')';
 		}
-		if ($user->authorise("jefe.delgada", "com_nota") && $user->authorise("jefe.punta_arenas", "com_nota"))
-			$query .= " and (od.id_area=1 or od.id_area=2 or od.id_area=3 or od.id_area=4)";
-		elseif ($user->authorise("jefe.delgada", "com_nota"))
-			$query .= " and od.id_area=4 ";
-		elseif ($user->authorise("jefe.natales", "com_nota"))
-			$query .= " and od.id_area=5 ";
+		if ($user->authorise('gerencia_operaciones','com_nota'))
+			$query .= " and (od.id_area=1 or od.id_area=2 or od.id_area=3 or od.id_area=4 or od.id_area=5)";
+		else{
+			if ($user->authorise("jefe.delgada", "com_nota") && $user->authorise("jefe.punta_arenas", "com_nota"))
+				$query .= " and (od.id_area=1 or od.id_area=2 or od.id_area=3 or od.id_area=4)";
+			elseif ($user->authorise("jefe.delgada", "com_nota"))
+				$query .= " and od.id_area=4 ";
+			elseif ($user->authorise("jefe.natales", "com_nota"))
+				$query .= " and od.id_area=5 ";
+		}
+		
 		//$query .= " and od.id_tipo=2";
 
 		if ($parametro){
 			$query .= " join nota_item ni on ni.id_remitente=nr.id and ni.item like '%".$parametro."%' ";
 		}
+		
 		if ($desde!=''){
 			$query .= ' where nr.fecha between "'.NotaHelper::fechamysql($desde,2).'" and "'.NotaHelper::fechamysql($hasta,2).'" ';
-		}
+			if ($user->authorise('gerencia_operaciones','com_nota'))
+				$query .= " where nr.fecha>'2021-11-10' ";
+		}else
+		if ($user->authorise('gerencia_operaciones','com_nota'))
+			$query .= " where nr.fecha>'2021-11-10' ";
 		$query .= " order by nr.id desc ";
-        print_r($query);
+		
 		if ($deptos==''){
 			if ($parametro!=''){
 
@@ -804,7 +816,6 @@ class NotaModelNota extends JModelItem{
 					$query .= ' limit 10';
 			}
 		}
-		
 		$db->setQuery($query);
 		$db->query();
 		if ($db->getNumRows()){

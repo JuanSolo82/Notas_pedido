@@ -149,6 +149,7 @@ function anterior_previo(direccion){
     var url_controller = 'index.php?option=com_nota&task=carga.notas_rango&format=raw';
     if ($("#vista").val()=="notas_naves")
         url_controller = 'index.php?option=com_nota&task=carga.rango_naves&format=raw';
+    console.log(url_controller);
     $.ajax({
         url: url_controller,
         type: 'post',

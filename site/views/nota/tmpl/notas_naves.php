@@ -99,7 +99,7 @@ foreach ($this->notas_naves as $nd){ ?>
 					<div class='barra_avance <?php echo ($nd['capitan']==1 ? "paso_aprobado" : "").($nd['capitan']==2 ? "paso_rechazado" : "") ?>'>Autorizado capitán</div>
 				<div class='barra_avance <?php echo ($nd['jefe']==1 ? "paso_aprobado" : "").($nd['jefe']==2 ? "paso_rechazado" : "") ?>'>Autorizado jefe</div>
 				<div class='barra_avance <?php echo ($nd['depto']==1 ? "paso_aprobado" : "").($nd['depto']==2 ? "paso_rechazado" : "") ?>'>Autorizado depto</div>
-                <div class='barra_avance <?php echo ($nd['opreaciones']==1 ? "paso_aprobado" : "").($nd['opreaciones']==2 ? "paso_rechazado" : "") ?>'>Gerencia operaciones</div>
+                <div class='barra_avance <?php echo ($nd['operaciones']==1 ? "paso_aprobado" : "").($nd['opreaciones']==2 ? "paso_rechazado" : "") ?>'>Gerencia operaciones</div>
 				<div class='barra_avance <?php echo ($nd['adquisiciones']==1 ? "paso_aprobado" : "").($nd['adquisiciones']==2 ? "paso_rechazado" : "") ?>'>OC generada</div>
 				<div class='barra_avance <?php //echo ($nd['aprobado']==1 ? "paso_aprobado" : "").($nd['adquisiciones']==2 ? "paso_rechazado" : "") ?>'>Calificación</div>
 			</div>

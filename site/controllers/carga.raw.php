@@ -110,7 +110,10 @@ class NotaControllerCarga extends JControllerForm
 		$model = $this->getModel('nota');
 		$user = JFactory::getUser();
 		$pagina		= $jinput->get("pagina", 1,"int");
-		$notas 		= $model->notas_propias($user->id, $pagina);
+		if ($user->authorise('gerencia_operaciones','com_nota'))
+			$notas = $model->notas_naves($pagina);
+		else
+			$notas 		= $model->notas_propias($user->id, $pagina);
 		$datos_user = $model->getDatos_user($user->id);
 		$i=0;
 		foreach ($notas as $n){
@@ -143,7 +146,7 @@ class NotaControllerCarga extends JControllerForm
 		$id_nave	= $jinput->get('id_nave', 0, 'int');
 		$desde 		= $jinput->get('desde', '', 'string');
 		$hasta 		= $jinput->get('hasta', '', 'string');
-
+		print_r("rango");
 		$notas = array();
 		if ($id_nave){
 			$id_naves = $model->getSeccionesNaves($id_nave);
