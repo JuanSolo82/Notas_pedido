@@ -229,7 +229,8 @@ if ($user->authorise('jefe.depto', 'com_nota')){
 		</div>
 <?php }
 }
-if ($this->id_user==$this->detalle_nota['id_user'] && $this->detalle_nota['aprobado_adquisiciones']==0){ ?>
+if ($this->id_user==$this->detalle_nota['id_user'] && $this->detalle_nota['aprobado_adquisiciones']==0 
+    || ($user->authorise('gerencia_operaciones','com_nota') && $this->detalle_nota['autorizado_operaciones']==0)){ ?>
 	<div id="boton_anulacion" onclick="dialogo_anulacion()" class='boton'><img src='/portal/administrator/templates/hathor/images/header/icon-48-deny.png' /><br>Anular</div>
 	<div id="dialogo_anulacion" class="barra_nombre" style="display: none;">
 		Comentario <input type="text" id="comentario" autocomplete="off">
@@ -296,7 +297,7 @@ if ($this->id_user==$this->detalle_nota['id_user'] && $this->datos_nota['aprobad
 
 <?php if (($user->authorise('jefe.delgada','com_nota') || $user->authorise('jefe.natales', 'com_nota')) 
 			&& !$user->authorise('core.admin', 'com_nota') 
-			&& $this->detalle_nota['autorizado_jefe']==0){ ?>
+			&& $this->detalle_nota['autorizado_jefe']==0 || ($user->authorise('gerencia_operaciones','com_nota') && $this->detalle_nota['autorizado_operaciones']==0)){ ?>
 <div id='boton_guardar'>
 	<a onclick="aprobar_naves(<?php echo $this->id_remitente ?>, <?php echo $j ?>)">
 		<div class='boton' style="height: auto;"><img src='/portal/administrator/templates/hathor/images/header/icon-48-save.png' /><br>Autorizar nota</div>
@@ -304,7 +305,7 @@ if ($this->id_user==$this->detalle_nota['id_user'] && $this->datos_nota['aprobad
 </div>
 <?php } ?>
 </div>
-<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?car=6"></script>
-<script type="text/javascript" src="/portal/components/com_nota/assets/js/jquery.min.js?car=6"></script>
-<script type="text/javascript" src="/portal/components/com_nota/assets/js/jquery-ui.min.js?car=6"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?opr=6"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/jquery.min.js?w=e6"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/jquery-ui.min.js?t=64"></script>
 
