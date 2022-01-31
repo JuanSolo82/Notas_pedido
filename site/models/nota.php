@@ -1073,7 +1073,6 @@ class NotaModelNota extends JModelItem{
 		$query = "update nota_naves set ley_navarino=".$ley_navarino." where id=".$id_nave;
 		$db->setQuery($query);
 		$db->query();
-		print_r($query);
 
 		// actualizar tablas utilizadas para obtención de régimen especial
 		$query = "update oti_departamento od 

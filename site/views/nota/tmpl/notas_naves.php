@@ -106,6 +106,9 @@ foreach ($this->notas_naves as $nd){ ?>
 		</td>
 		<td align='center'>
 		<?php 
+			if (JFactory::getUser()->authorise('gerencia_operaciones','com_nota')){
+				echo "G";
+			}
 			if ($nd['empleado']==1 && $nd['capitan']==1 && $nd['jefe']==0 && $nd['depto']==0 && $nd['adquisiciones']==0){ ?>
 					<a onclick="SqueezeBox.fromElement(this, 
 								{handler:'iframe', 

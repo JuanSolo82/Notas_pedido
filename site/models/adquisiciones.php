@@ -11,23 +11,35 @@ jimport('joomla.application.component.modelitem');
 class NotaModelAdquisiciones extends JModelItem{
 	public function getLista_notas(){
 		$db = JFactory::getDbo();
-		$query = "select nr.id, nr.fecha, u.name as nombre_remitente, od.nombre as departamento,nrev.autorizado_depto, nrev.aprobado_adquisiciones 
-				from nota_remitente nr 
+
+		$query = "select nr.id, nr.fecha, u.name as nombre_remitente, od.nombre as departamento, nrev.autorizado_depto, 
+                    nrev.autorizado_operaciones as operaciones, nrev.aprobado_adquisiciones ";
+		$query .= ", depto.id_area, depto.id_tipo ";
+		$query .= " from nota_remitente nr 
 				join jml_users u on u.id=nr.id_user 
+                join oti_departamento od on od.id=nr.id_depto_compra 
 				join nota_revision nrev on nrev.id_nota_remitente=nr.id 
 					and nrev.enviado_empleado=1 
 					and nrev.autorizado_capitan=1 
 					and nrev.autorizado_jefe=1 
-					and ((nrev.autorizado_depto=0 and nr.id_adepto=4) || nrev.autorizado_depto=1)
+					and ((nrev.autorizado_depto=0 and nr.id_adepto=4) || nrev.autorizado_depto=1) 
 					and nrev.aprobado_adquisiciones=0 
-				join nota_user nu on nu.id_user=u.id 
-				join oti_departamento od on od.id=nr.id_depto_compra 
-				where nr.fecha>'2019-01-01' order by nr.id desc, nr.fecha desc";
+				join nota_user nu on nu.id_user=u.id ";
+		
+		$query .= " join (select od.id as id_depto, od.id_tipo, od.id_area, od.nombre as depto_origen, nu.id_user, 
+						nr.id as id_remitente from oti_departamento od, nota_user nu, 
+						nota_remitente nr 
+					where nr.id_user=nu.id_user and nu.id_depto=od.id) 
+						depto on depto.id_user=nr.id_user and depto.id_remitente=nr.id";
+
+		$query .= " where nr.fecha>'2019-01-01' ";
+        $query .= " order by nr.id desc, nr.fecha desc";
 		$db->setQuery($query);
 		$db->query();
 		if (!$db->getNumRows())
 			return null;
 		return $db->loadAssocList();
+		// /portal/media/notas_pedido/adjuntos/38574/" 
 	}
 	public function getPendientesOc(){
 		return sizeof($this->getLista_notas());
