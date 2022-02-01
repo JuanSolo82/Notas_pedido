@@ -38,7 +38,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 			$lista = array();
 			foreach ($lista_notas as $l){
 				if ($l['id_tipo']==2){
-					if ($l['operaciones']==1 || $l['id_adepto']!=1)
+					if ($l['operaciones']==1)
 						$lista[] = $l;
 				}else
 					$lista[] = $l;
