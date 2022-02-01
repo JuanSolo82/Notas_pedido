@@ -113,7 +113,8 @@ function aprobar_naves(id_remitente, items){
         url: 'index.php?option=com_nota&task=nota_revision',
         method: 'post',
         data: {id_remitente: id_remitente, enviado_empleado:1, autorizado_capitan:1, autorizado_jefe:1, autorizado_depto:0, autorizado_operaciones:1, aprobado_adquisiciones:0},
-        success: function(){
+        success: function(data){
+            console.log(data);
             $("#boton_guardar").html("<h3>Enviado</h3>");
             $("#boton_anulacion").hide();
         }
@@ -150,7 +151,6 @@ function anterior_previo(direccion){
     var url_controller = 'index.php?option=com_nota&task=carga.notas_rango&format=raw';
     if ($("#vista").val()=="notas_naves")
         url_controller = 'index.php?option=com_nota&task=carga.rango_naves&format=raw';
-    console.log(url_controller);
     $.ajax({
         url: url_controller,
         type: 'post',

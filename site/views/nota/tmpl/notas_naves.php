@@ -117,24 +117,22 @@ foreach ($this->notas_naves as $nd){ ?>
 								size: {x: 900, y: 550}, 
 								url:'<?php echo $url_nota; ?>',
 								onClose:function(){window.location.reload();} })">
-					<img src='/portal/administrator/templates/hathor/images/menu/icon-16-edit.png' /></a>
+				<img src='/portal/administrator/templates/hathor/images/menu/icon-16-edit.png' /></a>
 		<?php }else{
-                if ($nd['empleado']==1 && $nd['capitan']==1 && $nd['jefe']==0 && $nd['depto']==0 && $nd['adquisiciones']==0){ ?>
-					<a onclick="SqueezeBox.fromElement(this, 
+                if ($nd['empleado']==1 && $nd['capitan']==1 && $nd['jefe']==0 && $nd['depto']==0 && $nd['adquisiciones']==0){ 
+                    $url_nota = JRoute::_('index.php?option=com_nota&view=com_nota&task=detalle_nota&id_nota='.$nd['id'].'&tmpl=component');
+                    $icon = 'edit';
+                }else{ 
+                    $url_nota = JRoute::_('index.php?option=com_nota&view=com_nota&task=reportes.detalle_nota&id_nota='.$nd['id'].'&tmpl=component');
+                    $icon = 'article';
+                } ?>
+                    <a onclick="SqueezeBox.fromElement(this, 
 								{handler:'iframe', 
 								size: {x: 900, y: 550}, 
-								url:'<?php echo JRoute::_('index.php?option=com_nota&view=com_nota&task=detalle_nota&id_nota='.$nd['id'].'&tmpl=component'); ?>',
+								url:'<?php echo $url_nota ?>',
 								onClose:function(){window.location.reload();} })">
-					<img src='/portal/administrator/templates/hathor/images/menu/icon-16-edit.png' /></a>
-				<?php }else{ ?>
-					<a onclick="SqueezeBox.fromElement(this, 
-								{handler:'iframe', 
-								size: {x: 900, y: 550}, 
-								url:'<?php echo JRoute::_('index.php?option=com_nota&view=com_nota&task=reportes.detalle_nota&id_nota='.$nd['id'].'&tmpl=component'); ?>',
-								onClose:function(){window.location.reload();} })">
-					<img src='/portal/administrator/templates/hathor/images/menu/icon-16-article.png' /></a>
-	<?php       } 
-            }
+					<img src='/portal/administrator/templates/hathor/images/menu/icon-16-<?php echo $icon ?>.png' /></a>
+        <?php   }
 			?>
 		</td>
 	</tr>

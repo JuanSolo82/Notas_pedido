@@ -343,17 +343,18 @@ class NotaModelNota extends JModelItem{
 		$db->setQuery($query);
 		$db->query();
 	}
-	function actualizar_revision($id_remitente, $enviado_empleado, $autorizado_capitan, $autorizado_jefe, $autorizado_depto, $aprobado_adquisiciones){
+	function actualizar_revision($id_remitente, $enviado_empleado, $autorizado_capitan, $autorizado_jefe, $autorizado_depto, $autorizado_operaciones, $aprobado_adquisiciones){
 		$db = JFactory::getDbo();
 		if (!$aprobado_adquisiciones){
 			$query = "update nota_revision set enviado_empleado=".$enviado_empleado.", autorizado_capitan=".$autorizado_capitan.", 
-						autorizado_jefe=".$autorizado_jefe.", autorizado_depto=".$autorizado_depto.", aprobado_adquisiciones=".$aprobado_adquisiciones." 
+						autorizado_jefe=".$autorizado_jefe.", autorizado_depto=".$autorizado_depto.", autorizado_operaciones=".$autorizado_operaciones.", aprobado_adquisiciones=".$aprobado_adquisiciones." 
 						where id_nota_remitente=".$id_remitente;
 			$db->setQuery($query);
 			$db->query();
 		}else{ // primero revisar si se han sacado todas las OC de una nota
 			
 		}
+        return $query;
 	}
 	public function tramitado($id_remitente, $terminado, $motivo, $generico, $id_user, $nombre){
 		$db = JFactory::getDbo();
@@ -770,11 +771,12 @@ class NotaModelNota extends JModelItem{
 		$user = JFactory::getUser();
 		$datos_user = $this->getDatos_user($user->id);
 		$query = "select nr.id, nr.fecha, od.nombre as depto_origen, u.name as usuario, nrev.enviado_empleado as empleado, nrev.autorizado_capitan as capitan, 
-					nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto, nrev.autorizado_operaciones as operaciones, nrev.aprobado_adquisiciones as adquisiciones 
+					nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto, nrev.autorizado_operaciones as operaciones, nrev.aprobado_adquisiciones as adquisiciones, 
+                    nr.id_adepto 
 				from nota_remitente nr 
 				join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan=1 ";
 		if ($user->authorise('gerencia_operaciones','com_nota'))
-			$query .= " and nrev.autorizado_depto=1 ";
+			$query .= " and (nrev.autorizado_depto=1 or (nrev.autorizado_depto=0 and nr.id_adepto!=1))";
 		$query .= " join nota_user nu on nu.id_user=nr.id_user join jml_users u on u.id=nu.id_user 
 				join oti_departamento od on od.id=nu.id_depto ";
 		if ($deptos!=''){
