@@ -111,6 +111,9 @@ $proveedor = explode('_',$this->datos_nota['proveedor']);
 				<a href="/portal/media/notas_pedido/adjuntos/<?php echo $this->id_remitente.'/'.$i['adjunto'] ?>" class="modal">
 					<img src='/portal/administrator/templates/hathor/images/menu/icon-16-archive.png' />
 				</a>
+                <a href="/portal/media/notas_pedido/adjuntos/<?php echo $this->id_remitente.'/'.$i['adjunto'] ?>" target="_blank">
+					<img src='/portal/administrator/templates/hathor/images/menu/icon-16-archive.png' />
+				</a>
 			<?php } ?>
 			</td>
 				<td>

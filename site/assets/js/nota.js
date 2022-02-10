@@ -616,8 +616,7 @@ function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
                     id_tipo_modificacion: $("#tipo_modificacion"+opcion+"_"+i).val(),
                     valor_unitario: $("#valor_unitario"+opcion+"_"+i).val()
                 },
-            success: function(){
-            }
+            success: function(){}
         });
     }
     $.ajax({
