@@ -472,11 +472,14 @@ class NotaControllerAdquisiciones extends JControllerForm
 		$total = 0;
 		foreach ($items as $i){
 			if ($i['opcion_oc']==$opcion){
-                if ($i['nueva_cantidad'])
-                    $cantidad = $i['nueva_cantidad'];
-                else
+                if (sizeof($i['modificacion'])){
+                    $elemento = end($i['modificacion']);
+                    $cantidad = $elemento['nueva_cantidad'];
+                }else{
                     $cantidad = $i['cantidad'];
-				//$cantidad = $i['cantidad'] ? $i['cantidad'] : $i['nueva_cantidad'];
+                }
+                //$cantidad = $i['cantidad'] ? $i['cantidad'] : $i['nueva_cantidad'];
+
 				if ($cantidad){
 					$html .= '
 					<tr>

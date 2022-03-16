@@ -604,6 +604,7 @@ function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
     var exenta = $("#exento").prop('checked') ? 1 : 0;
 
     for (var i=1;i<=items_orden;i++){
+        console.log($("#cantidad_original"+opcion+"_"+i).val()+', '+$("#cantidad"+opcion+"_"+i).val());
         $.ajax({
             url: 'index.php?option=com_nota&task=editar_item',
             timeout: 1000,

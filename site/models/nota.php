@@ -234,13 +234,13 @@ class NotaModelNota extends JModelItem{
 		$db = JFactory::getDbo();
 		//$query = "select id, cantidad, item, motivo, opcion_oc, adjunto from nota_item where id_remitente=".$id_remitente;
 		$query = "select ni.id, ni.cantidad, ni.item, ni.motivo, ni.opcion_oc, ni.valor, ni.adjunto ";
-        //$query .= ", nm.nueva_cantidad, nm.id_nueva_cantidad, nm.id_tipoModificacion ";
+        $query .= ", nm.nueva_cantidad, nm.id_nueva_cantidad, nm.id_tipoModificacion ";
         $query .= " from nota_item ni 
 					join nota_remitente nr on nr.id=ni.id_remitente and nr.id=".$id_remitente;
-        /*
+        
         $query .= " left join (select nm.id as id_nueva_cantidad, nm.id_item,nm.nueva_cantidad, nm.id_tipoModificacion 
 					from nota_modificada nm, nota_item ni 
-					where ni.id=nm.id_item order by nm.id desc limit 1) nm on nm.id_item=ni.id";*/
+					where ni.id=nm.id_item order by nm.id desc limit 1) nm on nm.id_item=ni.id";
         if ($opcion_oc)
             $query .= " where ni.opcion_oc=".$opcion_oc;
 		$db->setQuery($query);
@@ -251,7 +251,7 @@ class NotaModelNota extends JModelItem{
 			$lista[$i]['modificacion'] = array();
 			foreach ($lista as $l){
 				$lista[$i]['modificacion'] = $this->getEliminados($l['id']);
-                $lista[$i]['id_nueva_cantidad'] = 0;
+                /*$lista[$i]['id_nueva_cantidad'] = 0;
                 $lista[$i]['nueva_cantidad'] = 0;
                 $lista[$i]['id_tipo_modificacion'] = 0;
                 // modificaciones si es que existen
@@ -267,7 +267,7 @@ class NotaModelNota extends JModelItem{
                     $lista[$i]['nueva_cantidad'] = $item['nueva_cantidad'];
                     $lista[$i]['id_tipo_modificacion'] = $item['id_tipo_modificacion'];
                 }
-                
+                */
 				$i++;
 			}
 			return $lista;
