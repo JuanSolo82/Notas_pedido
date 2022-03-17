@@ -112,9 +112,11 @@ function aprobar_naves(id_remitente, items){
     $.ajax({
         url: 'index.php?option=com_nota&task=nota_revision',
         method: 'post',
-        data: {id_remitente: id_remitente, enviado_empleado:1, autorizado_capitan:1, autorizado_jefe:1, autorizado_depto:0, aprobado_adquisiciones:0},
-        success: function(){
+        data: {id_remitente: id_remitente, enviado_empleado:1, autorizado_capitan:1, autorizado_jefe:1, autorizado_depto:0, autorizado_operaciones:1, aprobado_adquisiciones:0},
+        success: function(data){
+            console.log(data);
             $("#boton_guardar").html("<h3>Enviado</h3>");
+            $("#boton_anulacion").hide();
         }
     });
 
@@ -149,7 +151,6 @@ function anterior_previo(direccion){
     var url_controller = 'index.php?option=com_nota&task=carga.notas_rango&format=raw';
     if ($("#vista").val()=="notas_naves")
         url_controller = 'index.php?option=com_nota&task=carga.rango_naves&format=raw';
-    console.log(url_controller);
     $.ajax({
         url: url_controller,
         type: 'post',
@@ -603,6 +604,7 @@ function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
     var exenta = $("#exento").prop('checked') ? 1 : 0;
 
     for (var i=1;i<=items_orden;i++){
+        console.log($("#cantidad_original"+opcion+"_"+i).val()+', '+$("#cantidad"+opcion+"_"+i).val());
         $.ajax({
             url: 'index.php?option=com_nota&task=editar_item',
             timeout: 1000,
@@ -615,8 +617,7 @@ function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
                     id_tipo_modificacion: $("#tipo_modificacion"+opcion+"_"+i).val(),
                     valor_unitario: $("#valor_unitario"+opcion+"_"+i).val()
                 },
-            success: function(){
-            }
+            success: function(){}
         });
     }
     $.ajax({

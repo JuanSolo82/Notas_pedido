@@ -233,10 +233,11 @@ class NotaModelNota extends JModelItem{
 	function getItems($id_remitente, $opcion_oc=0){
 		$db = JFactory::getDbo();
 		//$query = "select id, cantidad, item, motivo, opcion_oc, adjunto from nota_item where id_remitente=".$id_remitente;
-		$query = "select ni.id, ni.cantidad, ni.item, ni.motivo, ni.opcion_oc, ni.valor, ni.adjunto, nm.nueva_cantidad, 
-                        nm.id_nueva_cantidad, nm.id_tipoModificacion 
-					from nota_item ni 
+		$query = "select ni.id, ni.cantidad, ni.item, ni.motivo, ni.opcion_oc, ni.valor, ni.adjunto ";
+        $query .= ", nm.nueva_cantidad, nm.id_nueva_cantidad, nm.id_tipoModificacion ";
+        $query .= " from nota_item ni 
 					join nota_remitente nr on nr.id=ni.id_remitente and nr.id=".$id_remitente;
+        
         $query .= " left join (select nm.id as id_nueva_cantidad, nm.id_item,nm.nueva_cantidad, nm.id_tipoModificacion 
 					from nota_modificada nm, nota_item ni 
 					where ni.id=nm.id_item order by nm.id desc limit 1) nm on nm.id_item=ni.id";
@@ -250,6 +251,23 @@ class NotaModelNota extends JModelItem{
 			$lista[$i]['modificacion'] = array();
 			foreach ($lista as $l){
 				$lista[$i]['modificacion'] = $this->getEliminados($l['id']);
+                /*$lista[$i]['id_nueva_cantidad'] = 0;
+                $lista[$i]['nueva_cantidad'] = 0;
+                $lista[$i]['id_tipo_modificacion'] = 0;
+                // modificaciones si es que existen
+                $query = "select id as id_nueva_cantidad, nueva_cantidad, id_tipoModificacion 
+                            from nota_modificada 
+                            where id_item = ".$l['id']." 
+                            order by id desc limit 1";
+                $db->setQuery($query);
+                $db->query();
+                if ($db->getNumRows()){
+                    $item = $db->loadAssoc();
+                    $lista[$i]['id_nueva_cantidad'] = $item['id_nueva_cantidad'];
+                    $lista[$i]['nueva_cantidad'] = $item['nueva_cantidad'];
+                    $lista[$i]['id_tipo_modificacion'] = $item['id_tipo_modificacion'];
+                }
+                */
 				$i++;
 			}
 			return $lista;
@@ -343,17 +361,18 @@ class NotaModelNota extends JModelItem{
 		$db->setQuery($query);
 		$db->query();
 	}
-	function actualizar_revision($id_remitente, $enviado_empleado, $autorizado_capitan, $autorizado_jefe, $autorizado_depto, $aprobado_adquisiciones){
+	function actualizar_revision($id_remitente, $enviado_empleado, $autorizado_capitan, $autorizado_jefe, $autorizado_depto, $autorizado_operaciones, $aprobado_adquisiciones){
 		$db = JFactory::getDbo();
 		if (!$aprobado_adquisiciones){
 			$query = "update nota_revision set enviado_empleado=".$enviado_empleado.", autorizado_capitan=".$autorizado_capitan.", 
-						autorizado_jefe=".$autorizado_jefe.", autorizado_depto=".$autorizado_depto.", aprobado_adquisiciones=".$aprobado_adquisiciones." 
+						autorizado_jefe=".$autorizado_jefe.", autorizado_depto=".$autorizado_depto.", autorizado_operaciones=".$autorizado_operaciones.", aprobado_adquisiciones=".$aprobado_adquisiciones." 
 						where id_nota_remitente=".$id_remitente;
 			$db->setQuery($query);
 			$db->query();
 		}else{ // primero revisar si se han sacado todas las OC de una nota
 			
 		}
+        return $query;
 	}
 	public function tramitado($id_remitente, $terminado, $motivo, $generico, $id_user, $nombre){
 		$db = JFactory::getDbo();
@@ -770,11 +789,12 @@ class NotaModelNota extends JModelItem{
 		$user = JFactory::getUser();
 		$datos_user = $this->getDatos_user($user->id);
 		$query = "select nr.id, nr.fecha, od.nombre as depto_origen, u.name as usuario, nrev.enviado_empleado as empleado, nrev.autorizado_capitan as capitan, 
-					nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto, nrev.autorizado_operaciones as operaciones, nrev.aprobado_adquisiciones as adquisiciones 
+					nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto, nrev.autorizado_operaciones as operaciones, nrev.aprobado_adquisiciones as adquisiciones, 
+                    nr.id_adepto 
 				from nota_remitente nr 
 				join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan=1 ";
 		if ($user->authorise('gerencia_operaciones','com_nota'))
-			$query .= " and nrev.autorizado_depto=1 ";
+			$query .= " and (nrev.autorizado_depto=1 or (nrev.autorizado_depto=0 and nr.id_adepto!=1))";
 		$query .= " join nota_user nu on nu.id_user=nr.id_user join jml_users u on u.id=nu.id_user 
 				join oti_departamento od on od.id=nu.id_depto ";
 		if ($deptos!=''){

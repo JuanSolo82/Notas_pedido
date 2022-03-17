@@ -16,6 +16,7 @@ class NotaModelAdquisiciones extends JModelItem{
                     nrev.aprobado_adquisiciones ";
 		if (NotaHelper::isTestSite())
 			$query .= ", nrev.autorizado_operaciones as operaciones ";
+
 		$query .= ", depto.id_area, depto.id_tipo ";
 		$query .= " from nota_remitente nr 
 				join jml_users u on u.id=nr.id_user 

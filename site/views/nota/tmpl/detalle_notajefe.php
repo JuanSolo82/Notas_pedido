@@ -193,7 +193,7 @@ if (($this->datos_user['id']==$this->detalle_nota['id_user'] && $this->detalle_n
 										<?php echo $this->detalle_nota['id_adepto']==$this->datos_propios['id_depto'] ? 1 : 0 ?>)" 
 		class='boton'>
 			<img src='/portal/administrator/templates/hathor/images/header/icon-48-save.png' />
-			<br>Autorizar nota.
+			<br>Autorizar nota
 	</div>
 
 	<div id="boton_anulacion" onclick="dialogo_anulacion()" class='boton'><img src='/portal/administrator/templates/hathor/images/header/icon-48-deny.png' /><br>Anular</div>

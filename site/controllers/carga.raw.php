@@ -38,8 +38,9 @@ class NotaControllerCarga extends JControllerForm
 		$autorizado_jefe 		= $jinput->get("autorizado_jefe", -1, "int");
 		$autorizado_depto 		= $jinput->get("autorizado_depto", -1, "int");
 		$aprobado_adquisiciones	= $jinput->get("aprobado_adquisiciones", -1, "int");
+        $autorizado_operaciones = $jinput->get("aprobado_adquisiciones", 0, "int");
 		$generico				= $jinput->get("generico", -1, "int");
-		$model->actualizar_revision($id_remitente, $enviado_empleado, $autorizado_capitan, $autorizado_jefe, $autorizado_depto, $aprobado_adquisiciones);
+		$model->actualizar_revision($id_remitente, $enviado_empleado, $autorizado_capitan, $autorizado_jefe, $autorizado_depto, $autorizado_operaciones, $aprobado_adquisiciones);
 		$user = JFactory::getUser();
 		
 		$nombre = "";

@@ -99,31 +99,41 @@ foreach ($this->notas_naves as $nd){ ?>
 					<div class='barra_avance <?php echo ($nd['capitan']==1 ? "paso_aprobado" : "").($nd['capitan']==2 ? "paso_rechazado" : "") ?>'>Autorizado capitán</div>
 				<div class='barra_avance <?php echo ($nd['jefe']==1 ? "paso_aprobado" : "").($nd['jefe']==2 ? "paso_rechazado" : "") ?>'>Autorizado jefe</div>
 				<div class='barra_avance <?php echo ($nd['depto']==1 ? "paso_aprobado" : "").($nd['depto']==2 ? "paso_rechazado" : "") ?>'>Autorizado depto</div>
-                <div class='barra_avance <?php echo ($nd['operaciones']==1 ? "paso_aprobado" : "").($nd['opreaciones']==2 ? "paso_rechazado" : "") ?>'>Gerencia operaciones</div>
+                <div class='barra_avance <?php echo ($nd['operaciones']==1 ? "paso_aprobado" : "").($nd['operaciones']==2 ? "paso_rechazado" : "") ?>'>Gerencia operaciones</div>
 				<div class='barra_avance <?php echo ($nd['adquisiciones']==1 ? "paso_aprobado" : "").($nd['adquisiciones']==2 ? "paso_rechazado" : "") ?>'>OC generada</div>
 				<div class='barra_avance <?php //echo ($nd['aprobado']==1 ? "paso_aprobado" : "").($nd['adquisiciones']==2 ? "paso_rechazado" : "") ?>'>Calificación</div>
 			</div>
 		</td>
 		<td align='center'>
 		<?php 
-			if (JFactory::getUser()->authorise('gerencia_operaciones','com_nota')){
-				echo "G";
-			}
-			if ($nd['empleado']==1 && $nd['capitan']==1 && $nd['jefe']==0 && $nd['depto']==0 && $nd['adquisiciones']==0){ ?>
-					<a onclick="SqueezeBox.fromElement(this, 
+			if (JFactory::getUser()->authorise('gerencia_operaciones','com_nota')){ 
+                if ($nd['operaciones']==0){
+                    $url_nota = JRoute::_('index.php?option=com_nota&view=com_nota&task=detalle_nota&id_nota='.$nd['id'].'&tmpl=component');
+                }else{
+                    $url_nota = JRoute::_('index.php?option=com_nota&view=com_nota&task=reportes.detalle_nota&id_nota='.$nd['id'].'&tmpl=component');
+                } ?>
+				<a onclick="SqueezeBox.fromElement(this, 
 								{handler:'iframe', 
 								size: {x: 900, y: 550}, 
-								url:'<?php echo JRoute::_('index.php?option=com_nota&view=com_nota&task=detalle_nota&id_nota='.$nd['id'].'&tmpl=component'); ?>',
+								url:'<?php echo $url_nota; ?>',
 								onClose:function(){window.location.reload();} })">
-					<img src='/portal/administrator/templates/hathor/images/menu/icon-16-edit.png' /></a>
-				<?php }else{ ?>
-					<a onclick="SqueezeBox.fromElement(this, 
+				<img src='/portal/administrator/templates/hathor/images/menu/icon-16-edit.png' /></a>
+		<?php }else{
+                if ($nd['empleado']==1 && $nd['capitan']==1 && $nd['jefe']==0 && $nd['depto']==0 && $nd['adquisiciones']==0){ 
+                    $url_nota = JRoute::_('index.php?option=com_nota&view=com_nota&task=detalle_nota&id_nota='.$nd['id'].'&tmpl=component');
+                    $icon = 'edit';
+                }else{ 
+                    $url_nota = JRoute::_('index.php?option=com_nota&view=com_nota&task=reportes.detalle_nota&id_nota='.$nd['id'].'&tmpl=component');
+                    $icon = 'article';
+                } ?>
+                    <a onclick="SqueezeBox.fromElement(this, 
 								{handler:'iframe', 
 								size: {x: 900, y: 550}, 
-								url:'<?php echo JRoute::_('index.php?option=com_nota&view=com_nota&task=reportes.detalle_nota&id_nota='.$nd['id'].'&tmpl=component'); ?>',
+								url:'<?php echo $url_nota ?>',
 								onClose:function(){window.location.reload();} })">
-					<img src='/portal/administrator/templates/hathor/images/menu/icon-16-article.png' /></a>
-			<?php } ?>
+					<img src='/portal/administrator/templates/hathor/images/menu/icon-16-<?php echo $icon ?>.png' /></a>
+        <?php   }
+			?>
 		</td>
 	</tr>
 <?php } ?>

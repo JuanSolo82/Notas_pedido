@@ -339,13 +339,19 @@ class NotaController extends JController{
 	function nota_revision(){
 		$jinput = JFactory::getApplication()->input;
 		$model = $this->getModel('nota');
+        $user = JFactory::getUser();
 		$id_remitente 			= $jinput->get("id_remitente", 0, "int");
 		$enviado_empleado 		= $jinput->get("enviado_empleado", -1, "int");
 		$autorizado_capitan 	= $jinput->get("autorizado_capitan", -1, "int");
 		$autorizado_jefe 		= $jinput->get("autorizado_jefe", -1, "int");
 		$autorizado_depto 		= $jinput->get("autorizado_depto", -1, "int");
+        $autorizado_operaciones	= $jinput->get("autorizado_operaciones", -1, "int");
 		$aprobado_adquisiciones	= $jinput->get("aprobado_adquisiciones", -1, "int");
-		$query = $model->actualizar_revision($id_remitente, $enviado_empleado, $autorizado_capitan, $autorizado_jefe, $autorizado_depto, $aprobado_adquisiciones);
+        if ($user->authorise('gerencia_operaciones','com_nota'))
+            $autorizado_depto=1;
+        
+		$query = $model->actualizar_revision($id_remitente, $enviado_empleado, $autorizado_capitan, $autorizado_jefe, $autorizado_depto, $autorizado_operaciones, $aprobado_adquisiciones);
+        print_r($query.'-------------------');
 	}
 	function generar_oc(){
 		$jinput = JFactory::getApplication()->input;
