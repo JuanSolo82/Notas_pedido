@@ -13,7 +13,9 @@ class NotaModelAdquisiciones extends JModelItem{
 		$db = JFactory::getDbo();
 
 		$query = "select nr.id, nr.fecha, u.name as nombre_remitente, od.nombre as departamento, nrev.autorizado_depto, 
-                    nrev.autorizado_operaciones as operaciones, nrev.aprobado_adquisiciones ";
+                    nrev.aprobado_adquisiciones ";
+		if (NotaHelper::isTestSite())
+			$query .= ", nrev.autorizado_operaciones as operaciones ";
 		$query .= ", depto.id_area, depto.id_tipo ";
 		$query .= " from nota_remitente nr 
 				join jml_users u on u.id=nr.id_user 
