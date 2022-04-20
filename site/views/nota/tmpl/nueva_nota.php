@@ -11,7 +11,7 @@ JHTML::script('jquery.typeahead.min.js', 'components/com_nota/assets/js/');
 //echo JRequest::checkToken('get')."?";
 $user = JFactory::getUser();
 ?>
-<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?ges=128"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?virt=3"></script>
 <div class='fila_completa centrar' style='margin-bottom: 20px;'>
 	<div class='barra_nombre' style='width: 90%;'>Nueva nota</div>
 </div>
@@ -166,9 +166,13 @@ $user = JFactory::getUser();
 		<tr>
 			<td><input class='entrada' id='cantidad<?php echo $i ?>' name='cantidad<?php echo $i ?>' type='number' size='2' required type="number" min="0" step=".1" style='width: 70px;'></td>
 			<td>
-				<input class='entrada' id='descripcion<?php echo $i ?>' name='descripcion<?php echo $i ?>' type='text' style='width: 90%;' autocomplete='on'>
+				<input class='entrada' id='descripcion<?php echo $i ?>'
+                    name='descripcion<?php echo $i ?>' type='text' style='width: 90%;' autocomplete='off' 
+                    onkeypress="cargar_item(this.value,<?php echo $i ?>)" 
+                    onblur="cargar_item('',<?php echo $i ?>)">
 					<div id='items<?php echo $i ?>'>
 				</div>
+                <div id='producto<?php echo $i ?>'></div>
 			</td>
 			<td><input class='entrada' id='motivo<?php echo $i ?>' name='motivo<?php echo $i ?>' type='text' style='width: 90%;'></td>
 			<?php if ($user->authorise('adquisiciones.jefe','com_nota') || $user->authorise('valor_item','com_nota')){ ?>
@@ -200,6 +204,7 @@ $user = JFactory::getUser();
 	</div>
 	</a>
 </div>
+<input type='hidden' id='sitio_pruebas' value='<?php echo NotaHelper::isTestSite() ? 1 : 0 ?>'>
 
 <div id="valores_formulario" title="Atención" style="display: none;">
  	<p>Debe ingresar valores al formulario</p>

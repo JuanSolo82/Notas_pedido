@@ -12,18 +12,19 @@ class NotaModelAdquisiciones extends JModelItem{
 	public function getLista_notas(){
 		$db = JFactory::getDbo();
 
-		$query = "select nr.id, nr.id_adepto, nr.fecha, u.name as nombre_remitente, od.nombre as departamento, nrev.autorizado_depto, 
-                    nrev.autorizado_operaciones as operaciones, nrev.aprobado_adquisiciones ";
-		$query .= ", depto.id_area, depto.id_tipo ";
+		$query = "select nr.id, nr.id_adepto, nr.fecha, u.name as nombre_remitente, od.nombre as departamento, nrev.autorizado_depto ";
+        if (NotaHelper::isTestSite())
+            $query .= ", nrev.autorizado_operaciones as operaciones ";
+		$query .= ", nrev.aprobado_adquisiciones, depto.id_area, depto.id_tipo ";
 		$query .= " from nota_remitente nr 
 				join jml_users u on u.id=nr.id_user 
                 join oti_departamento od on od.id=nr.id_depto_compra 
 				join nota_revision nrev on nrev.id_nota_remitente=nr.id 
 					and nrev.enviado_empleado=1 
 					and nrev.autorizado_capitan=1 
-					and nrev.autorizado_jefe=1 
-					and ((nrev.autorizado_depto=0 and nr.id_adepto=4) || nrev.autorizado_depto=1) 
-					and nrev.aprobado_adquisiciones=0 
+					and nrev.autorizado_jefe=1 ";
+        $query .= "and ((nrev.autorizado_depto=0 and nr.id_adepto=4) || nrev.autorizado_depto=1) ";
+        $query .= " and nrev.aprobado_adquisiciones=0 
 				join nota_user nu on nu.id_user=u.id ";
 		
 		$query .= " join (select od.id as id_depto, od.id_tipo, od.id_area, od.nombre as depto_origen, nu.id_user, 

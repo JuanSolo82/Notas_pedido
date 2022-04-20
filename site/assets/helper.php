@@ -104,10 +104,11 @@ class NotaHelper {
 		// si no hay una conexion preestablecida, crearla
 		if (!$db_handle) {
 			// Connect to mssql server
-			$handle = mssql_connect(SQL_HOST,SQL_USER,SQL_PASS) or die("Cannot connect to server");
+			//$handle = mssql_connect(SQL_HOST,SQL_USER,SQL_PASS) or die("Cannot connect to server");
+            $handle = mssql_connect('ventas.tabsa.cl','compra','[Samurai100%Letal?=') or die("Cannot connect to server");
 			// Select a database
 			//$db = mssql_select_db((R2Helper::isTestSite() ? SQL_DB_BAK : SQL_DB), $handle) or die("Cannot select database");
-			$db = mssql_select_db(SQL_DB, $handle) or die("Cannot select database");
+			$db = mssql_select_db('Compras_dev', $handle) or die("Cannot select database");
 		}
 		else $handle = $db_handle;
 		// Execute a query

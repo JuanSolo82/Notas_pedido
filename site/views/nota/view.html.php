@@ -86,9 +86,9 @@ class NotaViewNota extends JView{
 		//$menu = ".".$user->authorise('jefe.depto', 'com_nota').','.$user->authorise('empleado.depto', 'com_nota').'.';
 		$menu .= $this->getBoton('Nueva nota', 'article-add', 'nueva_nota','');
 		$menu .= $this->getBoton('Notas propias', 'article', 'notas_propias','');
-		if ($user->authorise('gerencia_operaciones','com_nota')){
+		/*if ($user->authorise('gerencia_operaciones','com_nota') && NotaHelper::isTestSite()){
             $menu .= $this->getBoton('Notas de operaciones', 'cpanel', 'notas_naves');
-        }else{
+        }else{*/
             if (($user->authorise('jefe.depto', 'com_nota') 
                 || $user->authorise('capitan.jefe', 'com_nota') 
                 || $user->authorise('capitan.sin_jefe', 'com_nota')) 
@@ -120,7 +120,7 @@ class NotaViewNota extends JView{
             }
             if ($user->authorise('resumen_area','com_nota'))
                 $menu .= $this->getBoton('Resumen notas enviadas', 'contacts-categories', 'notas_area');
-        }
+        //}
 		
 		return $menu;
 	}

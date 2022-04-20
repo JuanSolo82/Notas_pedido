@@ -35,15 +35,15 @@ class NotaControllerAdquisiciones extends JControllerForm
 			$jinput->set('layout', 'lista_notas');
 			$model = $this->getModel('adquisiciones');
 			$lista_notas = $model->getLista_notas();
-			$lista = array();
+			/*$lista = array();
 			foreach ($lista_notas as $l){
 				if ($l['id_tipo']==2){
 					if ($l['operaciones']==1)
 						$lista[] = $l;
 				}else
 					$lista[] = $l;
-			}
-			$jinput->set("lista_notas", $lista);
+			}*/
+			$jinput->set("lista_notas", $lista_notas);
 			//$borrar_notas = $model->borrar_atrasadas();
 		}else{
 			$msg = JFactory::getApplication();

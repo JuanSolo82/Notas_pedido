@@ -231,20 +231,14 @@ class NotaControllerCarga extends JControllerForm
 		$ind = $jinput->get('ind', 0, 'int');
 		$proveedor = $model->getListaProveedor($str);
 		
-		if ($ind)
-			$html = "<ul id='lista_proveedores".$ind."' onchange='escoger_proveedor(\"\",\"0\", 0)' class='lista_proveedores'>";
-		else
-			$html = "<ul id='lista_proveedores' onchange='escoger_proveedor(\"\",\"0\",\"\", 0)' class='lista_proveedores'>";
+		$html = "<ul id='lista_proveedores".($ind ? $ind : '')."' onchange='escoger_proveedor(\"\",\"0\", 0)' class='lista_proveedores'>";
 		if (sizeof($proveedor)){
 			foreach ($proveedor as $p){
 				$html .= "<li id='".$p['RazonSocial']."' onclick='escoger_proveedor(\"".utf8_encode(ucwords(strtolower($p['RazonSocial'])))."\", \"".$p['rut']."\",\"".ucwords(strtolower($p['giro']))."\", ".$ind.")'>".utf8_encode($p['RazonSocial'])."</li>";
 			}
-		}/*else{
-			$html .= "<li id='0'>Sin coincidencias</li>";
-		}*/
+		}
 		$html .= "</ul>";
 		echo $html;
-		//echo json_encode($proveedor);
 	}
 	function getProveedor(){
 		$jinput = JFactory::getApplication()->input;
@@ -285,5 +279,24 @@ class NotaControllerCarga extends JControllerForm
 		$jinput->set("notas", $notas_area);
 		$jinput->set("pagina", $pagina);
 		$view->rango_area();
+	}
+
+    function getProducto(){
+		$jinput = JFactory::getApplication()->input;
+		$model = $this->getModel('nota');
+		$str 	= $jinput->get("str", "", "string");
+        $ind    = $jinput->get("ind",0,"int");
+		$producto = $model->getProducto($str);
+
+        $html = '';
+        if (sizeof($producto)){
+            $html = "<ul id='lista_productos' onchange='escoger_producto(\"\",0)' class='lista_proveedores'>";
+			foreach ($producto as $p){
+				$html .= "<li id='".$p['id']."' onclick='escoger_producto(\"".utf8_encode(($p['nombre']))."\",".$ind.")'>".utf8_encode($p['nombre'])."</li>";
+			}
+            $html .= "</ul>";
+		}
+		
+		echo $html;
 	}
 }

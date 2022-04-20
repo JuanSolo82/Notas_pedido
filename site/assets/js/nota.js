@@ -763,51 +763,6 @@ function cambiar_destino(id_remitente, nombre_remitente){
     $('#cambiar_destino').hide();
 }
 
-function cargar_proveedor(str, ind=0){
-    if (!ind) $("#proveedor").empty();
-    else $("#proveedor"+ind).empty();
-    if (str.length>1){
-        $.ajax({
-            url: 'index.php?option=com_nota&task=carga.getListaProveedor&format=raw',
-            type: 'post',
-            data: { str: str, ind: ind },
-            success: function(data){
-                if (!ind)
-                    $("#proveedor").append(data);
-                else
-                    $("#proveedor"+ind).append(data);
-            }
-        });
-    }
-    /*var availableTags = [
-        "ActionScript",
-        "AppleScript",
-        "Asp",
-        "BASIC",
-        "C",
-        "C++",
-        "Clojure",
-        "COBOL",
-        "ColdFusion",
-        "Erlang",
-        "Fortran",
-        "Groovy",
-        "Haskell",
-        "Java",
-        "JavaScript",
-        "Lisp",
-        "Perl",
-        "PHP",
-        "Python",
-        "Ruby",
-        "Scala",
-        "Scheme"
-    ];
-    $("#proveedor").autocomplete({
-        source: availableTags
-    });*/
-}
-
 function escoger_proveedor(razon_social, rut="", giro="", ind=0){
     if (!ind){
         $("#proveedor_escogido").val(razon_social);
@@ -827,9 +782,6 @@ function escoger_proveedor(razon_social, rut="", giro="", ind=0){
                 $("#giro_proveedor"+ind).val(data['giro']);
             }
         });
-        //$("#proveedor_escogido"+ind).val(razon_social);
-        //$("#rut_proveedor"+ind).val(rut);
-        //$("#giro_proveedor"+ind).val(rut);
         $("#lista_proveedores"+ind).fadeOut();
         $("#proveedor"+ind).empty();
     }
@@ -1015,4 +967,71 @@ function ocultar_ediciones(id_nave){
     $("#fechas"+id_nave).hide();
     $("#editar_regimen"+id_nave).show();
     $("#guardar_regimen"+id_nave).hide();
+}
+
+function cargar_proveedor(str, ind=0){
+    if (!ind) $("#proveedor").empty();
+    else $("#proveedor"+ind).empty();
+    if (str.length>1){
+        $.ajax({
+            url: 'index.php?option=com_nota&task=carga.getListaProveedor&format=raw',
+            type: 'post',
+            data: { str: str, ind: ind },
+            success: function(data){
+                if (!ind)
+                    $("#proveedor").append(data);
+                else
+                    $("#proveedor"+ind).append(data);
+            }
+        });
+    }
+    /*var availableTags = [
+        "ActionScript",
+        "AppleScript",
+        "Asp",
+        "BASIC",
+        "C",
+        "C++",
+        "Clojure",
+        "COBOL",
+        "ColdFusion",
+        "Erlang",
+        "Fortran",
+        "Groovy",
+        "Haskell",
+        "Java",
+        "JavaScript",
+        "Lisp",
+        "Perl",
+        "PHP",
+        "Python",
+        "Ruby",
+        "Scala",
+        "Scheme"
+    ];
+    $("#proveedor").autocomplete({
+        source: availableTags
+    });*/
+}
+
+function cargar_item(str,ind=0){
+    var sitio_pruebas = $("#sitio_pruebas").length ? parseInt($("#sitio_pruebas").val()) : 0;
+    $("#producto"+ind).empty();
+    if (str.length>1 && sitio_pruebas){
+        $.ajax({
+            url: 'index.php?option=com_nota&task=carga.getProducto&format=raw',
+            type: 'post',
+            data: { str: str, ind: ind },
+            success: function(data){
+                $("#producto"+ind).append(data);
+            }
+        });
+    }
+}
+
+function escoger_producto(producto,ind=0){
+    if (ind){
+        $("#descripcion"+ind).val(producto);
+        $("#producto"+ind).empty();
+    }
 }
