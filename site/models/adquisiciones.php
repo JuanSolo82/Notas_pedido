@@ -12,10 +12,12 @@ class NotaModelAdquisiciones extends JModelItem{
 	public function getLista_notas(){
 		$db = JFactory::getDbo();
 
-		$query = "select nr.id, nr.id_adepto, nr.fecha, u.name as nombre_remitente, od.nombre as departamento, nrev.autorizado_depto ";
-        if (NotaHelper::isTestSite())
-            $query .= ", nrev.autorizado_operaciones as operaciones ";
-		$query .= ", nrev.aprobado_adquisiciones, depto.id_area, depto.id_tipo ";
+		$query = "select nr.id, nr.fecha, u.name as nombre_remitente, od.nombre as departamento, nrev.autorizado_depto, 
+                    nrev.aprobado_adquisiciones ";
+		if (NotaHelper::isTestSite())
+			$query .= ", nrev.autorizado_operaciones as operaciones ";
+
+		$query .= ", depto.id_area, depto.id_tipo ";
 		$query .= " from nota_remitente nr 
 				join jml_users u on u.id=nr.id_user 
                 join oti_departamento od on od.id=nr.id_depto_compra 

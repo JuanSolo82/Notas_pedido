@@ -1027,7 +1027,7 @@ function cargar_item(str,ind=0){
             }
         });
     }
-}
+} 
 
 function escoger_producto(producto,ind=0){
     if (ind){
