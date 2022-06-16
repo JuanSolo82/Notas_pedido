@@ -1016,7 +1016,7 @@ function cargar_proveedor(str, ind=0){
 
 function cargar_item(str,ind=0){
     var sitio_pruebas = $("#sitio_pruebas").length ? parseInt($("#sitio_pruebas").val()) : 0;
-    $("#producto"+ind).empty();
+    //$("#producto"+ind).empty();
     if (str.length>1 && sitio_pruebas){
         $.ajax({
             url: 'index.php?option=com_nota&task=carga.getProducto&format=raw',
@@ -1030,8 +1030,10 @@ function cargar_item(str,ind=0){
 } 
 
 function escoger_producto(producto,ind=0){
+    console.log(ind);
     if (ind){
         $("#descripcion"+ind).val(producto);
-        $("#producto"+ind).empty();
+        $("#lista_productos"+ind).fadeOut();
+        //$("#producto"+ind).empty();
     }
 }

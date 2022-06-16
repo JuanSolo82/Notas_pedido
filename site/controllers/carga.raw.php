@@ -290,13 +290,12 @@ class NotaControllerCarga extends JControllerForm
 
         $html = '';
         if (sizeof($producto)){
-            $html = "<ul id='lista_productos' onchange='escoger_producto(\"\",0)' class='lista_proveedores'>";
+            $html = "<ul id='lista_productos".$ind."' onchange='escoger_producto(\"\",0)' class='lista_proveedores'>";
 			foreach ($producto as $p){
-				$html .= "<li id='".$p['id']."' onclick='escoger_producto(\"".utf8_encode(($p['nombre']))."\",".$ind.")'>".utf8_encode($p['nombre'])."</li>";
+				$html .= "<li id='".$p['id']."' onclick='escoger_producto(\"".$p['nombre']."\",".$ind.")'>".$p['nombre']."</li>";
 			}
             $html .= "</ul>";
 		}
-		
 		echo $html;
 	}
 }

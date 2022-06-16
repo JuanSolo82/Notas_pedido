@@ -166,10 +166,18 @@ $user = JFactory::getUser();
 		<tr>
 			<td><input class='entrada' id='cantidad<?php echo $i ?>' name='cantidad<?php echo $i ?>' type='number' size='2' required type="number" min="0" step=".1" style='width: 70px;'></td>
 			<td>
-				<input class='entrada' id='descripcion<?php echo $i ?>'
+                <?php if (NotaHelper::isTestSite()){ ?>
+                    <!--<input class='entrada' id='descripcion<?php echo $i ?>'
                     name='descripcion<?php echo $i ?>' type='text' style='width: 90%;' autocomplete='off' 
                     onkeypress="cargar_item(this.value,<?php echo $i ?>)" 
-                    onblur="cargar_item('',<?php echo $i ?>)">
+                    onblur="cargar_item('',<?php echo $i ?>)">-->
+                    <input class='entrada' id='descripcion<?php echo $i ?>'
+                        name='descripcion<?php echo $i ?>' type='text' style='width: 90%;' autocomplete='off'>
+                <?php }else{ ?>
+                    <input class='entrada' id='descripcion<?php echo $i ?>'
+                        name='descripcion<?php echo $i ?>' type='text' style='width: 90%;' autocomplete='off'>
+                <?php } ?>
+				
 					<div id='items<?php echo $i ?>'>
 				</div>
                 <div id='producto<?php echo $i ?>'></div>

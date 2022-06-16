@@ -318,7 +318,8 @@ class NotaModelNota extends JModelItem{
 			76 => "30,22,99",
 			77 => "41",
 			106 => "107", // anan  
-			108 => "109,110,111,112,113,114" // Kaweskar, 109 sala máquinas borrado
+			108 => "109,110,111,112,113,114", // Kaweskar, 109 sala máquinas borrado
+            94 => "94,14,120" // administracion y finanzas, encargado de departamentos de personal y bodega (120 en produccion, 116 servidor de pruebas)
 		);
 		$query = "select nr.id as id_remitente, nr.fecha, od.nombre as depto_origen, nrev.enviado_empleado as empleado, nrev.autorizado_capitan as capitan, ";
 		$query .= " nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto, nrev.aprobado_adquisiciones as adquisiciones";
@@ -328,20 +329,28 @@ class NotaModelNota extends JModelItem{
 						join oti_departamento od on od.id=nu.id_depto ";
 		if ($user->authorise('jefe.delgada','com_nota'))
 			$query .= " and (od.id=62 or od.id=".$datos_user['id_depto'].") ";
-		elseif ($user->authorise('jefe.depto', 'com_nota'))
-			$query .= " and od.id=".$datos_user['id_depto']; 
+		elseif ($user->authorise('jefe.depto', 'com_nota')){
+            if ($datos_user['id_depto']==94){ // finanzas
+                $query .= " and od.id in (".$deptos[$datos_user['id_depto']].") ";
+            }else{
+                $query .= " and od.id=".$datos_user['id_depto']; 
+            }
+            
+        }
 		if ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota'))
 			$query .= " and od.id in (".$deptos[$datos_user['id_depto']].") ";
 		$query .= " order by nr.id desc ";
 		// tipos de orden según privilegio
-		if ($user->authorise('jefe.depto', 'com_nota'))
-			$query .= ", nrev.autorizado_jefe ";
+		if ($user->authorise('jefe.depto', 'com_nota')){
+            $query .= ", nrev.autorizado_jefe ";
+        }
 		if ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota'))
 			$query .= ", nrev.autorizado_capitan ";
 		if ($pagina) 
 			$query .= ' limit '.(($pagina-1)*10).', 10';
 		else
 			$query .= ' limit 10';
+
 		$db->setQuery($query);
 		$db->query();
 		return $db->loadAssocList();
@@ -628,7 +637,11 @@ class NotaModelNota extends JModelItem{
 			$query = "select count(*) as cantidad 
 					from nota_remitente nr, nota_revision nrev, nota_user nu 
 					where nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan!=2 and nrev.autorizado_jefe=0 and 
-						nr.id_user!=".$datos_user['id']." and nr.id_user=nu.id_user and nu.id_depto=".$datos_user['id_depto'];
+						nr.id_user!=".$datos_user['id']." and nr.id_user=nu.id_user";
+            if ($datos_user['id_depto']==94){
+                $query .= " and nu.id_depto in (14,120)";
+            }else
+                $query .= " and nu.id_depto=".$datos_user['id_depto'];
 		}
 		if ($user->authorise('jefe.delgada', 'com_nota') && $user->authorise('jefe.depto', 'com_nota')){
 			$query = "select count(*) as cantidad 
