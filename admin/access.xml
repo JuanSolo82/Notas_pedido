@@ -22,5 +22,6 @@
 		<action name="resumen_area" title="Resumen notas área" description="Revisar resumen de notas salidas del área al que pertenece" />
 		<action name="valor_item" title="Valor para cada ítem" description="Permite ingresar el valor de los ítems ingresados" />
         <action name="gerencia_operaciones" title="Gestión de notas operaciones" description="Permite aprobar notas aprobadas por jefes de operaciones" />
+        <action name="rio_verde" title="Notas naves Río Verde" description="Gestionar notas naves sector Río Verde" />
 	</section>
 </access>

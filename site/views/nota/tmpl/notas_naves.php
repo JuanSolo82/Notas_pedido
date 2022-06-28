@@ -99,9 +99,9 @@ foreach ($this->notas_naves as $nd){ ?>
 					<div class='barra_avance <?php echo ($nd['capitan']==1 ? "paso_aprobado" : "").($nd['capitan']==2 ? "paso_rechazado" : "") ?>'>Autorizado capitán</div>
 				<div class='barra_avance <?php echo ($nd['jefe']==1 ? "paso_aprobado" : "").($nd['jefe']==2 ? "paso_rechazado" : "") ?>'>Autorizado jefe</div>
 				<div class='barra_avance <?php echo ($nd['depto']==1 ? "paso_aprobado" : "").($nd['depto']==2 ? "paso_rechazado" : "") ?>'>Autorizado depto</div>
-                <?php if (NotaHelper::isTestSite()){ ?>
+                <?php /*if (NotaHelper::isTestSite()){ ?>
                     <div class='barra_avance <?php echo ($nd['operaciones']==1 ? "paso_aprobado" : "").($nd['operaciones']==2 ? "paso_rechazado" : "") ?>'>Gerencia operaciones</div>
-                <?php } ?>
+                <?php }*/ ?>
                 
 				<div class='barra_avance <?php echo ($nd['adquisiciones']==1 ? "paso_aprobado" : "").($nd['adquisiciones']==2 ? "paso_rechazado" : "") ?>'>OC generada</div>
 				<div class='barra_avance <?php //echo ($nd['aprobado']==1 ? "paso_aprobado" : "").($nd['adquisiciones']==2 ? "paso_rechazado" : "") ?>'>Calificación</div>

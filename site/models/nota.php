@@ -304,7 +304,7 @@ class NotaModelNota extends JModelItem{
 	function notas_jefe($datos_user, $pagina=0){
 		$db = JFactory::getDbo();
 		$user = JFactory::getUser();
-
+        
 		$deptos = array(
 			51 => "",
 			69 => "8,33", 
@@ -629,15 +629,13 @@ class NotaModelNota extends JModelItem{
 						where nr.id_user=nu.id_user and nu.id_depto=od.id and od.id_area=6 and nr.id=nrev.id_nota_remitente 
 							and nrev.enviado_empleado=1 and nrev.autorizado_jefe=0";
 		}
+        
 		if ($user->authorise('jefe.depto', 'com_nota')){
-			/*$query = "select count(*) as cantidad 
-						from nota_remitente nr, nota_revision nrev, nota_user nu, oti_departamento od 
-						where nr.id_user=nu.id_user and nu.id_depto=od.id and nr.id_adepto=".$datos_user['id_depto']." and nr.id=nrev.id_nota_remitente 
-							and nrev.enviado_empleado=1 and nrev.autorizado_capitan=1 and nrev.autorizado_jefe=0";*/
-			$query = "select count(*) as cantidad 
-					from nota_remitente nr, nota_revision nrev, nota_user nu 
-					where nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan!=2 and nrev.autorizado_jefe=0 and 
-						nr.id_user!=".$datos_user['id']." and nr.id_user=nu.id_user";
+            $query = "select count(*) as cantidad 
+                    from nota_remitente nr, nota_revision nrev, nota_user nu, oti_departamento od  
+                    where nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 
+                        and nrev.autorizado_capitan!=2 and nrev.autorizado_jefe=0 and nrev.aprobado_adquisiciones=0 
+                        nr.id_user!=".$datos_user['id']." and nr.id_user=nu.id_user and od.id=nu.id_depto ";
             if ($datos_user['id_depto']==94){
                 $query .= " and nu.id_depto in (14,120)";
             }else
@@ -676,6 +674,8 @@ class NotaModelNota extends JModelItem{
 					join nota_user nu on nu.id_user=nr.id_user join oti_departamento od on od.id=nu.id_depto";
 		if ($user->authorise("jefe.delgada", "com_nota") && $user->authorise("jefe.punta_arenas", "com_nota"))
 			$query .= " and (od.id_area=4 or od.id_area=2 or od.id_area=3 or od.id_area=1)";
+        elseif ($user->authorise("rio_verde", "com_nota"))
+			$query .= " and od.id_area=3 ";
 		elseif ($user->authorise("jefe.delgada", "com_nota"))
 			$query .= " and od.id_area=4 ";
 		elseif ($user->authorise("jefe.natales", "com_nota"))
@@ -806,29 +806,31 @@ class NotaModelNota extends JModelItem{
 		$datos_user = $this->getDatos_user($user->id);
 		$query = "select nr.id, nr.fecha, od.nombre as depto_origen, u.name as usuario, nrev.enviado_empleado as empleado, nrev.autorizado_capitan as capitan, 
 					nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto";
-        if (NotaHelper::isTestSite())
-            $query .= ",nrev.autorizado_operaciones as operaciones";
+        /*if (NotaHelper::isTestSite())
+            $query .= ",nrev.autorizado_operaciones as operaciones";*/
         $query .= ", nrev.aprobado_adquisiciones as adquisiciones, 
                     nr.id_adepto 
 				from nota_remitente nr 
 				join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan=1 ";
-		if ($user->authorise('gerencia_operaciones','com_nota') && NotaHelper::isTestSite())
-			$query .= " and (nrev.autorizado_depto=1 or (nrev.autorizado_depto=0 and nr.id_adepto!=1))";
+		/*if ($user->authorise('gerencia_operaciones','com_nota') && NotaHelper::isTestSite())
+			$query .= " and (nrev.autorizado_depto=1 or (nrev.autorizado_depto=0 and nr.id_adepto!=1))";*/
 		$query .= " join nota_user nu on nu.id_user=nr.id_user join jml_users u on u.id=nu.id_user 
 				join oti_departamento od on od.id=nu.id_depto ";
 		if ($deptos!=''){
 			$query .= ' and od.id in ('.$deptos.')';
 		}
-		if ($user->authorise('gerencia_operaciones','com_nota'))
+		/*if ($user->authorise('gerencia_operaciones','com_nota'))
 			$query .= " and (od.id_area=1 or od.id_area=2 or od.id_area=3 or od.id_area=4 or od.id_area=5)";
-		else{
+		else{*/
 			if ($user->authorise("jefe.delgada", "com_nota") && $user->authorise("jefe.punta_arenas", "com_nota"))
-				$query .= " and (od.id_area=1 or od.id_area=2 or od.id_area=3 or od.id_area=4)";
+				$query .= " and (od.id_area=1 or od.id_area=2 or od.id_area=4)";
+            elseif ($user->authorise('rio_verde','com_nota'))
+                $query .= " and od.id_area=3 ";
 			elseif ($user->authorise("jefe.delgada", "com_nota"))
 				$query .= " and od.id_area=4 ";
 			elseif ($user->authorise("jefe.natales", "com_nota"))
 				$query .= " and od.id_area=5 ";
-		}
+		//}
 		
 		//$query .= " and od.id_tipo=2";
 
