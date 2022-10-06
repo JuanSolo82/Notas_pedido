@@ -350,7 +350,6 @@ class NotaModelNota extends JModelItem{
 			$query .= ' limit '.(($pagina-1)*10).', 10';
 		else
 			$query .= ' limit 10';
-
 		$db->setQuery($query);
 		$db->query();
 		return $db->loadAssocList();
@@ -806,33 +805,32 @@ class NotaModelNota extends JModelItem{
 		$datos_user = $this->getDatos_user($user->id);
 		$query = "select nr.id, nr.fecha, od.nombre as depto_origen, u.name as usuario, nrev.enviado_empleado as empleado, nrev.autorizado_capitan as capitan, 
 					nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto";
-        /*if (NotaHelper::isTestSite())
-            $query .= ",nrev.autorizado_operaciones as operaciones";*/
+                    
         $query .= ", nrev.aprobado_adquisiciones as adquisiciones, 
                     nr.id_adepto 
 				from nota_remitente nr 
 				join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan=1 ";
-		/*if ($user->authorise('gerencia_operaciones','com_nota') && NotaHelper::isTestSite())
-			$query .= " and (nrev.autorizado_depto=1 or (nrev.autorizado_depto=0 and nr.id_adepto!=1))";*/
 		$query .= " join nota_user nu on nu.id_user=nr.id_user join jml_users u on u.id=nu.id_user 
 				join oti_departamento od on od.id=nu.id_depto ";
 		if ($deptos!=''){
 			$query .= ' and od.id in ('.$deptos.')';
 		}
-		/*if ($user->authorise('gerencia_operaciones','com_nota'))
-			$query .= " and (od.id_area=1 or od.id_area=2 or od.id_area=3 or od.id_area=4 or od.id_area=5)";
-		else{*/
-			if ($user->authorise("jefe.delgada", "com_nota") && $user->authorise("jefe.punta_arenas", "com_nota"))
-				$query .= " and (od.id_area=1 or od.id_area=2 or od.id_area=4)";
-            elseif ($user->authorise('rio_verde','com_nota'))
-                $query .= " and od.id_area=3 ";
-			elseif ($user->authorise("jefe.delgada", "com_nota"))
-				$query .= " and od.id_area=4 ";
-			elseif ($user->authorise("jefe.natales", "com_nota"))
-				$query .= " and od.id_area=5 ";
-		//}
-		
-		//$query .= " and od.id_tipo=2";
+
+        
+        if ($user->authorise("jefe.natales", "com_nota")){
+            if ($user->authorise('rio_verde','com_nota')) // italo autoriza Natales y Río Verde
+                $query .= " and (od.id_area=3 or od.id_area=5)";
+            if ($user->authorise('jefe.delgada','com_nota'))
+                $query .= " and (od.id_area=4 or od.id_area=5)";
+        }
+        elseif ($user->authorise("jefe.delgada", "com_nota") && $user->authorise("jefe.punta_arenas", "com_nota"))
+            $query .= " and (od.id_area=1 or od.id_area=2 or od.id_area=4)";
+        elseif ($user->authorise('rio_verde','com_nota'))
+            $query .= " and od.id_area=3 ";
+        elseif ($user->authorise("jefe.delgada", "com_nota"))
+            $query .= " and od.id_area=4 ";
+        elseif ($user->authorise("jefe.natales", "com_nota"))
+            $query .= " and od.id_area=5 ";
 
 		if ($parametro){
 			$query .= " join nota_item ni on ni.id_remitente=nr.id and ni.item like '%".$parametro."%' ";
@@ -857,6 +855,7 @@ class NotaModelNota extends JModelItem{
 					$query .= ' limit 10';
 			}
 		}
+        //print_r($user->authorise("jefe.natales", "com_nota"));
 		$db->setQuery($query);
 		$db->query();
 		if ($db->getNumRows()){

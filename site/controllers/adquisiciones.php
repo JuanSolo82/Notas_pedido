@@ -459,12 +459,13 @@ class NotaControllerAdquisiciones extends JControllerForm
 
 		$html .= '</tr>
 				</table>';
+        
 		$html .= '<table class="tabla_items" border=1 cellspacing=0 cellpadding=2>
 			<tr>
 				<td width="5%"><b>#</b></td>
-				<td width="5%"><b>Cantidad</b></td>
+				<td width="5%"><b>Cant</b></td>
 				<td width="30%"><b>Item</b></td>
-				<td width="30%"><b>Observaciones</b></td>';
+				<td width="15%"><b>Observaciones</b></td>';
 			if ($items[0]['valor']){
 				$html .= '<td width="10%"><b>Valor unitario</b></td>';
 				$html .= '<td width="10%"><b>Subtotal</b></td>';
