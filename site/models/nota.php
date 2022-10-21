@@ -664,10 +664,11 @@ class NotaModelNota extends JModelItem{
 		return $db->loadResult();
 	}
 	function getPendientes_naves(){
+
 		$user = JFactory::getUser();
 		$db = JFactory::getDbo();
 		$datos_user = $this->getDatos_user($user->id);
-		$query = "select count(*) as cantidad 
+		/*$query = "select count(*) as cantidad 
 					from nota_remitente nr 
 					join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan=1 and nrev.autorizado_jefe=0 
 					join nota_user nu on nu.id_user=nr.id_user join oti_departamento od on od.id=nu.id_depto";
@@ -679,7 +680,24 @@ class NotaModelNota extends JModelItem{
 			$query .= " and od.id_area=4 ";
 		elseif ($user->authorise("jefe.natales", "com_nota"))
 			$query .= " and od.id_area=5 ";
-		$query .= " and od.id_tipo=2";
+		$query .= " and od.id_tipo=2";*/
+        $ar_dependencias = array(
+            (127) => "18,71, 8,69, 9,72, 11,74", // pablo sierpe -> puentes: Crux, Patagonia, Fueguino, Yaghan
+            (NotaHelper::isTestSite() ? 293 : 305) => '77, 21,90, 7,73, 22,76,99,102', // Luis Rosales -> puentes: Toucan, skua, Bahía Azul, Melinka
+            78 => "108,111,112, 79,36,70,89, 106, 10,35,75,87", // Gustavo Mancilla -> Kaweskar, Pionero, Anan, Pathagon
+            226 => "18,71, 8,69, 9,72, 11,74,77, 21,90, 7,73, 22,76,99,102,108,111,112, 79,36,70,89, 106, 10,35,75,87" // Edmundo Villarroel, todos
+        );
+		$db = JFactory::getDbo();
+		$user = JFactory::getUser();
+		$datos_user = $this->getDatos_user($user->id);
+        $query = "select count(*) as cantidad";
+        $query .= " from nota_remitente nr";
+        $query .= " join jml_users u on u.id=nr.id_user";
+        $query .= " join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan=1 and nrev.autorizado_jefe=0 ";
+        $query .= " join nota_user nu on nu.id_user=u.id ";
+        $query .= " join oti_departamento od on od.id=nu.id_depto and od.id_tipo=2 and od.id in (".$ar_dependencias[$user->id].") ";
+        $query .= " where nr.fecha>'2022-01-01'";
+		$query .= " order by nr.id desc ";
 		$db->setQuery($query);
 		$db->query();
 		return $db->loadResult();

@@ -23,8 +23,10 @@ class NotaController extends JController{
 			$notas_pendientes = $model->getPendientes();
 			$pendientes_depto = $model->getPendientes_depto();
 		}
-		if ($user->authorise('jefe.delgada', 'com_nota') || $user->authorise('jefe.natales', 'com_nota'))
-			$pendientes_naves = $model->getPendientes_naves();
+		if ($user->authorise('jefe.delgada', 'com_nota') || $user->authorise('jefe.natales', 'com_nota')){
+            $pendientes_naves = $model->getPendientes_naves();
+        }
+        
 		$jinput->set("datos_user", $datos_user);
 		$jinput->set("notas_pendientes", $notas_pendientes);
 		$jinput->set("pendientes_depto", $pendientes_depto);
