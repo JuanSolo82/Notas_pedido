@@ -16,8 +16,9 @@ class NotaController extends JController{
 		$user = JFactory::getUser();
 		$datos_user = $model->getDatos_user($user->id);
 		//$notas_sin_revisar = $model->pendientes_revision();
-		//print_r(sizeof($notas_sin_revisar));
+		//print_r($user->authorise('jefe.delgada', 'com_nota') ? 'Notas naves' : 'NO');
 		$notas_pendientes=0;
+        $pendientes_naves=0;
 
 		if ($user->authorise('jefe.depto', 'com_nota') || $user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota')){
 			$notas_pendientes = $model->getPendientes();
@@ -346,13 +347,11 @@ class NotaController extends JController{
 		$autorizado_capitan 	= $jinput->get("autorizado_capitan", -1, "int");
 		$autorizado_jefe 		= $jinput->get("autorizado_jefe", -1, "int");
 		$autorizado_depto 		= $jinput->get("autorizado_depto", -1, "int");
-        $autorizado_operaciones	= $jinput->get("autorizado_operaciones", -1, "int");
 		$aprobado_adquisiciones	= $jinput->get("aprobado_adquisiciones", -1, "int");
         if ($user->authorise('gerencia_operaciones','com_nota'))
             $autorizado_depto=1;
         
-		$query = $model->actualizar_revision($id_remitente, $enviado_empleado, $autorizado_capitan, $autorizado_jefe, $autorizado_depto, $autorizado_operaciones, $aprobado_adquisiciones);
-        print_r($query.'-------------------');
+		$query = $model->actualizar_revision($id_remitente, $enviado_empleado, $autorizado_capitan, $autorizado_jefe, $autorizado_depto, $aprobado_adquisiciones);
 	}
 	function generar_oc(){
 		$jinput = JFactory::getApplication()->input;

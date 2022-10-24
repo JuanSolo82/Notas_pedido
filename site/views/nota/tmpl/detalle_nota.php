@@ -213,7 +213,7 @@ function aprobar_nave(id_remitente, items){
 <div class='centrar'>
 <?php 
 
-if ($user->authorise('jefe.depto', 'com_nota')){
+if ($user->authorise('jefe.depto', 'com_nota') && !($user->authorise('jefe.delgada', 'com_nota'))){
 	if ($this->detalle_nota['id_adepto']==$this->datos_jefe['id_depto'] && !$this->detalle_nota['autorizado_depto']){ ?>
 		<div id="enviado" class="barra_nombre" style="display: none;">Aprobado</div>
 		<div id="conjunto_botones">

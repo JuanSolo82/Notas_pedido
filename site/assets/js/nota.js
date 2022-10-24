@@ -112,7 +112,7 @@ function aprobar_naves(id_remitente, items){
     $.ajax({
         url: 'index.php?option=com_nota&task=nota_revision',
         method: 'post',
-        data: {id_remitente: id_remitente, enviado_empleado:1, autorizado_capitan:1, autorizado_jefe:1, autorizado_depto:0, autorizado_operaciones:1, aprobado_adquisiciones:0},
+        data: {id_remitente: id_remitente, enviado_empleado:1, autorizado_capitan:1, autorizado_jefe:1, autorizado_depto:0, aprobado_adquisiciones:0},
         success: function(data){
             console.log(data);
             $("#boton_guardar").html("<h3>Enviado</h3>");

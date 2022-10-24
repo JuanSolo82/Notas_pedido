@@ -369,13 +369,11 @@ class NotaModelNota extends JModelItem{
 		$db->setQuery($query);
 		$db->query();
 	}
-	function actualizar_revision($id_remitente, $enviado_empleado, $autorizado_capitan, $autorizado_jefe, $autorizado_depto, $autorizado_operaciones, $aprobado_adquisiciones){
+	function actualizar_revision($id_remitente, $enviado_empleado, $autorizado_capitan, $autorizado_jefe, $autorizado_depto, $aprobado_adquisiciones){
 		$db = JFactory::getDbo();
 		if (!$aprobado_adquisiciones){
 			$query = "update nota_revision set enviado_empleado=".$enviado_empleado.", autorizado_capitan=".$autorizado_capitan.", 
 						autorizado_jefe=".$autorizado_jefe.", autorizado_depto=".$autorizado_depto;
-        if (NotaHelper::isTestSite())
-            $query .= ", autorizado_operaciones=".$autorizado_operaciones;
         $query .= ", aprobado_adquisiciones=".$aprobado_adquisiciones." 
 						where id_nota_remitente=".$id_remitente;
 			$db->setQuery($query);
@@ -657,7 +655,7 @@ class NotaModelNota extends JModelItem{
 		$query = "select count(*) as cantidad 
 				from nota_remitente nr, nota_revision nrev, nota_user nu, oti_departamento od 
 				where nr.id_user=nu.id_user and nu.id_depto=od.id and nr.id_adepto=".$datos_user['id_depto']." and nr.id=nrev.id_nota_remitente 
-					and nrev.enviado_empleado=1 and nrev.autorizado_jefe=1 and nrev.autorizado_depto=0";
+					and nrev.enviado_empleado=1 and nrev.autorizado_jefe=1 and nrev.autorizado_depto=0 and nrev.aprobado_adquisiciones=0";
 		
 		$db->setQuery($query);
 		$db->query();
@@ -685,6 +683,7 @@ class NotaModelNota extends JModelItem{
             (127) => "18,71, 8,69, 9,72, 11,74", // pablo sierpe -> puentes: Crux, Patagonia, Fueguino, Yaghan
             (NotaHelper::isTestSite() ? 293 : 305) => '77, 21,90, 7,73, 22,76,99,102', // Luis Rosales -> puentes: Toucan, skua, Bahía Azul, Melinka
             78 => "108,111,112, 79,36,70,89, 106, 10,35,75,87", // Gustavo Mancilla -> Kaweskar, Pionero, Anan, Pathagon
+            106 => '25,26,29,30,33,34,37,38,40,41,100,107,113', // hgonzalez, todos maquinas
             226 => "18,71, 8,69, 9,72, 11,74,77, 21,90, 7,73, 22,76,99,102,108,111,112, 79,36,70,89, 106, 10,35,75,87" // Edmundo Villarroel, todos
         );
 		$db = JFactory::getDbo();
@@ -822,8 +821,10 @@ class NotaModelNota extends JModelItem{
             (127) => "18,71, 8,69, 9,72, 11,74", // pablo sierpe -> puentes: Crux, Patagonia, Fueguino, Yaghan
             (NotaHelper::isTestSite() ? 293 : 305) => '77, 21,90, 7,73, 22,76,99,102', // Luis Rosales -> puentes: Toucan, skua, Bahía Azul, Melinka
             78 => "108,111,112, 79,36,70,89, 106, 10,35,75,87", // Gustavo Mancilla -> Kaweskar, Pionero, Anan, Pathagon
+            106 => '25,26,29,30,33,34,37,38,40,41,100,107,113', // hgonzalez, todos maquina
             226 => "18,71, 8,69, 9,72, 11,74,77, 21,90, 7,73, 22,76,99,102,108,111,112, 79,36,70,89, 106, 10,35,75,87" // Edmundo Villarroel, todos
         );
+        $ar_maquinas = array(127 => '33');
 		$db = JFactory::getDbo();
 		$user = JFactory::getUser();
 		$datos_user = $this->getDatos_user($user->id);
