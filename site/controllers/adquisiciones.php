@@ -35,7 +35,8 @@ class NotaControllerAdquisiciones extends JControllerForm
 			$jinput->set('layout', 'lista_notas');
 			$model = $this->getModel('adquisiciones');
 			$lista_notas = $model->getLista_notas();
-			if (NotaHelper::isTestSite()){
+            
+			/*if (NotaHelper::isTestSite()){
 				$lista = array();
 				foreach ($lista_notas as $l){
 					if ($l['id_tipo']==2){
@@ -47,7 +48,8 @@ class NotaControllerAdquisiciones extends JControllerForm
 				$jinput->set("lista_notas", $lista);
 			}else{
 				$jinput->set("lista_notas", $lista_notas);
-			}
+			}*/
+            $jinput->set("lista_notas", $lista_notas);
 			//$borrar_notas = $model->borrar_atrasadas();
 		}else{
 			$msg = JFactory::getApplication();

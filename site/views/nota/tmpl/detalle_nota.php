@@ -7,6 +7,8 @@ JHTML::stylesheet('nota.css', 'components/com_nota/assets/css/');
 //JHTML::script('nota.js', 'components/com_nota/assets/js/');
 JHtml::_('behavior.modal');
 $user = JFactory::getUser();
+$ar_maquinas = array(127 => array(26=>26,29=>29,33=>33,38=>38));
+
 $f = explode('-', $this->detalle_nota['fecha']);
 ?>
 <script>
@@ -295,12 +297,15 @@ if ($this->id_user==$this->detalle_nota['id_user'] && $this->datos_nota['aprobad
 	</div>
 <?php } ?>
 
-<?php if (($user->authorise('jefe.delgada','com_nota') || $user->authorise('jefe.natales', 'com_nota')) 
+<?php 
+
+if (($user->authorise('jefe.delgada','com_nota') || $user->authorise('jefe.natales', 'com_nota')) 
 			&& !$user->authorise('core.admin', 'com_nota') 
-			&& $this->detalle_nota['autorizado_jefe']==0 
-            || ($user->authorise('gerencia_operaciones','com_nota') && $this->detalle_nota['autorizado_operaciones']==0)){ ?>
+			&& ($this->detalle_nota['autorizado_jefe']==0 || (array_key_exists($this->detalle_nota['id_depto_origen'],$ar_maquinas[$user->id]) && $this->detalle_nota['autorizado_jefe']==1))){ 
+                
+                ?>
         <div id='boton_guardar'>
-            <a onclick="aprobar_naves(<?php echo $this->id_remitente ?>, <?php echo $j ?>)">
+            <a onclick="aprobar_naves(<?php echo $this->id_remitente ?>, <?php echo $j ?>, <?php echo (array_key_exists($this->detalle_nota['id_depto_origen'],$ar_maquinas[$user->id]) && $this->detalle_nota['autorizado_jefe']==1) ? 1 : 0 ?>)">
                 <div class='boton' style="height: auto;"><img src='/portal/administrator/templates/hathor/images/header/icon-48-save.png' /><br>Autorizar nota</div>
             </a>
         </div>

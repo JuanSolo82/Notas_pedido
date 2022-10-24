@@ -11,8 +11,9 @@ JHTML::stylesheet('jquery-ui.css', 'components/com_nota/assets/css/');
 JHtml::_('behavior.modal');
 $i=1;
 $user = JFactory::getUser();
+$ar_maquinas = array(127 => array(26=>26,29=>29,33=>33,38=>38));
 ?>
-<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?col=46"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?jef=1"></script>
 <input type="hidden" id="vista" value="<?php echo $this->layout; ?>">
 <input type='hidden' size='3' id='pagina' value='1'>
 <div class='fila_completa centrar' style='margin-bottom: 20px;'>
@@ -108,35 +109,22 @@ foreach ($this->notas_naves as $nd){ ?>
 			</div>
 		</td>
 		<td align='center'>
-		<?php 
-			if (JFactory::getUser()->authorise('gerencia_operaciones','com_nota')){ 
-                if ($nd['operaciones']==0){
-                    $url_nota = JRoute::_('index.php?option=com_nota&view=com_nota&task=detalle_nota&id_nota='.$nd['id'].'&tmpl=component');
-                }else{
-                    $url_nota = JRoute::_('index.php?option=com_nota&view=com_nota&task=reportes.detalle_nota&id_nota='.$nd['id'].'&tmpl=component');
-                } ?>
-				<a onclick="SqueezeBox.fromElement(this, 
-								{handler:'iframe', 
-								size: {x: 900, y: 550}, 
-								url:'<?php echo $url_nota; ?>',
-								onClose:function(){window.location.reload();} })">
-				<img src='/portal/administrator/templates/hathor/images/menu/icon-16-edit.png' /></a>
-		<?php }else{
-                if ($nd['empleado']==1 && $nd['capitan']==1 && $nd['jefe']==0 && $nd['depto']==0 && $nd['adquisiciones']==0){ 
+		<?php   //echo array_key_exists($nd['id_depto'],$ar_maquinas[$user->id]) ? 'si' : 'no';
+                
+                if (($nd['empleado']==1 && $nd['capitan']==1 && $nd['jefe']==0 && $nd['depto']==0 && $nd['adquisiciones']==0) 
+                    || (array_key_exists($nd['id_depto'],$ar_maquinas[$user->id]) && $nd['jefe']==1 && $nd['depto']==0)){ 
                     $url_nota = JRoute::_('index.php?option=com_nota&view=com_nota&task=detalle_nota&id_nota='.$nd['id'].'&tmpl=component');
                     $icon = 'edit';
                 }else{ 
                     $url_nota = JRoute::_('index.php?option=com_nota&view=com_nota&task=reportes.detalle_nota&id_nota='.$nd['id'].'&tmpl=component');
                     $icon = 'article';
                 } ?>
-                    <a onclick="SqueezeBox.fromElement(this, 
-								{handler:'iframe', 
-								size: {x: 900, y: 550}, 
-								url:'<?php echo $url_nota ?>',
-								onClose:function(){window.location.reload();} })">
-					<img src='/portal/administrator/templates/hathor/images/menu/icon-16-<?php echo $icon ?>.png' /></a>
-        <?php   }
-			?>
+                <a onclick="SqueezeBox.fromElement(this, 
+                            {handler:'iframe', 
+                            size: {x: 900, y: 550}, 
+                            url:'<?php echo $url_nota ?>',
+                            onClose:function(){window.location.reload();} })">
+                <img src='/portal/administrator/templates/hathor/images/menu/icon-16-<?php echo $icon ?>.png' /></a>
 		</td>
 	</tr>
 <?php } ?>

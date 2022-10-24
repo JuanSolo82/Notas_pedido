@@ -686,6 +686,9 @@ class NotaModelNota extends JModelItem{
             106 => '25,26,29,30,33,34,37,38,40,41,100,107,113', // hgonzalez, todos maquinas
             226 => "18,71, 8,69, 9,72, 11,74,77, 21,90, 7,73, 22,76,99,102,108,111,112, 79,36,70,89, 106, 10,35,75,87" // Edmundo Villarroel, todos
         );
+        $ar_maquinas = array(127 => '26,29,33,38',
+                            (NotaHelper::isTestSite() ? 293 : 305) => '25,30,40,41',
+                            78 => '34,113,37,107');
 		$db = JFactory::getDbo();
 		$user = JFactory::getUser();
 		$datos_user = $this->getDatos_user($user->id);
@@ -694,7 +697,12 @@ class NotaModelNota extends JModelItem{
         $query .= " join jml_users u on u.id=nr.id_user";
         $query .= " join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan=1 and nrev.autorizado_jefe=0 ";
         $query .= " join nota_user nu on nu.id_user=u.id ";
-        $query .= " join oti_departamento od on od.id=nu.id_depto and od.id_tipo=2 and od.id in (".$ar_dependencias[$user->id].") ";
+        $query .= " join oti_departamento od on od.id=nu.id_depto and od.id_tipo=2 and (od.id in (".$ar_dependencias[$user->id].") ";
+
+        if ($user->id!=106)
+            $query .= " or (od.id in(".$ar_maquinas[$user->id].") and nrev.autorizado_jefe=1)";
+        $query .= ")";
+
         $query .= " where nr.fecha>'2022-01-01'";
 		$query .= " order by nr.id desc ";
 		$db->setQuery($query);
@@ -824,7 +832,9 @@ class NotaModelNota extends JModelItem{
             106 => '25,26,29,30,33,34,37,38,40,41,100,107,113', // hgonzalez, todos maquina
             226 => "18,71, 8,69, 9,72, 11,74,77, 21,90, 7,73, 22,76,99,102,108,111,112, 79,36,70,89, 106, 10,35,75,87" // Edmundo Villarroel, todos
         );
-        $ar_maquinas = array(127 => '33');
+        $ar_maquinas = array(127 => '26,29,33,38',
+                            (NotaHelper::isTestSite() ? 293 : 305) => '25,30,40,41',
+                            78 => '34,113,37,107');
 		$db = JFactory::getDbo();
 		$user = JFactory::getUser();
 		$datos_user = $this->getDatos_user($user->id);
@@ -835,39 +845,11 @@ class NotaModelNota extends JModelItem{
         $query .= " join jml_users u on u.id=nr.id_user";
         $query .= " join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan=1 ";
         $query .= " join nota_user nu on nu.id_user=u.id ";
-        $query .= " join oti_departamento od on od.id=nu.id_depto and od.id_tipo=2 and od.id in (".$ar_dependencias[$user->id].") ";
+        $query .= " join oti_departamento od on od.id=nu.id_depto and od.id_tipo=2 and (od.id in (".$ar_dependencias[$user->id].") ";
 
-		/*
-        $query = "select nr.id, nr.fecha, od.nombre as depto_origen, u.name as usuario, nrev.enviado_empleado as empleado, nrev.autorizado_capitan as capitan, 
-					nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto";
-                    
-        $query .= ", nrev.aprobado_adquisiciones as adquisiciones, 
-                    nr.id_adepto 
-				from nota_remitente nr 
-				join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan=1 ";
-		$query .= " join nota_user nu on nu.id_user=nr.id_user join jml_users u on u.id=nu.id_user";
-        $query .= " join oti_departamento od";
-        $query .= " on";
-        $query .= " od.id=nu.id_depto ";
-		if ($deptos!=''){
-			$query .= ' and od.id in ('.$deptos.')';
-		}
-        
-        /*if ($user->authorise("jefe.natales", "com_nota")){
-            if ($user->authorise('rio_verde','com_nota')) // italo autoriza Natales y Río Verde
-                $query .= " and (od.id_area=3 or od.id_area=5)";
-            if ($user->authorise('jefe.delgada','com_nota'))
-                $query .= " and (od.id_area=4 or od.id_area=5)";
-        }
-        elseif ($user->authorise("jefe.delgada", "com_nota") && $user->authorise("jefe.punta_arenas", "com_nota"))
-            $query .= " and (od.id_area=1 or od.id_area=2 or od.id_area=4)";
-        elseif ($user->authorise('rio_verde','com_nota'))
-            $query .= " and od.id_area=3 ";
-        elseif ($user->authorise("jefe.delgada", "com_nota"))
-            $query .= " and od.id_area=4 ";
-        elseif ($user->authorise("jefe.natales", "com_nota"))
-            $query .= " and od.id_area=5 ";
-        */
+        if ($user->id!=106)
+            $query .= " or (od.id in(".$ar_maquinas[$user->id].") and nrev.autorizado_jefe=1)";
+        $query .= ")";
 		if ($parametro){
 			$query .= " join nota_item ni on ni.id_remitente=nr.id and ni.item like '%".$parametro."%' ";
 		}
@@ -891,7 +873,6 @@ class NotaModelNota extends JModelItem{
 					$query .= ' limit 10';
 			}
 		}
-        //print_r($query);
 		$db->setQuery($query);
 		$db->query();
 		if ($db->getNumRows()){
