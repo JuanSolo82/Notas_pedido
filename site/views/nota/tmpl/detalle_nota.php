@@ -7,7 +7,9 @@ JHTML::stylesheet('nota.css', 'components/com_nota/assets/css/');
 //JHTML::script('nota.js', 'components/com_nota/assets/js/');
 JHtml::_('behavior.modal');
 $user = JFactory::getUser();
-$ar_maquinas = array(127 => array(26=>26,29=>29,33=>33,38=>38));
+$ar_maquinas = array(127 => array(26=>26,29=>29,33=>33,38=>38),
+                    (NotaHelper::isTestSite() ? 293 : 305) => array(25=>25,30=>30,40=>40,41=>41),
+                    78 => array(34=>34,113=>113,37=>37,107=>107));
 
 $f = explode('-', $this->detalle_nota['fecha']);
 ?>

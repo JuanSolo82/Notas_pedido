@@ -11,7 +11,14 @@ JHTML::stylesheet('jquery-ui.css', 'components/com_nota/assets/css/');
 JHtml::_('behavior.modal');
 $i=1;
 $user = JFactory::getUser();
-$ar_maquinas = array(127 => array(26=>26,29=>29,33=>33,38=>38));
+/*
+$ar_maquinas = array(127 => '26,29,33,38',
+                            (NotaHelper::isTestSite() ? 293 : 305) => '25,30,40,41',
+                            78 => '34,113,37,107');
+*/
+$ar_maquinas = array(127 => array(26=>26,29=>29,33=>33,38=>38),
+                    (NotaHelper::isTestSite() ? 293 : 305) => array(25=>25,30=>30,40=>40,41=>41),
+                    78 => array(34=>34,113=>113,37=>37,107=>107));
 ?>
 <script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?jef=1"></script>
 <input type="hidden" id="vista" value="<?php echo $this->layout; ?>">
@@ -110,7 +117,6 @@ foreach ($this->notas_naves as $nd){ ?>
 		</td>
 		<td align='center'>
 		<?php   //echo array_key_exists($nd['id_depto'],$ar_maquinas[$user->id]) ? 'si' : 'no';
-                
                 if (($nd['empleado']==1 && $nd['capitan']==1 && $nd['jefe']==0 && $nd['depto']==0 && $nd['adquisiciones']==0) 
                     || (array_key_exists($nd['id_depto'],$ar_maquinas[$user->id]) && $nd['jefe']==1 && $nd['depto']==0)){ 
                     $url_nota = JRoute::_('index.php?option=com_nota&view=com_nota&task=detalle_nota&id_nota='.$nd['id'].'&tmpl=component');
@@ -119,6 +125,7 @@ foreach ($this->notas_naves as $nd){ ?>
                     $url_nota = JRoute::_('index.php?option=com_nota&view=com_nota&task=reportes.detalle_nota&id_nota='.$nd['id'].'&tmpl=component');
                     $icon = 'article';
                 } ?>
+                
                 <a onclick="SqueezeBox.fromElement(this, 
                             {handler:'iframe', 
                             size: {x: 900, y: 550}, 

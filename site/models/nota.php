@@ -666,20 +666,7 @@ class NotaModelNota extends JModelItem{
 		$user = JFactory::getUser();
 		$db = JFactory::getDbo();
 		$datos_user = $this->getDatos_user($user->id);
-		/*$query = "select count(*) as cantidad 
-					from nota_remitente nr 
-					join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan=1 and nrev.autorizado_jefe=0 
-					join nota_user nu on nu.id_user=nr.id_user join oti_departamento od on od.id=nu.id_depto";
-		if ($user->authorise("jefe.delgada", "com_nota") && $user->authorise("jefe.punta_arenas", "com_nota"))
-			$query .= " and (od.id_area=4 or od.id_area=2 or od.id_area=3 or od.id_area=1)";
-        elseif ($user->authorise("rio_verde", "com_nota"))
-			$query .= " and od.id_area=3 ";
-		elseif ($user->authorise("jefe.delgada", "com_nota"))
-			$query .= " and od.id_area=4 ";
-		elseif ($user->authorise("jefe.natales", "com_nota"))
-			$query .= " and od.id_area=5 ";
-		$query .= " and od.id_tipo=2";*/
-        $ar_dependencias = array(
+        /*$ar_dependencias = array(
             (127) => "18,71, 8,69, 9,72, 11,74", // pablo sierpe -> puentes: Crux, Patagonia, Fueguino, Yaghan
             (NotaHelper::isTestSite() ? 293 : 305) => '77, 21,90, 7,73, 22,76,99,102', // Luis Rosales -> puentes: Toucan, skua, Bahía Azul, Melinka
             78 => "108,111,112, 79,36,70,89, 106, 10,35,75,87", // Gustavo Mancilla -> Kaweskar, Pionero, Anan, Pathagon
@@ -701,10 +688,31 @@ class NotaModelNota extends JModelItem{
 
         if ($user->id!=106)
             $query .= " or (od.id in(".$ar_maquinas[$user->id].") and nrev.autorizado_jefe=1)";
+        $query .= ")";*/
+        $ar_dependencias = array(
+            (127) => "18,71, 8,69, 9,72, 11,74", // pablo sierpe -> puentes: Crux, Patagonia, Fueguino, Yaghan
+            (NotaHelper::isTestSite() ? 293 : 305) => '77, 21,90, 7,73, 22,76,99,102', // Luis Rosales -> puentes: Toucan, skua, Bahía Azul, Melinka
+            78 => "108,111,112, 79,36,70,89, 106, 10,35,75,87", // Gustavo Mancilla -> Kaweskar, Pionero, Anan, Pathagon
+            106 => '25,26,29,30,33,34,37,38,40,41,100,107,113', // hgonzalez, todos maquina
+            226 => "18,71, 8,69, 9,72, 11,74,77, 21,90, 7,73, 22,76,99,102,108,111,112, 79,36,70,89, 106, 10,35,75,87" // Edmundo Villarroel, todos
+        );
+        $ar_maquinas = array(127 => '26,29,33,38',
+                            (NotaHelper::isTestSite() ? 293 : 305) => '25,30,40,41',
+                            78 => '34,113,37,107');
+		$db = JFactory::getDbo();
+		$user = JFactory::getUser();
+		$datos_user = $this->getDatos_user($user->id);
+        $query = "select count(*)";
+        $query .= " from nota_remitente nr";
+        $query .= " join jml_users u on u.id=nr.id_user";
+        $query .= " join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan=1 ";
+        $query .= " join nota_user nu on nu.id_user=u.id ";
+        $query .= " join oti_departamento od on od.id=nu.id_depto and od.id_tipo=2 and ((od.id in (".$ar_dependencias[$user->id].") and nrev.autorizado_jefe=0) ";
+        if ($user->id!=106)
+            $query .= " or (od.id in(".$ar_maquinas[$user->id].") and nrev.autorizado_jefe=1)";
         $query .= ")";
+        $query .= " and nrev.autorizado_depto=0 and nrev.aprobado_adquisiciones=0 and nr.fecha>'2022-03-01'";
 
-        $query .= " where nr.fecha>'2022-01-01'";
-		$query .= " order by nr.id desc ";
 		$db->setQuery($query);
 		$db->query();
 		return $db->loadResult();
