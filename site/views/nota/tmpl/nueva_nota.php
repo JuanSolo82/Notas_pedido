@@ -184,7 +184,7 @@ $user = JFactory::getUser();
 			</td>
 			<td><input class='entrada' id='motivo<?php echo $i ?>' name='motivo<?php echo $i ?>' type='text' style='width: 90%;'></td>
 			<?php if ($user->authorise('adquisiciones.jefe','com_nota') || $user->authorise('valor_item','com_nota')){ ?>
-				<td><input class='entrada' id='valor<?php echo $i ?>' name='valor<?php echo $i ?>' type='text' style='width: 90%;'></td>
+				<td><input class='entrada' id='valor<?php echo $i ?>' name='valor<?php echo $i ?>' type='number' step="1" style='width: 90%;' onchange="formatear(<?php echo $i ?>)"></td>
 			<?php } ?>
 			<td>
 				<select id='opcion<?php echo $i ?>' name='opcion<?php echo $i ?>'>

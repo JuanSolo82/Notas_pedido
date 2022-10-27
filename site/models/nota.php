@@ -124,7 +124,7 @@ class NotaModelNota extends JModelItem{
 		$db->query();
 		if ($db->getNumRows())
 			return $db->loadResult();
-		return 0;
+		return 0;//49510
 	}
 
 	// para subir archivos

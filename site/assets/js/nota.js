@@ -1037,3 +1037,10 @@ function escoger_producto(producto,ind=0){
         //$("#producto"+ind).empty();
     }
 }
+
+function formatear(ind=1){
+    var valor = $("#valor"+ind).val();
+    if (valor){
+        $("#valor"+ind).val(valor.replace(/\./g, ''));
+    }
+}
