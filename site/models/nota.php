@@ -708,7 +708,7 @@ class NotaModelNota extends JModelItem{
         $query .= " join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan=1 ";
         $query .= " join nota_user nu on nu.id_user=u.id ";
         $query .= " join oti_departamento od on od.id=nu.id_depto and od.id_tipo=2 and ((od.id in (".$ar_dependencias[$user->id].") and nrev.autorizado_jefe=0) ";
-        if ($user->id!=106)
+        if ($user->id!=106 && $user->id!=321)
             $query .= " or (od.id in(".$ar_maquinas[$user->id].") and nrev.autorizado_jefe=1)";
         $query .= ")";
         $query .= " and nrev.autorizado_depto=0 and nrev.aprobado_adquisiciones=0 and nr.fecha>'2022-03-01'";
@@ -727,6 +727,7 @@ class NotaModelNota extends JModelItem{
 				join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and 
 					nrev.autorizado_capitan=1 and autorizado_jefe=1 and 
 					nr.id_adepto=".$datos_user['id_depto'];
+        $query .= " where nr.fecha>'2022-03-01'";
 		$query .= " order by nrev.autorizado_depto, nr.id desc ";
 		if ($pagina) 
 			$query .= ' limit '.(($pagina-1)*10).', 10';
@@ -838,6 +839,7 @@ class NotaModelNota extends JModelItem{
             (NotaHelper::isTestSite() ? 293 : 305) => '77, 21,90, 7,73, 22,76,99,102', // Luis Rosales -> puentes: Toucan, skua, Bahía Azul, Melinka
             78 => "108,111,112, 79,36,70,89, 106, 10,35,75,87", // Gustavo Mancilla -> Kaweskar, Pionero, Anan, Pathagon
             106 => '25,26,29,30,33,34,37,38,40,41,100,107,113', // hgonzalez, todos maquina
+            321 => '25,26,29,30,33,34,37,38,40,41,100,107,113', // Franklin = hgonzalez
             226 => "18,71, 8,69, 9,72, 11,74,77, 21,90, 7,73, 22,76,99,102,108,111,112, 79,36,70,89, 106, 10,35,75,87" // Edmundo Villarroel, todos
         );
         $ar_maquinas = array(127 => '26,29,33,38',
@@ -855,7 +857,7 @@ class NotaModelNota extends JModelItem{
         $query .= " join nota_user nu on nu.id_user=u.id ";
         $query .= " join oti_departamento od on od.id=nu.id_depto and od.id_tipo=2 and (od.id in (".$ar_dependencias[$user->id].") ";
 
-        if ($user->id!=106)
+        if ($user->id!=106 && $user->id!=321)
             $query .= " or (od.id in(".$ar_maquinas[$user->id].") and nrev.autorizado_jefe=1)";
         $query .= ")";
 		if ($parametro){
@@ -864,11 +866,7 @@ class NotaModelNota extends JModelItem{
 		
 		if ($desde!=''){
 			$query .= ' where nr.fecha between "'.NotaHelper::fechamysql($desde,2).'" and "'.NotaHelper::fechamysql($hasta,2).'" ';
-			if ($user->authorise('gerencia_operaciones','com_nota'))
-				$query .= " where nr.fecha>'2021-11-10' ";
 		}else
-		if ($user->authorise('gerencia_operaciones','com_nota'))
-			$query .= " where nr.fecha>'2021-11-10' ";
 		$query .= " order by nr.id desc ";
 		
 		if ($deptos==''){
