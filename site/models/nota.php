@@ -720,6 +720,8 @@ class NotaModelNota extends JModelItem{
 	function notas_depto($pagina=0){
 		$db = JFactory::getDbo();
 		$user = JFactory::getUser();
+        $ar_maquinas = array(321 => '25,26,29,30,33,34,37,38,40,41,100,107,113',
+                            106 => '25,26,29,30,33,34,37,38,40,41,100,107,113');
 		$datos_user = $this->getDatos_user($user->id);
 		$query = "select nr.id, nr.fecha, nrev.enviado_empleado as empleado, nrev.autorizado_capitan as capitan, 
 					nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto, nrev.aprobado_adquisiciones as adquisiciones 
@@ -727,7 +729,10 @@ class NotaModelNota extends JModelItem{
 				join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and 
 					nrev.autorizado_capitan=1 and autorizado_jefe=1 and 
 					nr.id_adepto=".$datos_user['id_depto'];
+        
         $query .= " where nr.fecha>'2022-03-01'";
+        if ($user->id==321)
+            $query .= " and nr.id_depto_costo not in (".$ar_maquinas[$user->id].") ";
 		$query .= " order by nrev.autorizado_depto, nr.id desc ";
 		if ($pagina) 
 			$query .= ' limit '.(($pagina-1)*10).', 10';

@@ -46,7 +46,8 @@ class NotaHelper {
 	}
 
 	public static function mail($subject, $body, $email){
-		$user = JFactory::getUser();
+
+		/*$user = JFactory::getUser();
 		$mailer = JFactory::getMailer();
 		$config = JFactory::getConfig();
 		$sender = array( 
@@ -77,11 +78,11 @@ class NotaHelper {
 		$mailer->setSubject($subject);
 		$mailer->isHTML(true);
 		$mailer->setBody($body);
-		$res = $mailer->Send();
+		$res = $mailer->Send();*/
 	}
 
 	public function mailAdjunto($subject, $body, $email, $adjunto=''){
-		$mailer = JFactory::getMailer();
+		/*$mailer = JFactory::getMailer();
 		$config = JFactory::getConfig();
 		$sender = array( 
 			$config->getValue( 'config.mailfrom' ),
@@ -97,7 +98,7 @@ class NotaHelper {
 			$body .= "<br><br><i>(Sin adjuntos)</i>";
 		else
 			$mailer->addAttachment($adjunto);
-		$mailer->Send();
+		$mailer->Send();*/
 	}
 	public static function getMssqlQuery($query, $db_handle = false) {
 		if ( substr($query,-1)!=';' ) $query .= ';';
