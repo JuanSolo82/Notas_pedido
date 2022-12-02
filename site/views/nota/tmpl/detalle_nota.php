@@ -168,10 +168,10 @@ function aprobar_nave(id_remitente, items){
 			<td align='center'>
 			<?php
 				if ($this->detalle_nota['autorizado_depto']) 
-					echo $i['cantidad']; 
+					echo $i['nueva_cantidad'] ? $i['nueva_cantidad'] : $i['cantidad']; 
 				else{ ?>
-					<input type='hidden' id='cantidad_oculto<?php echo $j ?>' value='<?php echo $i['cantidad'] ?>'>
-					<input type='number' size='3' autocomplete="off" id='cantidad<?php echo $j ?>' value='<?php echo $i['cantidad'] ?>'>
+					<input type='hidden' id='cantidad_oculto<?php echo $j ?>' value='<?php echo $i['nueva_cantidad'] ? $i['nueva_cantidad'] : $i['cantidad'] ?>'>
+					<input type='number' size='3' autocomplete="off" id='cantidad<?php echo $j ?>' value='<?php echo $i['nueva_cantidad'] ? $i['nueva_cantidad'] : $i['cantidad'] ?>'>
 			<?php }
 			?>
 			</td>

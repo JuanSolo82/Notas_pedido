@@ -508,9 +508,24 @@ class NotaControllerAdquisiciones extends JControllerForm
             if ($datos['exenta']){
                 $html .= "<table style='font-size: 10px; width: 100%;' border=1 cellspacing=0 cellpadding=2>";
                 $html .= "<tr>";
-                $html .= "<td align='right' width='90%'>Total $</td>";
+                $html .= "<td align='right' width='90%'>Subtotal $</td>";
                 $html .= "<td align='right'>".number_format($total,0,'','.')."</td>";
-                $html .= "</tr></table>";
+                $html .= "</tr>";
+				if($datos['id_remitente'] == 50107 && JFactory::getUser()->username == 'cmiranda'){ //Eliminar esta cochinada una vez hayan gestionado la orden 🤢🤮
+					$html .= "<tr>";
+					$html .= "<td align='right' width='90%'>Descuento $</td>";
+					$html .= "<td align='right'>1.209.600</td>";
+					$html .= "</tr>";
+					$html .= "<tr>";
+					$html .= "<td align='right' width='90%'>Total $</td>";
+					$html .= "<td align='right'>33.350.400</td>";
+					$html .= "</tr>";
+					$html .= "<tr>";
+					$html .= "<td align='right' width='90%'>Tipo de pago</td>";
+					$html .= "<td align='right'>CONTADO</td>";
+					$html .= "</tr>";
+				}
+				$html .= "</table>";
             }else{
                 $html .= "<table style='font-size: 10px; width: 100%;' border=1 cellspacing=0 cellpadding=2>";
                 $html .= "<tr style='border: 1px solid grey;'>";
@@ -558,6 +573,7 @@ class NotaControllerAdquisiciones extends JControllerForm
 				</p>
 			</div>
 			</div>';
+
 		return $html;
 	}
 
