@@ -7,6 +7,7 @@ jimport('joomla.application.component.view');
  
 class NotaViewNota extends JView{
     function display($tpl = null){
+        print_r(JFactory::getUser()->id);
 		$jinput = JFactory::getApplication()->input;
 		$layout = $jinput->get("layout", "", "string");
 		$this->datos_user 	= $jinput->get("datos_user", array(), "array");

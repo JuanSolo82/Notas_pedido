@@ -15,8 +15,6 @@ class NotaController extends JController{
 		$model = $this->getModel('nota');
 		$user = JFactory::getUser();
 		$datos_user = $model->getDatos_user($user->id);
-		//$notas_sin_revisar = $model->pendientes_revision();
-		//print_r($user->authorise('jefe.delgada', 'com_nota') ? 'Notas naves' : 'NO');
 		$notas_pendientes=0;
         $pendientes_naves=0;
 
