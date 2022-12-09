@@ -93,6 +93,9 @@ $(document).ready(function() {
             }
         });
     }
+    // carga de listas de notas en nueva vista 'autorizaciones'
+    avanzar(1);
+    
 });
 
 function aprobar_naves(id_remitente, items, autorizado_depto=0){
@@ -739,6 +742,7 @@ function bajar_pdf(id_remitente, orden_compra, opcion){
 }
 
 function editar_destino(){
+    console.log("destino");
     $("#destino_actual").hide();
     $("#nuevo_destino").show();
     $('#editar_destino').hide();
@@ -1043,4 +1047,26 @@ function formatear(ind=1){
     if (valor){
         $("#valor"+ind).val(valor.replace(/\./g, ''));
     }
+}
+
+function avanzar(direccion=0){
+    var pagina = parseInt($("#avance").text());
+    if (direccion==1)
+        pagina = pagina+1;
+    else if (pagina>1)
+        pagina=pagina-1
+    $("#avance").html(pagina);
+    var url_controller = 'index.php?option=com_nota&task=carga.getNotas_naves&format=raw';
+    $.ajax({
+        url: url_controller,
+        type: 'post',
+        data: {pagina: pagina},
+        success: function(data){
+            $("#pagina").html(data);
+        }
+    });
+    $("#pagina").css({'opacity':'0.5'});
+    setTimeout(function(){
+        $("#pagina").css({'opacity':'1'});
+    },500);
 }

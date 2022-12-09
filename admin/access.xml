@@ -23,5 +23,7 @@
 		<action name="valor_item" title="Valor para cada ítem" description="Permite ingresar el valor de los ítems ingresados" />
         <action name="gerencia_operaciones" title="Gestión de notas operaciones" description="Permite aprobar notas aprobadas por jefes de operaciones" />
         <action name="rio_verde" title="Notas naves Río Verde" description="Gestionar notas naves sector Río Verde" />
+        <action name="gestion_naves" title="Notas naves" description="Gestionar notas generadas en naves" />
+        <action name="maquinas_naves" title="Notas jefes de máquina" description="Gestionar notas desde salas de máquinas" />
 	</section>
 </access>

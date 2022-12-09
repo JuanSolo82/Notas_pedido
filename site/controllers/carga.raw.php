@@ -298,4 +298,15 @@ class NotaControllerCarga extends JControllerForm
 		}
 		echo $html;
 	}
+
+    function getNotas_naves(){
+        $jinput = JFactory::getApplication()->input;
+        $view = $this->getView('autorizaciones','raw');
+		$model = $this->getModel('nota');
+        $pagina = $jinput->get("pagina",0,"int");
+
+        $notas = $model->notas_naves($pagina);
+        $jinput->set("notas", $notas);
+        $view->rango_notas();
+    }
 }

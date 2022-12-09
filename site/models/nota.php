@@ -83,19 +83,15 @@ class NotaModelNota extends JModelItem{
 		else{
 			if ($user->authorise('tripulante', 'com_nota') || $user->authorise('empleado.depto', 'com_nota')){
 				$valores = "1,0,0,0,0";
-				//print_r('tripulante - empleado');
 			}	
 			if ($user->authorise('capitan.jefe', 'com_nota')){
 				$valores = "1,1,0,0,0";
-				//print_r('capitan');
 			}
 			if ($user->authorise('jefe.depto', 'com_nota') && !$user->authorise('empleado.depto', 'com_nota')){
 				$valores = "1,1,1,0,0";
-				//print_r('jefe - no empleado');
 			}
 			if ($user->authorise('adquisiciones.jefe', 'com_nota') && !$user->authorise('empleado.depto', 'com_nota')){
 				$valores = "1,1,1,1,0";
-				//print_r('adquisiones');
 			}
 		}
 		
@@ -605,6 +601,7 @@ class NotaModelNota extends JModelItem{
 		$user = JFactory::getUser();
 		$db = JFactory::getDbo();
 		$datos_user = $this->getDatos_user($user->id);
+        
 		$query = "";
 		if ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota')){
 			$nave = substr($datos_user['username'],1);
@@ -644,7 +641,9 @@ class NotaModelNota extends JModelItem{
 					where nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan!=2 and nrev.autorizado_jefe=0 and 
 						nr.id_user!=".$datos_user['id']." and nr.id_user=nu.id_user and (nu.id_depto=".$datos_user['id_depto']." or nu.id_depto=62) ";
 		}
+        $query .= " and nrev.aprobado_adquisiciones=0";
         $query .= " and nr.fecha>'2022-01-01'";
+        //print_r($query);
 		$db->setQuery($query);
 		$db->query();
 		return $db->loadResult();
@@ -821,7 +820,7 @@ class NotaModelNota extends JModelItem{
 		return array();
 	}
 	function notas_naves($pagina=0, $parametro='', $deptos='', $desde='', $hasta=''){
-        $ar_dependencias = array(
+        /*$ar_dependencias = array(
             (127) => "18,71, 8,69, 9,72, 11,74", // pablo sierpe -> puentes: Crux, Patagonia, Fueguino, Yaghan
             (NotaHelper::isTestSite() ? 293 : 305) => '77, 21,90, 7,73, 22,76,99,102', // Luis Rosales -> puentes: Toucan, skua, Bahía Azul, Melinka
             78 => "108,111,112, 19,36,70,89, 106, 10,35,75,87", // Gustavo Mancilla -> Kaweskar, Pionero, Anan, Pathagon
@@ -836,7 +835,7 @@ class NotaModelNota extends JModelItem{
                             78 => '34,113,37,107',
 							326 => '34,113,37,107');
 		$db = JFactory::getDbo();
-		$user = JFactory::getUser();
+		
 		$datos_user = $this->getDatos_user($user->id);
         $query = "select nr.id, nr.fecha, u.name, nu.id_depto, nrev.enviado_empleado as empleado";
         $query .= ", nrev.autorizado_capitan as capitan, nrev.autorizado_jefe as jefe";
@@ -849,26 +848,37 @@ class NotaModelNota extends JModelItem{
 
         if ($user->id!=106 && $user->id!=321)
             $query .= " or (od.id in(".$ar_maquinas[$user->id].") and nrev.autorizado_jefe=1)";
-        $query .= ")";
-		if ($parametro){
-			$query .= " join nota_item ni on ni.id_remitente=nr.id and ni.item like '%".$parametro."%' ";
-		}
-		
-		if ($desde!=''){
+        $query .= ")";*/
+        $user = JFactory::getUser();
+        $db = JFactory::getDbo();
+        $query = "select nr.id, od.nombre as depto_origen, od.id as id_nave, nr.fecha, 
+                    nrev.enviado_empleado as empleado,
+                    nrev.autorizado_capitan as capitan, 
+                    nrev.autorizado_jefe as jefe,
+                    nrev.autorizado_depto as depto,
+                    nrev.aprobado_adquisiciones as adquisiciones 
+                from nota_remitente nr 
+                join nota_revision nrev on nrev.id_nota_remitente=nr.id 
+                join oti_departamento od on od.id=nr.id_depto_costo 
+                join nota_deptoLugar ndl on ndl.id_depto=od.id 
+                join nota_lugarNave nln on nln.id=ndl.id_lugar 
+                join nota_item ni on ni.id_remitente=nr.id ";
+        if ($parametro){
+            $query .= " and ni.item like '%".$parametro."%' ";
+        }
+        if ($desde!=''){
 			$query .= ' where nr.fecha between "'.NotaHelper::fechamysql($desde,2).'" and "'.NotaHelper::fechamysql($hasta,2).'" ';
-		}else
-		$query .= " order by nr.id desc ";
-		
-		if ($deptos==''){
-			if ($parametro!=''){
-
-			}else{
-				if ($pagina) 
-					$query .= ' limit '.(($pagina-1)*10).', 10';
-				else
-					$query .= ' limit 10';
-			}
-		}
+		}else{
+            $query .= " where nr.fecha>'2022-01-01'";
+        }
+		if ($user->authorise('gestion_naves','com_nota')){
+            $query .= " and nrev.autorizado_capitan=1 and 
+                        nrev.aprobado_adquisiciones!=2 and 
+                        od.id_tipo=2 ";
+            $query .= " order by nrev.autorizado_jefe, nr.fecha desc";
+        }
+        $query .= ' limit '.(($pagina-1)*10).', 10';
+        
 		$db->setQuery($query);
 		$db->query();
 		if ($db->getNumRows()){

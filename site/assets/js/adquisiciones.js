@@ -9,6 +9,12 @@ $(document).ready(function(){
 			buscar_oc('',$("#nota_pedido").val());
 		}
 	});
+
+    $("#editar_destino").click(function(){
+        console.log("editar");
+        $("#destino").hide();
+        $("#nuevo_destino").show();
+    });
 });
 
 function buscar_oc(orden_compra, nota_pedido){
@@ -265,4 +271,3 @@ function nueva_oc(num_items){
 		return;
 	}
 }
-

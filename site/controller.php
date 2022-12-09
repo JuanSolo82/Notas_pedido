@@ -462,7 +462,7 @@ class NotaController extends JController{
 	}
 	function notas_naves(){
 		$jinput = JFactory::getApplication()->input;
-		$jinput->set('view', 'nota');
+        $jinput->set('view', 'nota');
 		$jinput->set( 'layout', 'notas_naves' );
 		$model = $this->getModel('nota');
 		$naves = $model->getNaves();

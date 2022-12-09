@@ -7,7 +7,6 @@ jimport('joomla.application.component.view');
  
 class NotaViewNota extends JView{
     function display($tpl = null){
-        print_r(JFactory::getUser()->id);
 		$jinput = JFactory::getApplication()->input;
 		$layout = $jinput->get("layout", "", "string");
 		$this->datos_user 	= $jinput->get("datos_user", array(), "array");
@@ -102,9 +101,13 @@ class NotaViewNota extends JView{
                     $menu .= $this->getBoton('Notas enviadas al departamento', 'article-add', 'notas_depto','',1);
             }
             
-            if ($user->authorise('jefe.delgada', 'com_nota') || $user->authorise('jefe.natales', 'com_nota')){
-                $menu .= $this->getBoton('Notas de naves', 'cpanel', 'notas_naves', '',1);
+            if ($user->authorise('gestion_naves','com_nota')){
+                //$menu .= $this->getBoton('Notas de naves', 'cpanel', 'notas_naves', '',1);
+                $menu .= $this->getBoton('Notas de naves', 'cpanel', 'autorizaciones.notas_naves', '',1);
             }
+            /*if ($user->authorise('jefe.delgada', 'com_nota') || $user->authorise('jefe.natales', 'com_nota')){
+                $menu .= $this->getBoton('Notas de naves', 'cpanel', 'notas_naves', '',1);
+            }*/
             if ($user->authorise('adquisiciones.jefe', 'com_nota')){
                 $menu .= $this->getBoton('Notas recibidas', 'category', '','adquisiciones');
                 $menu .= $this->getBoton('Editar naves', 'media', 'editar_naves');
