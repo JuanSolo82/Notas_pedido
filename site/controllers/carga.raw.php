@@ -309,4 +309,36 @@ class NotaControllerCarga extends JControllerForm
         $jinput->set("notas", $notas);
         $view->rango_notas();
     }
+
+    function cambiar_destino(){
+        $jinput = JFactory::getApplication()->input;
+        $model = $this->getModel('nota');
+        $id_remitente = $jinput->get("id_remitente",0,"int");
+        $id_adepto    = $jinput->get("id_adepto",0,"int");
+        $model->cambiar_destino($id_remitente, $id_adepto);
+    }
+    function actualizar_item(){
+        $jinput = JFactory::getApplication()->input;
+        $model = $this->getModel('nota');
+        $cantidad_original  = $jinput->get("cantidad_original",0,"int");
+        $cantidad_nueva     = $jinput->get("cantidad_nueva",0,"int");
+        $id_item            = $jinput->get("id_item",0,"int");
+        $tipo_modificacion  = $jinput->get("tipo_modificacion",0,"int");
+
+        $query = $model->actualizar_item($id_item, $cantidad_original, $cantidad_nueva, $tipo_modificacion);
+    }
+    function aprobar_nota(){
+        $user = JFactory::getUser();
+        $jinput = JFactory::getApplication()->input;
+        $model = $this->getModel('nota');
+        $id_remitente = $jinput->get('id_remitente',0,'int');
+        if ($user->authorise('gestion_naves','com_nota')){
+            if ($user->authorise('maquinas_naves','com_nota')){
+                $model->actualizar_revision($id_remitente,1,1,1,0,0);
+            }
+            if ($user->authorise('gestion_patagonia','com_nota')){
+                $model->actualizar_revision($id_remitente,1,1,1,1,0);
+            }
+        }
+    }
 }

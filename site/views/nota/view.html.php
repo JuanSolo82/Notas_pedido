@@ -15,7 +15,7 @@ class NotaViewNota extends JView{
 			$this->notas_pendientes = $jinput->get("notas_pendientes", 0, "int");
 			$this->pendientes_depto = $jinput->get("pendientes_depto", 0, "int");
 		}
-		if ($user->authorise("jefe.delgada", "com_nota") || $user->authorise("jefe.natales", "com_nota")){
+		if ($user->authorise('gestion_naves','com_nota')){
 			$this->pendientes_naves = $jinput->get("pendientes_naves", 0, "int");
 			$this->layout			= $layout;
 		}
@@ -129,6 +129,7 @@ class NotaViewNota extends JView{
 		return $menu;
 	}
 	function getBoton($label, $icono, $task='', $modulo='', $notificacion=0) {
+        $user = JFactory::getUser();
 		if (trim($modulo)==''){
 			$boton = '<a href="'.JRoute::_('index.php?option=com_nota&view=com_nota&task='.$task).'">';
 		}else{
@@ -141,8 +142,9 @@ class NotaViewNota extends JView{
 				$boton .= '<div class="notificacion" '.($this->notas_pendientes ? '' : 'style="background: grey;"').'>'.$this->notas_pendientes.'</div>';
 			if ($task=='notas_depto')
 				$boton .= '<div class="notificacion" '.($this->pendientes_depto ? '' : 'style="background: grey;"').'>'.$this->pendientes_depto.'</div>';
-			if ($task=='notas_naves')
+			if ($task=='autorizaciones.notas_naves')
 				$boton .= '<div class="notificacion" '.($this->pendientes_naves ? '' : 'style="background: grey;"').'>'.$this->pendientes_naves.'</div>';
+
 		}
 		$boton .= '  <img src="/portal/administrator/templates/hathor/images/header/icon-48-' . $icono . '.png" />' . PHP_EOL;
 		$boton .= '  <br><span class="titulo_item">' . $label . '</span>' . PHP_EOL;

@@ -36,15 +36,12 @@ class NotaControllerAutorizaciones extends JControllerForm{
 		$detalle_nota 	= $model->getDetalle_nota($id_remitente);
 		$datos_user 	= $model->getDatos_user($detalle_nota['id_user']);
 		$items			= $model->getItems($id_remitente);
-		
-		
-		$datos_nota 	= $model->getDetalle_nota($id_remitente);
+
 		$jinput->set('id_remitente', $id_remitente);
 		$jinput->set('detalle_nota', $detalle_nota);
 		$jinput->set('items', $items);
 		$jinput->set("datos_user", $datos_user);
 		$jinput->set("datos_jefe", $datos_jefe);
-		$jinput->set("datos_nota", $datos_nota);
 		$jinput->set("id_user_actual", $user->id);
 		$jinput->set('lista_deptos', $lista_deptos);
 		parent::display();

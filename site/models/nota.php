@@ -196,16 +196,20 @@ class NotaModelNota extends JModelItem{
 		$query = "select nr.id as id_remitente, nr.id_tipo_pedido, nr.ley_navarino, u.name as nombre_usuario, u.email,
 					od.nombre as depto_origen, nr.fecha, nr.proveedor, nr.id_depto_costo, nr.cotizacion,
 					nnr.nombre as nombre_remitente, nu.id_depto as id_depto_origen, nr.id_user,
-					nr.id_adepto, nrev.autorizado_jefe, nrev.autorizado_capitan, nrev.autorizado_depto, nrev.aprobado_adquisiciones, 
-					np.descripcion as prioridad, dc.depto_compra, na.aprobado, na.anotacion, na.fecha_anotacion, ne.exenta
+					nr.id_adepto, nrev.enviado_empleado, nrev.autorizado_jefe, nrev.autorizado_capitan, nrev.autorizado_depto, nrev.aprobado_adquisiciones, 
+					np.descripcion as prioridad, dc.depto_compra, na.aprobado, na.anotacion, na.fecha_anotacion, ne.exenta,
+                    nln.lugar, nln.valor,
+                    (((nln.valor=2 and nrev.autorizado_jefe=1 and nrev.autorizado_depto=0) or 
+                    (nln.valor=1 and nrev.autorizado_capitan=1 and nrev.autorizado_jefe=0))) as pendiente
 				from nota_remitente nr join jml_users u on u.id=nr.id_user 
 					join nota_user nu on nu.id_user=u.id 
 					join oti_departamento od on od.id=nu.id_depto 
 					left join nota_nombreRemitente nnr on nnr.id_remitente=nr.id 
 					join nota_revision nrev on nrev.id_nota_remitente=nr.id 
-					join nota_prioridad np on np.id=nr.id_prioridad 
-					left join 
-						(select od.nombre as depto_compra, nr.id 
+					join nota_prioridad np on np.id=nr.id_prioridad ";
+        $query .= " left join nota_deptoLugar ndl on ndl.id_depto=nr.id_depto_costo 
+					left join nota_lugarNave nln on nln.id=ndl.id_lugar ";
+        $query .= " left join (select od.nombre as depto_compra, nr.id 
 							from oti_departamento od 
 							join nota_remitente nr on nr.id_depto_compra=od.id and nr.id=".$id_remitente.") dc on dc.id=nr.id
 					left join 
@@ -370,7 +374,7 @@ class NotaModelNota extends JModelItem{
 		if (!$aprobado_adquisiciones){
 			$query = "update nota_revision set enviado_empleado=".$enviado_empleado.", autorizado_capitan=".$autorizado_capitan.", 
 						autorizado_jefe=".$autorizado_jefe.", autorizado_depto=".$autorizado_depto;
-        $query .= ", aprobado_adquisiciones=".$aprobado_adquisiciones." 
+            $query .= ", aprobado_adquisiciones=".$aprobado_adquisiciones." 
 						where id_nota_remitente=".$id_remitente;
 			$db->setQuery($query);
 			$db->query();
@@ -664,8 +668,10 @@ class NotaModelNota extends JModelItem{
 		return $db->loadResult();
 	}
 	function getPendientes_naves(){
-
-		$user = JFactory::getUser();
+        //notas_naves($pagina=0, $parametro='', $deptos='', $desde='', $hasta='')
+        $cantidad = $this->notas_naves(0,'','','','',1);
+        return $cantidad;
+		/*$user = JFactory::getUser();
 		$db = JFactory::getDbo();
 		$datos_user = $this->getDatos_user($user->id);
         $ar_dependencias = array(
@@ -696,7 +702,7 @@ class NotaModelNota extends JModelItem{
         $query .= " and nrev.autorizado_depto=0 and nrev.aprobado_adquisiciones=0 and nr.fecha>'2022-03-01'";
 		$db->setQuery($query);
 		$db->query();
-		return $db->loadResult();
+		return $db->loadResult();*/
 	}
 	function notas_depto($pagina=0){
 		$db = JFactory::getDbo();
@@ -819,66 +825,99 @@ class NotaModelNota extends JModelItem{
 			return $db->loadAssoc();
 		return array();
 	}
-	function notas_naves($pagina=0, $parametro='', $deptos='', $desde='', $hasta=''){
-        /*$ar_dependencias = array(
-            (127) => "18,71, 8,69, 9,72, 11,74", // pablo sierpe -> puentes: Crux, Patagonia, Fueguino, Yaghan
-            (NotaHelper::isTestSite() ? 293 : 305) => '77, 21,90, 7,73, 22,76,99,102', // Luis Rosales -> puentes: Toucan, skua, Bahía Azul, Melinka
-            78 => "108,111,112, 19,36,70,89, 106, 10,35,75,87", // Gustavo Mancilla -> Kaweskar, Pionero, Anan, Pathagon
-            81 => "108,111,112, 19,36,70,89, 106, 10,35,75,87", // Sebsatián Timis -> Kaweskar, Pionero, Anan, Pathagon
-			326 => "108,111,112, 19,36,70,89, 106, 10,35,75,87", // Nelson Ormeño -> Kaweskar, Pionero, Anan, Pathagon
-            106 => '25,26,29,30,33,34,37,38,40,41,100,107,113', // hgonzalez, todos maquina
-            321 => '25,26,29,30,33,34,37,38,40,41,100,107,113', // Franklin = hgonzalez
-            226 => "18,71, 8,69, 9,72, 11,74,77, 21,90, 7,73, 22,76,99,102,108,111,112, 79,36,70,89, 106, 10,35,75,87,19" // Edmundo Villarroel, todos
-        );
-        $ar_maquinas = array(127 => '26,29,33,38',
-                            (NotaHelper::isTestSite() ? 293 : 305) => '25,30,40,41',
-                            78 => '34,113,37,107',
-							326 => '34,113,37,107');
-		$db = JFactory::getDbo();
-		
-		$datos_user = $this->getDatos_user($user->id);
-        $query = "select nr.id, nr.fecha, u.name, nu.id_depto, nrev.enviado_empleado as empleado";
-        $query .= ", nrev.autorizado_capitan as capitan, nrev.autorizado_jefe as jefe";
-        $query .= ", nrev.autorizado_depto as depto, nrev.aprobado_adquisiciones as adquisiciones";
-        $query .= " from nota_remitente nr";
-        $query .= " join jml_users u on u.id=nr.id_user";
-        $query .= " join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and nrev.autorizado_capitan=1 ";
-        $query .= " join nota_user nu on nu.id_user=u.id ";
-        $query .= " join oti_departamento od on od.id=nu.id_depto and od.id_tipo=2 and (od.id in (".$ar_dependencias[$user->id].") ";
-
-        if ($user->id!=106 && $user->id!=321)
-            $query .= " or (od.id in(".$ar_maquinas[$user->id].") and nrev.autorizado_jefe=1)";
-        $query .= ")";*/
+	function notas_naves($pagina=0, $parametro='', $deptos='', $desde='', $hasta='', $pendientes=0){
+        
         $user = JFactory::getUser();
+        $naves = "";
+        if ($user->authorise('gestion_patagonia','com_nota'))
+            $naves .= "8,32,33,69,88,";
+        if ($user->authorise('gestion_crux','com_nota'))
+            $naves .= "18,26,27,71,84,";
+        if ($user->authorise('gestion_yaghan'.'com_nota'))
+            $naves .= "11,38,39,48,74,";
+        if ($user->authorise('gestion_toucan'.'com_nota'))
+            $naves .= "20,41,77,78,";
+        if ($user->authorise('gestion_skua','com_nota'))
+            $naves .= "21,40,79,90,";
+        if ($user->authorise('gestion_bahia_azul','com_nota'))
+            $naves .= "7,24,25,73,86,";
+        if ($user->authorise('gestion_melinka','com_nota'))
+            $naves .= "22,30,31,76,85,";
+        if ($user->authorise('gestion_kaweskar','com_nota'))
+            $naves .= "108,110,111,112,113,114,";
+        if ($user->authorise('gestion_pionero','com_nota'))
+            $naves .= "19,36,37,70,89,";
+        if ($user->authorise('gestion_anan','com_nota'))
+            $naves .= "106,107,";
+        if ($user->authorise('gestion_pathagon','com_nota'))
+            $naves .= "10,34,35,75,87,";
+        $naves = substr($naves,0,-1);
         $db = JFactory::getDbo();
-        $query = "select nr.id, od.nombre as depto_origen, od.id as id_nave, nr.fecha, 
-                    nrev.enviado_empleado as empleado,
-                    nrev.autorizado_capitan as capitan, 
-                    nrev.autorizado_jefe as jefe,
-                    nrev.autorizado_depto as depto,
-                    nrev.aprobado_adquisiciones as adquisiciones 
-                from nota_remitente nr 
+        if ($pendientes){
+            $query = "select count(*) as cantidad 
+                        from nota_remitente nr 
+                        join nota_revision nrev on nrev.id_nota_remitente=nr.id 
+                        join oti_departamento od on od.id=nr.id_depto_costo 
+                        join nota_deptoLugar ndl on ndl.id_depto=od.id 
+                        join nota_lugarNave nln on nln.id=ndl.id_lugar 
+                    where nr.fecha>'2022-01-01' and od.id_tipo=2  ";
+            if ($user->authorise('gestion_naves','com_nota')){
+                $query .= " and nrev.autorizado_capitan=1 ";
+                if ($user->authorise('maquinas_naves','com_nota'))
+                    $query .= " and nrev.autorizado_jefe=0 and nr.id_adepto=1";
+                elseif ($user->authorise('gestion_patagonia','com_nota')){
+                    $query .= " and od.id in (".$naves.") and 
+                            ((nln.valor=2 and nrev.autorizado_jefe=1 and nrev.autorizado_depto=0) or 
+                            (nln.valor=1 and nrev.autorizado_capitan=1 and nrev.autorizado_jefe=0))";
+                }
+            }
+            $db->setQuery($query);
+            $db->query();
+            return $db->loadResult();
+        }else{
+            $query = "select nr.id, od.nombre as depto_origen, od.id as id_nave, nr.fecha, 
+                nrev.enviado_empleado as empleado,
+                nrev.autorizado_capitan as capitan, 
+                nrev.autorizado_jefe as jefe,
+                nrev.autorizado_depto as depto,
+                nrev.aprobado_adquisiciones as adquisiciones,
+                    (((nln.valor=2 and nrev.autorizado_jefe=1 and nrev.autorizado_depto=0) or 
+                    (nln.valor=1 and nrev.autorizado_capitan=1 and nrev.autorizado_jefe=0))) as pendiente ";
+            $query .= " from nota_remitente nr 
                 join nota_revision nrev on nrev.id_nota_remitente=nr.id 
                 join oti_departamento od on od.id=nr.id_depto_costo 
                 join nota_deptoLugar ndl on ndl.id_depto=od.id 
                 join nota_lugarNave nln on nln.id=ndl.id_lugar 
                 join nota_item ni on ni.id_remitente=nr.id ";
-        if ($parametro){
-            $query .= " and ni.item like '%".$parametro."%' ";
+            /*if ($parametro){
+                $query .= " and ni.item like '%".$parametro."%' ";
+            }
+            if ($desde!=''){
+                $query .= ' where nr.fecha between "'.NotaHelper::fechamysql($desde,2).'" and "'.NotaHelper::fechamysql($hasta,2).'" ';
+            }else{
+                $query .= " where nr.fecha>'2022-01-01' and od.id_tipo=2 ";
+            }*/
+            $query .= " where nr.fecha>'2022-01-01' and od.id_tipo=2 ";
+            if ($user->authorise('gestion_naves','com_nota')){
+                $query .= " and nrev.autorizado_capitan=1 ";
+                if ($user->authorise('maquinas_naves','com_nota'))
+                    $query .= " and nrev.autorizado_jefe=0 and nr.id_adepto=1";
+                elseif ($user->authorise('gestion_patagonia','com_nota')){
+                    $query .= " and od.id in (".$naves.") and 
+                            ((nln.valor=2 and nrev.autorizado_jefe=1 ) or 
+                            (nln.valor=1 and nrev.autorizado_capitan=1))";
+                }
+                $query .= " group by nr.id";
+                if ($user->authorise('maquinas_naves','com_nota')){
+                    $query .= " order by nrev.autorizado_jefe,";
+                }elseif ($user->authorise('gestion_patagonia','com_nota')){
+                    $query .= " order by nrev.autorizado_jefe, nrev.autorizado_depto,";
+                }
+                $query .= " nr.fecha desc";
+                
+            }
+            $query .= ' limit '.(($pagina-1)*10).', 10';
         }
-        if ($desde!=''){
-			$query .= ' where nr.fecha between "'.NotaHelper::fechamysql($desde,2).'" and "'.NotaHelper::fechamysql($hasta,2).'" ';
-		}else{
-            $query .= " where nr.fecha>'2022-01-01'";
-        }
-		if ($user->authorise('gestion_naves','com_nota')){
-            $query .= " and nrev.autorizado_capitan=1 and 
-                        nrev.aprobado_adquisiciones!=2 and 
-                        od.id_tipo=2 ";
-            $query .= " order by nrev.autorizado_jefe, nr.fecha desc";
-        }
-        $query .= ' limit '.(($pagina-1)*10).', 10';
-        
 		$db->setQuery($query);
 		$db->query();
 		if ($db->getNumRows()){
@@ -1152,5 +1191,36 @@ class NotaModelNota extends JModelItem{
 
         $res = NotaHelper::getMssqlQuery($query);
         return $res;
+    }
+
+    function actualizar_item($id_item, $cantidad_original, $nueva_cantidad, $id_tipo_modificacion, $motivo=''){
+        $db = JFactory::getDbo();
+        $user = JFactory::getUser();
+        $fecha = date("Y-m-d");
+        $hora = date("H:i");
+        $query = "insert into nota_modificada(id_item, cantidad_original, nueva_cantidad, id_user, motivo, fecha, hora, id_tipoModificacion) 
+            values(".$id_item.", ".$cantidad_original.", ".$nueva_cantidad.", ".$user->id.", '".$motivo."', '".$fecha."', '".$hora."', ".$id_tipo_modificacion.")";
+        $db->setQuery($query);
+        $db->query();
+        if ($nueva_cantidad){
+            $query = "update nota_item set aprobado=1 where id=".$id_item;
+            $db->setQuery($query);
+            $db->query();
+        }
+        
+        /*
+		if ($descripcion!="" || $motivo!=''){
+			$query = "update nota_item set item='".$descripcion."', motivo='".$motivo."', valor=".$valor." where id=".$id_item;
+		}
+		if ($cantidad_original!=$nueva_cantidad){
+			$user = JFactory::getUser();
+			$fecha = date("Y-m-d");
+			$hora = date("H:i");
+			$query = "insert into nota_modificada(id_item, cantidad_original, nueva_cantidad, id_user, motivo, fecha, hora, id_tipoModificacion) 
+						values(".$id_item.", ".$cantidad_original.", ".$nueva_cantidad.", ".$user->id.", '".$motivo."', '".$fecha."', '".$hora."', ".$id_tipo_modificacion.")";
+		}
+		$db->setQuery($query);
+		$db->query();
+         */
     }
 }

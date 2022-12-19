@@ -21,9 +21,20 @@
 		<action name="depto_compra" title="Departamento compra" description="El empleado puede escoger el departamento que se hace cargo de la compra" />
 		<action name="resumen_area" title="Resumen notas área" description="Revisar resumen de notas salidas del área al que pertenece" />
 		<action name="valor_item" title="Valor para cada ítem" description="Permite ingresar el valor de los ítems ingresados" />
-        <action name="gerencia_operaciones" title="Gestión de notas operaciones" description="Permite aprobar notas aprobadas por jefes de operaciones" />
         <action name="rio_verde" title="Notas naves Río Verde" description="Gestionar notas naves sector Río Verde" />
         <action name="gestion_naves" title="Notas naves" description="Gestionar notas generadas en naves" />
         <action name="maquinas_naves" title="Notas jefes de máquina" description="Gestionar notas desde salas de máquinas" />
+        <action name="patagonia" title="Notas Patagonia" description="Gestionar notas desde Patagonia" />
+        <action name="crux" title="Notas Crux Australis" description="Gestionar notas desde Crux Australis" />
+        <action name="yaghan" title="Notas Yaghan" description="Gestionar notas desde Yaghan" />
+        <action name="toucan" title="Notas Toucan" description="Gestionar notas desde Toucan" />
+        <action name="skua" title="Notas Skua" description="Gestionar notas desde Skua" />
+        <action name="bahia_azul" title="Notas Bahía Azul" description="Gestionar notas desde Bahía Azul" />
+        <action name="melinka" title="Notas Melinka" description="Gestionar notas desde Melinka" />
+        <action name="kaweskar" title="Notas Kaweskar" description="Gestionar notas desde Kaweskar" />
+        <action name="pionero" title="Notas Pionero" description="Gestionar notas desde Pionero" />
+        <action name="anan" title="Notas Anan" description="Gestionar notas desde Anan" />
+        <action name="pathagon" title="Notas Pathagon" description="Gestionar notas desde Pathagon" />
+        <action name="fueguino" title="Notas Fueguino" description="Gestionar notas desde Fueguino" />
 	</section>
 </access>

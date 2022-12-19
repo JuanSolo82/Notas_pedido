@@ -11,7 +11,7 @@ class NotaViewAutorizaciones extends JView{
         if ($layout=="detalle_nota"){
             $this->detalle_nota = $jinput->get("detalle_nota",array(),"array");
             $this->lista_deptos = $jinput->get("lista_deptos",array(),"array");
-            
+            $this->items        = $jinput->get("items",array(),"array");
         }
         parent::display($tpl);
     }
