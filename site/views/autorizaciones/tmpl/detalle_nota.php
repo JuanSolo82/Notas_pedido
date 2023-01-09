@@ -114,7 +114,6 @@ $user = JFactory::getUser();
 <div class='fila_vacia'></div>
 <div class='centrar'>
     <?php 
-
     if ($this->detalle_nota['pendiente']){ ?>
         <div id="conjunto_botones">
 			<div class='boton' onclick="actualizar_autorizacion(<?php echo $this->detalle_nota['id_remitente'] ?>,<?php echo $cont ?>)" id="boton_guardar">

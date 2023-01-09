@@ -333,12 +333,7 @@ class NotaControllerCarga extends JControllerForm
         $model = $this->getModel('nota');
         $id_remitente = $jinput->get('id_remitente',0,'int');
         if ($user->authorise('gestion_naves','com_nota')){
-            if ($user->authorise('maquinas_naves','com_nota')){
-                $model->actualizar_revision($id_remitente,1,1,1,0,0);
-            }
-            if ($user->authorise('gestion_patagonia','com_nota')){
-                $model->actualizar_revision($id_remitente,1,1,1,1,0);
-            }
+            $model->actualizar_revision($id_remitente,1,1,1,0,0);
         }
     }
 }

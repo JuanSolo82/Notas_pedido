@@ -303,7 +303,8 @@ if ($this->id_user==$this->detalle_nota['id_user'] && $this->datos_nota['aprobad
 
 if (($user->authorise('jefe.delgada','com_nota') || $user->authorise('jefe.natales', 'com_nota')) 
 			&& !$user->authorise('core.admin', 'com_nota') 
-			&& ($this->detalle_nota['autorizado_jefe']==0 || (array_key_exists($this->detalle_nota['id_depto_origen'],$ar_maquinas[$user->id]) && $this->detalle_nota['autorizado_jefe']==1))){ 
+			&& ($this->detalle_nota['autorizado_jefe']==0 || 
+            (array_key_exists($this->detalle_nota['id_depto_origen'],$ar_maquinas[$user->id]) && $this->detalle_nota['autorizado_jefe']==1))){ 
                 
                 ?>
         <div id='boton_guardar'>
