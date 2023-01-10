@@ -304,7 +304,7 @@ class NotaControllerCarga extends JControllerForm
         $view = $this->getView('autorizaciones','raw');
 		$model = $this->getModel('nota');
         $pagina = $jinput->get("pagina",0,"int");
-
+        
         $notas = $model->notas_naves($pagina);
         $jinput->set("notas", $notas);
         $view->rango_notas();

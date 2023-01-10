@@ -28,7 +28,7 @@ function actualizar_destino(id_remitente, nombre_remitente=""){
     $("#nuevo_destino").hide();
 }
 
-function actualizar_autorizacion(id_remitente, num_items){
+function actualizar_autorizacion(id_remitente, num_items){ 
     var cantidad_nueva = 0;
     var cantidad_original = 0;
     var id_item = 0;
@@ -58,8 +58,8 @@ function actualizar_autorizacion(id_remitente, num_items){
     $.ajax({
         url: 'index.php?option=com_nota&view=com_nota&task=carga.aprobar_nota&format=raw',
         type: 'post',
-       /* processData: false,  // tell jQuery not to process the data
-        contentType: false,   // tell jQuery not to set contentType*/
+       // processData: false,  // tell jQuery not to process the data
+        //contentType: false,   // tell jQuery not to set contentType
         data: {id_remitente: id_remitente},
         success: function(data){
             $("#boton_anulacion").hide();

@@ -8,6 +8,7 @@ class NotaViewAutorizaciones extends JView{
         $jinput = JFactory::getApplication()->input;
         $user = JFactory::getUser();
         $layout = $jinput->get("layout","","string");
+        
         if ($layout=="detalle_nota"){
             $this->detalle_nota = $jinput->get("detalle_nota",array(),"array");
             $this->lista_deptos = $jinput->get("lista_deptos",array(),"array");

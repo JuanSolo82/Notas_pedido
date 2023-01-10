@@ -28,7 +28,7 @@ class NotaControllerAutorizaciones extends JControllerForm{
 		$id_remitente = $jinput->get("id_nota", 0, 'int');
 		$model 			= $this->getModel('nota');
 		$user = JFactory::getUser();
-
+        
 		$datos_jefe = array();
 		$lista_deptos	= $model->getDepartamentos_destino();
 		if ($user->authorise('jefe.depto', 'com_nota'))
