@@ -139,7 +139,7 @@ class NotaController extends JController{
 			JError::raiseWarning( 100, 'Usuario no agregado, contactar a departamento TIC' );
 		$id_adepto 			= $jinput->get("depto_destino", 0, "int");
 		if ($user->authorise('tripulante.maquina', 'com_nota') && !$user->authorise("core.admin", "com_nota"))
-			$id_adepto = 1; // fijo para naves
+			$id_adepto = 4; // fijo para naves
 		
 		$id_prioridad 		= $jinput->get("prioridad", 0, "int");
 		$nombre_tripulante	= $jinput->get("nombre_tripulante", "", "string");
