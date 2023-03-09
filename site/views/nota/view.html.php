@@ -83,7 +83,7 @@ class NotaViewNota extends JView{
 	function setMenu(){
 		$user = JFactory::getUser();
 		$menu = '';
-		//$menu = ".".($user->authorise('adquisiciones.jefe', 'com_nota') ? 'adquisiciones' : 'No');
+		//$menu = ".".($user->authorise('jefe.depto', 'com_nota') ? 'jefe' : 'No');
 		$menu .= $this->getBoton('Nueva nota', 'article-add', 'nueva_nota','');
 		$menu .= $this->getBoton('Notas propias', 'article', 'notas_propias','');
         if (($user->authorise('jefe.depto', 'com_nota') 
