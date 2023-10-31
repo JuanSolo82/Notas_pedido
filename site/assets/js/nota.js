@@ -521,7 +521,7 @@ function asignar(id, id_depto_actual){
     var depto_escogido = parseInt($("#departamento"+id).val());
     var id_nivel       = parseInt($("#nivel"+id).val());
     if (!depto_escogido){
-        alert('Alarma');
+        alert('Escoja departamento');
         return;
     }
     $.ajax({
@@ -603,11 +603,11 @@ function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
     var rut_proveedor   = $("#rut_proveedor"+opcion).val();
     var giro_proveedor  = $("#giro_proveedor"+opcion).val();
     var cotizacion      = $("#cotizacion"+opcion).val();
-    var items_orden = $("#items_orden"+opcion).val();
+    var items_orden     = $("#items_orden"+opcion).val();
+    var email           = $("#email_destino"+opcion).length ? $("#email_destino"+opcion).val() : '';
     var exenta = $("#exento").prop('checked') ? 1 : 0;
-
+    
     for (var i=1;i<=items_orden;i++){
-        console.log($("#cantidad_original"+opcion+"_"+i).val()+', '+$("#cantidad"+opcion+"_"+i).val());
         $.ajax({
             url: 'index.php?option=com_nota&task=editar_item',
             timeout: 1000,
@@ -637,15 +637,36 @@ function cargar_pdf(id_remitente, orden_compra, opcion, opciones){
                 cotizacion: cotizacion,
                 exenta: exenta},
         success: function(data){
-            console.log(data);
-            window.open('/portal/media/notas_pedido/Orden_compra'+id_remitente+'-'+opcion+'.pdf', 'nombre'); 
+            window.open('/portal/media/notas_pedido/Orden_compra'+id_remitente+'-'+opcion+'.pdf', 'nombre');
             $("#generada_oc"+opcion).css("display", "block");
+            console.log("creada OC ");
         }
     });
     $.ajax({
         url: "index.php?option=com_nota&task=carga.actualizarRevision&format=raw",
         type: 'post',
         data: { id_remitente: id_remitente, aprobado_adquisiciones: 1 }
+    });
+    
+    if (email!=''){
+        console.log("enviar mail");
+        enviar_orden(email,id_remitente, opcion);
+    }
+}
+
+function enviar_orden(email, id_remitente, opcion){
+    var ruta_orden = 'http://192.168.20.150/portal/media/notas_pedido/Orden_compra'+id_remitente+'-'+opcion+'.pdf';
+    $.ajax({
+        url: 'http://api-correo-test.corp.tabsa.cl/api/enviar_orden',
+        method: 'post',
+        data: { ruta: ruta_orden, email: email },
+        success: function(resp){
+            console.log(resp);
+            if ($("#enviado_mail"+opcion).length){
+                $("#enviado_mail"+opcion).css('display', 'block');
+                $("#enviado_mail"+opcion).html(resp)
+            }
+        }
     });
 }
 
@@ -1069,4 +1090,28 @@ function avanzar(direccion=0){
     setTimeout(function(){
         $("#pagina").css({'opacity':'1'});
     },500);
+}
+
+function proponer_producto(indice){
+    var item = $("#descripcion"+indice).val();
+    var opciones = "";
+    if (item.length>3){
+        $.ajax({
+            url: 'http://api-compras-test.corp.tabsa.cl/api/buscarProducto',
+            method: 'post',
+            data: {item: $("#descripcion"+indice).val()},
+            success: function(resp){
+                opciones = "";
+                $.each(resp, function(key, value){
+                    opciones = opciones + "<div class='sugerencia-item' onclick='aceptar_sugerencia("+indice+", \""+value['nombre']+"\")'>"+value['nombre']+"</div>";
+                });
+                $("#items"+indice).html(opciones);
+            }
+        });
+    }
+}
+
+function aceptar_sugerencia(indice,sugerencia){
+    $("#descripcion"+indice).val(sugerencia);
+    $("#items"+indice).hide();
 }

@@ -54,7 +54,7 @@ foreach ($opciones as $opcion){ ?>
 <?php
 $proveedor = explode('_',$this->datos_nota['proveedor']);
 ?>
-<div style="border: 1px solid grey; height: auto; width: 400px; margin-bottom: 20px; padding: 10px;">
+<div style="border-radius: 5px; border: 1px solid grey; height: auto; width: 400px; margin-bottom: 20px; padding: 10px; float: left; margin-right: 10px;">
 	<div style="float: left; width: 35%;"><b>Proveedor</b></div>
 	<input type="text" size="30" autocomplete="off" onkeypress="cargar_proveedor(this.value, <?php echo $opcion ?>)" id="proveedor_escogido<?php echo $opcion ?>" value="<?php echo sizeof($this->proveedor) ? ucwords(strtolower($this->proveedor['RazonSocial'])) : "" ?>"><br>
 	<div id='proveedor<?php echo $opcion ?>'></div>
@@ -65,6 +65,14 @@ $proveedor = explode('_',$this->datos_nota['proveedor']);
 	<div style="float: left; width: 35%;"><b style="width: 25%;">Cotización (opcional)</b></div>
 	<input type="text" size="30" autocomplete="off" id="cotizacion<?php echo $opcion ?>" value="<?php echo $this->datos_nota['cotizacion'] ? $this->datos_nota['cotizacion'] : "" ?>">
 </div>
+<?php if (NotaHelper::isTestSite()){ ?>
+    <div style="border-radius: 5px; border: 1px solid grey; width: 200px; float: left; padding: 10px;" id="enviar_oc<?php echo $opcion ?>">
+        <div style="float: left; width: 85%;"><b>Correo destino</b></div>
+        <input type="text" size="30" id="email_destino<?php echo $opcion ?>" value=""><br>
+    <!--<input type="button" value="Enviar test" onclick="enviar_orden('jmarinan@tabsa.cl', 38659, <?php echo $opcion ?>)">-->
+</div>
+<?php } ?>
+
 <div style="width: 80%; float: left;">
 	<table class='tabla_listado' style="width: 97%;">
 		<tr>
@@ -201,6 +209,9 @@ $proveedor = explode('_',$this->datos_nota['proveedor']);
 	<div class="centrar">
 		p.p. Transbordadora Austral Broom
 	</div>
+    <div style="position: absolute;">
+        <img src="'.JPATH_SITE.'/components/com_nota/assets/img/firma_caro.png">
+    </div>
 </div>
 <?php if (NotaHelper::isTestSite()){ ?>
 	<a href="/portal/media/notas_pedido/Orden_compra.pdf" target="_blank">OC test</a>
@@ -209,6 +220,11 @@ $proveedor = explode('_',$this->datos_nota['proveedor']);
 <a onclick="cargar_pdf(<?php echo $this->id_remitente ?>,0, <?php echo $opcion ?>, <?php echo sizeof($opciones) ?>)">
 	<div class='boton'><img src='/portal/administrator/templates/hathor/images/header/icon-48-print.png' /><br>Imprimir</div>
 </a>
+
+<div class='barra_avance paso_aprobado' 
+    style="position: relative; left: 40px; display: none;" 
+    id="enviado_mail<?php echo $opcion ?>"></div>
+
 <br>
 </div>
 

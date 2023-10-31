@@ -11,6 +11,39 @@ JHTML::script('jquery.typeahead.min.js', 'components/com_nota/assets/js/');
 //echo JRequest::checkToken('get')."?";
 $user = JFactory::getUser();
 ?>
+<style>
+  .ui-autocomplete {
+    max-height: 100px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+  }
+  /* IE 6 doesn't support max-height
+   * we use height instead, but this forces the menu to always be this tall
+   */
+   html .ui-autocomplete {
+    height: 100px;
+  }
+#suggestions {
+    box-shadow: 2px 2px 8px 0 rgba(0,0,0,.2);
+    height: auto;
+    position: absolute;
+    top: 45px;
+    z-index: 9999;
+    width: 206px;
+}
+ 
+#suggestions .suggest-element {
+    background-color: #EEEEEE;
+    border-top: 1px solid #d6d4d4;
+    cursor: pointer;
+    padding: 8px;
+    width: 100%;
+    float: left;
+}
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?virt=3"></script>
 <div class='fila_completa centrar' style='margin-bottom: 20px;'>
 	<div class='barra_nombre' style='width: 90%;'>Nueva nota</div>
@@ -166,21 +199,14 @@ $user = JFactory::getUser();
 		<tr>
 			<td><input class='entrada' id='cantidad<?php echo $i ?>' name='cantidad<?php echo $i ?>' type='number' size='2' required type="number" min="0" step=".1" style='width: 70px;'></td>
 			<td>
-                <?php if (NotaHelper::isTestSite()){ ?>
-                    <!--<input class='entrada' id='descripcion<?php echo $i ?>'
-                    name='descripcion<?php echo $i ?>' type='text' style='width: 90%;' autocomplete='off' 
-                    onkeypress="cargar_item(this.value,<?php echo $i ?>)" 
-                    onblur="cargar_item('',<?php echo $i ?>)">-->
-                    <input class='entrada' id='descripcion<?php echo $i ?>'
-                        name='descripcion<?php echo $i ?>' type='text' style='width: 90%;' autocomplete='off'>
-                <?php }else{ ?>
-                    <input class='entrada' id='descripcion<?php echo $i ?>'
-                        name='descripcion<?php echo $i ?>' type='text' style='width: 90%;' autocomplete='off'>
-                <?php } ?>
-				
-					<div id='items<?php echo $i ?>'>
-				</div>
-                <div id='producto<?php echo $i ?>'></div>
+                <input class='entrada' id='descripcion<?php echo $i ?>'
+                    name='descripcion<?php echo $i ?>' 
+                    type='text' 
+                    style='width: 90%;' 
+                    autocomplete='off' 
+                onkeyup="proponer_producto(<?php echo $i ?>)">
+            
+                <div class='sugerencias' id='items<?php echo $i ?>'></div>
 			</td>
 			<td><input class='entrada' id='motivo<?php echo $i ?>' name='motivo<?php echo $i ?>' type='text' style='width: 90%;'></td>
 			<?php if ($user->authorise('adquisiciones.jefe','com_nota') || $user->authorise('valor_item','com_nota')){ ?>

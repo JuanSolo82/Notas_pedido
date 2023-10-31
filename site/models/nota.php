@@ -193,7 +193,7 @@ class NotaModelNota extends JModelItem{
 	}
 	function getDetalle_nota($id_remitente){
 		$db = JFactory::getDbo();
-		$query = "select nr.id as id_remitente, nr.id_tipo_pedido, nr.ley_navarino, u.name as nombre_usuario, u.email,
+		$query = "select nr.id as id_remitente, nr.id_adepto, nr.id_tipo_pedido, nr.ley_navarino, u.name as nombre_usuario, u.email,
 					od.nombre as depto_origen, nr.fecha, nr.proveedor, nr.id_depto_costo, nr.cotizacion,
 					nnr.nombre as nombre_remitente, nu.id_depto as id_depto_origen, nr.id_user,
 					nr.id_adepto, nrev.enviado_empleado, nrev.autorizado_jefe, nrev.autorizado_capitan, nrev.autorizado_depto, nrev.aprobado_adquisiciones, 
@@ -305,7 +305,6 @@ class NotaModelNota extends JModelItem{
 	function notas_jefe($datos_user, $pagina=0){
 		$db = JFactory::getDbo();
 		$user = JFactory::getUser();
-        
 		$deptos = array(
 			51 => "",
 			69 => "8,33", 
@@ -320,7 +319,8 @@ class NotaModelNota extends JModelItem{
 			77 => "41",
 			106 => "107", // anan  
 			108 => "109,110,111,112,113,114", // Kaweskar, 109 sala máquinas borrado
-            94 => "94,14,120" // administracion y finanzas, encargado de departamentos de personal y bodega (120 en produccion, 116 servidor de pruebas)
+            94 => "94,14,120", // administracion y finanzas, encargado de departamentos de personal y bodega (120 en produccion, 116 servidor de pruebas)
+            149 => "150,151" // Kenos
 		);
 		$query = "select nr.id as id_remitente, nr.fecha, od.nombre as depto_origen, nrev.enviado_empleado as empleado, nrev.autorizado_capitan as capitan, ";
 		$query .= " nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto, nrev.aprobado_adquisiciones as adquisiciones";
@@ -606,8 +606,7 @@ class NotaModelNota extends JModelItem{
 		$user = JFactory::getUser();
 		$db = JFactory::getDbo();
 		$datos_user = $this->getDatos_user($user->id);
-        
-		$query = "";
+        $query = "";
 		if ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota')){
 			$nave = substr($datos_user['username'],1);
 			$query = "select count(*) as cantidad 
@@ -634,7 +633,7 @@ class NotaModelNota extends JModelItem{
                     from nota_remitente nr, nota_revision nrev, nota_user nu, oti_departamento od  
                     where nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 
                         and nrev.autorizado_capitan!=2 and nrev.autorizado_jefe=0 and nrev.aprobado_adquisiciones=0 
-                        nr.id_user!=".$datos_user['id']." and nr.id_user=nu.id_user and od.id=nu.id_depto ";
+                        and nr.id_user!=".$datos_user['id']." and nr.id_user=nu.id_user and od.id=nu.id_depto ";
             if ($datos_user['id_depto']==94){
                 $query .= " and nu.id_depto in (14,120)";
             }else
@@ -648,7 +647,6 @@ class NotaModelNota extends JModelItem{
 		}
         $query .= " and nrev.aprobado_adquisiciones=0";
         $query .= " and nr.fecha>'2022-01-01'";
-        //print_r($query);
 		$db->setQuery($query);
 		$db->query();
 		return $db->loadResult();
@@ -659,13 +657,19 @@ class NotaModelNota extends JModelItem{
 		$datos_user = $this->getDatos_user($user->id);
 		$query = "select count(*) as cantidad 
 				from nota_remitente nr, nota_revision nrev, nota_user nu, oti_departamento od 
-				where nr.id_user=nu.id_user and nu.id_depto=od.id and nr.id_adepto=".$datos_user['id_depto']." and nr.id=nrev.id_nota_remitente 
+				where nr.id_user=nu.id_user and nu.id_depto=od.id ";
+        if ($user->username=='stimis')
+            $query .= " and nr.id_adepto in (".$datos_user['id_depto'].", 51)";
+        else
+            $query .= " and nr.id_adepto=".$datos_user['id_depto'];
+        $query .= " and nr.id=nrev.id_nota_remitente 
 					and nrev.enviado_empleado=1 and nrev.autorizado_jefe=1 and nrev.autorizado_depto=0 and nrev.aprobado_adquisiciones=0";
         if ($user->id==106 || $user->id==321)
             $query .= " and od.id_tipo!=2 ";
-		
+        $query .= " and nr.fecha>'2022-01-01'";
 		$db->setQuery($query);
 		$db->query();
+        
 		return $db->loadResult();
 	}
 	function getPendientes_naves(){
@@ -705,20 +709,27 @@ class NotaModelNota extends JModelItem{
 		$db->query();
 		return $db->loadResult();*/
 	}
-	function notas_depto($pagina=0){
+	function notas_depto($pagina=0, $conteo=0){
 		$db = JFactory::getDbo();
 		$user = JFactory::getUser();
         $ar_maquinas = array(321 => '25,26,29,30,33,34,37,38,40,41,100,107,113',
                             106 => '25,26,29,30,33,34,37,38,40,41,100,107,113');
 		$datos_user = $this->getDatos_user($user->id);
-		$query = "select nr.id, nr.fecha, nrev.enviado_empleado as empleado, nrev.autorizado_capitan as capitan, 
-					nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto, nrev.aprobado_adquisiciones as adquisiciones 
-				from nota_remitente nr 
+        if (!$conteo){
+            $query = "select nr.id, nr.fecha, nrev.enviado_empleado as empleado, nrev.autorizado_capitan as capitan, 
+            nrev.autorizado_jefe as jefe, nrev.autorizado_depto as depto, nrev.aprobado_adquisiciones as adquisiciones ";
+        }else {
+            $query = "select count(*) ";
+        }
+		$query .= " from nota_remitente nr 
 				join nota_revision nrev on nrev.id_nota_remitente=nr.id and nrev.enviado_empleado=1 and 
-					nrev.autorizado_capitan=1 and autorizado_jefe=1 and 
-					nr.id_adepto=".$datos_user['id_depto'];
+					nrev.autorizado_capitan=1 and autorizado_jefe=1 ";
+        if ($user->username=='stimis')
+            $query .= " and nr.id_adepto in (".$datos_user['id_depto'].", 51)";
+        else
+            $query .= " and nr.id_adepto=".$datos_user['id_depto'];
         $query .= " join oti_departamento od on od.id=nr.id_depto_costo ";
-        $query .= " where nr.fecha>'2022-03-01'";
+        $query .= " where nr.fecha>'2022-01-01'";
         if ($user->id==106 || $user->id==321)
             $query .= " and od.id_tipo!=2 ";
 		$query .= " order by nrev.autorizado_depto, nr.id desc ";
@@ -830,9 +841,11 @@ class NotaModelNota extends JModelItem{
         
         $user = JFactory::getUser();
         $ar_naves = array(127 => "18,26,27,71,84,9,28,29,59,72,105,8,32,33,69,88,11,38,39,48,74", // psierpe Crux, Fueguino, Patagonia, Yaghan
-                            (NotaHelper::isTestSite() ? 293 : 305) => "20,41,77,78,21,40,79,90,7,24,25,73,86,22,30,31,76,85", // lrosales Toucan, Skua, Bahía azul, Melinka
+                            81 => "18,26,27,71,84,9,28,29,59,72,105,8,32,33,69,88,11,38,39,48,74", // stimis
+                            (NotaHelper::isTestSite() ? 293 : 305) => "20,41,77,78,21,40,79,90,7,24,25,73,86,22,30,31,76,85,149,150,151", // lrosales Toucan, Skua, Bahía azul, Melinka
                             78 => "108,110,111,112,113,114,19,36,37,70,89,106,107,10,34,35,75,87,87,8,32,33,69,88", // gmancilla Kaweskar, Pionero, Anan, Pathagon
-                            NotaHelper::isTestSite() ? 295 : 326 => "108,110,111,112,113,114,19,36,37,70,89,106,107,10,34,35,75,87,8,32,33,69,88", // Nelson Ormeño -> 
+                            (NotaHelper::isTestSite() ? 295 : 326) => "108,110,111,112,113,114,19,36,37,70,89,106,107,10,34,35,75,87,8,32,33,69,88", // Nelson Ormeño -> 
+                            226 => "18,26,27,71,84,9,28,29,59,72,105,8,32,33,69,88,11,38,39,48,74,20,41,77,78,21,40,79,90,7,24,25,73,86,22,30,31,76,85,108,110,111,112,113,114,19,36,37,70,89,106,107,10,34,35,75,87,87,8,32,33,69,88"
                         ); 
         
         $db = JFactory::getDbo();

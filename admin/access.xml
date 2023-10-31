@@ -24,5 +24,6 @@
         <action name="rio_verde" title="Notas naves Río Verde" description="Gestionar notas naves sector Río Verde" />
         <action name="gestion_naves" title="Notas naves" description="Gestionar notas generadas en naves" />
         <action name="maquinas_naves" title="Notas jefes de máquina" description="Gestionar notas desde salas de máquinas" />
+        <action name="notas_operaciones" title="Notas hacia operaciones" description="Gestionar notas a operaciones como destino desde otras areas" />
 	</section>
 </access>

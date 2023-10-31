@@ -152,7 +152,7 @@ class NotaController extends JController{
 		$tipo_gasto			= $jinput->get("tipo_gasto", 0, "int");
 
 		if (!$id_depto_compra) $id_depto_compra = $id_adepto;
-		
+
 		if (strlen($proveedor)){
 			$proveedor 			= NotaHelper::msquote($proveedor."_".$rut_proveedor."_".$giro_proveedor);
 			$proveedor 			= htmlentities($proveedor);
@@ -575,5 +575,16 @@ join (select nr.id, od.nombre as centro_costo from oti_departamento od, nota_rem
 left join nota_nombreRemitente nrem on nrem.id_remitente=nr.id 
 where nr.fecha > '2019-01-01'
 	 * 
+     * consulta para tintas en naves
+     select nr.fecha, od.nombre, ni.item
+from oti_departamento as od
+join nota_remitente nr on nr.id_depto_costo=od.id
+join nota_item ni on ni.id_remitente=nr.id
+where od.id_tipo=2
+and nr.fecha>'2022-05-01'
+and (ni.item like '%toner%' or ni.item like '%tonner%')
+and ni.item not like '%carton%'
+and ni.item not like '%boton%'
+
 	 */
 }

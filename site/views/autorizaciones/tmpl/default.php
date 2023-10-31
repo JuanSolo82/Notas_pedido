@@ -8,7 +8,7 @@ JHTML::script('jquery-ui.min.js', 'components/com_nota/assets/js/');
 JHTML::script('bootstrap.js', 'components/com_nota/assets/bootstrap/js/');
 
 ?>
-<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?jef_nav=1"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/nota.js?reaut=1"></script>
 
 <div class='fila_completa centrar' style='margin-bottom: 20px;'>
 	<div class='barra_nombre' style='width: 90%;'>Notas naves</div>

@@ -169,7 +169,9 @@ $f = explode('-', $this->detalle_nota['fecha']);
 <?php 
 
 	if ($this->detalle_nota['id_adepto']==$this->datos_propios['id_depto']){
-		if ($this->detalle_nota['autorizado_depto']==0){ ?>
+		if ($this->detalle_nota['autorizado_depto']==0){ 
+            
+            ?>
 			<div onclick="guardar_cambios_items(<?php echo sizeof($this->items) ?>, 
 													<?php echo ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota')) ? 1 : 0 ?>, 
 													<?php echo ($user->authorise('jefe.depto', 'com_nota')) ? 1 : 0 ?>, 
@@ -186,11 +188,14 @@ $f = explode('-', $this->detalle_nota['fecha']);
 		<?php }
 	}else
 if (($this->datos_user['id']==$this->detalle_nota['id_user'] && $this->detalle_nota['aprobado_adquisiciones']==0) || $this->datos_user['id']==229){ 
+    $autorizado_depto = 0;
+    if ($this->detalle_nota['id_adepto']==$this->datos_propios['id_depto'] || $this->datos_propios['username']=='stimis')
+        $autorizado_depto = 1;
 	?>
 	<div onclick="guardar_cambios_items(<?php echo sizeof($this->items) ?>, 
 										<?php echo ($user->authorise('capitan.jefe', 'com_nota') || $user->authorise('capitan.sin_jefe', 'com_nota')) ? 1 : 0 ?>, 
 										<?php echo ($user->authorise('jefe.depto', 'com_nota')) ? 1 : 0 ?>, 
-										<?php echo $this->detalle_nota['id_adepto']==$this->datos_propios['id_depto'] ? 1 : 0 ?>)" 
+										<?php echo $autorizado_depto ?>)" 
 		class='boton'>
 			<img src='/portal/administrator/templates/hathor/images/header/icon-48-save.png' />
 			<br>Autorizar nota

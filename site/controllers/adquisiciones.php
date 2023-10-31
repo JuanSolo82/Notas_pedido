@@ -560,10 +560,20 @@ class NotaControllerAdquisiciones extends JControllerForm
 			</div>
 			<div style="position: absolute; bottom: 60px; width: 40%; left: 400px; z-index: 5; font-size: 13px;">';
 			if (NotaHelper::isTestSite()){
-				$html .= '<div style="text-align: center; position: relative;">
+				/*$html .= '<div style="text-align: center; position: relative;">
 							<img src="'.JPATH_SITE.'/components/com_nota/assets/img/firma.jpg" width="180" height="130">
-							<div style="position: absolute; margin-left: 37%; margin-top: 8.6%;">'.$f[2].'-'.$f[1].'-'.$f[0].'</div>
-						</div>';
+							<div style="position: absolute; margin-left: 37%; margin-top: 8.6%;">'.$f[2].'-'.$f[1].'-'.$f[0].'</div>974572100
+						</div>';*/
+                $html .= '
+                    <div style="position: absolute; top: -150px; left: 40px;">
+                        <img src="'.JPATH_SITE.'/components/com_nota/assets/img/firma_caro.png" width="200" height="250">
+                    </div>
+                    ';
+                $html .= '
+                    <div style="position: absolute; top: -100px; right: 20px;">
+                        <img src="'.JPATH_SITE.'/components/com_nota/assets/img/timbre_adquisiciones_150.png" width="90" height="90">
+                    </div>';
+                
 			}
 
 			$html .= '<hr/>

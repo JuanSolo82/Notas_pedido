@@ -57,9 +57,9 @@ $user = JFactory::getUser();
             <a id="editar_destino" onclick="editar_destino()" style="display: block;">
                 <img src="/portal/administrator/templates/hathor/images/menu/icon-16-edit.png">
             </a>
-            <a id="guardar_destino" onclick="actualizar_destino(<?php echo $this->detalle_nota['id_remitente'] ?>)" style="display: none;">
+            <!--<a id="guardar_destino" onclick="actualizar_destino(<?php echo $this->detalle_nota['id_remitente'] ?>)" style="display: none;">
                 <img src="/portal/administrator/templates/hathor/images/menu/icon-16-save.png">
-            </a>
+            </a>-->
         <?php } ?>
         </div>
     </div>
@@ -120,7 +120,7 @@ $user = JFactory::getUser();
     <?php 
     if ($this->detalle_nota['pendiente']){ ?>
         <div id="conjunto_botones">
-			<div class='boton' onclick="actualizar_autorizacion(<?php echo $this->detalle_nota['id_remitente'] ?>,<?php echo $cont ?>)" id="boton_guardar">
+			<div class='boton' onclick="actualizar_autorizacion(<?php echo $this->detalle_nota['id_remitente'] ?>,<?php echo $cont ?>, <?php echo $this->detalle_nota['id_adepto'] ?>)" id="boton_guardar">
 				<img src='/portal/administrator/templates/hathor/images/header/icon-48-save.png' /><br>
 				Guardar cambios
 			</div>
@@ -148,4 +148,4 @@ $user = JFactory::getUser();
     <?php } ?>
 </div>
 
-<script type="text/javascript" src="/portal/components/com_nota/assets/js/editar_nota.js?fe=2"></script>
+<script type="text/javascript" src="/portal/components/com_nota/assets/js/editar_nota.js?docs=2"></script>

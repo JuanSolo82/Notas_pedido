@@ -13,7 +13,6 @@ function editar_destino(){
 function actualizar_destino(id_remitente, nombre_remitente=""){
     var id_destino = parseInt($("#nuevo_destino option:selected").val());
     var texto_nuevo_destino = $("#nuevo_destino option:selected").text();
-
     $.ajax({
         url: 'index.php?option=com_nota&task=carga.cambiar_destino&format=raw',
         type: 'post',
@@ -28,12 +27,12 @@ function actualizar_destino(id_remitente, nombre_remitente=""){
     $("#nuevo_destino").hide();
 }
 
-function actualizar_autorizacion(id_remitente, num_items){ 
+function actualizar_autorizacion(id_remitente, num_items, id_adepto_original){ 
     var cantidad_nueva = 0;
     var cantidad_original = 0;
     var id_item = 0;
     var tipo_modificacion = 0;
-    var suma_cantidades = 0;
+    this.actualizar_destino(id_remitente);
     for (var i=1;i<=num_items;i++){
         cantidad_original = parseInt($("#cantidad_original"+i).val());
         cantidad_nueva = parseInt($("#cantidad"+i).val());
@@ -58,10 +57,9 @@ function actualizar_autorizacion(id_remitente, num_items){
     $.ajax({
         url: 'index.php?option=com_nota&view=com_nota&task=carga.aprobar_nota&format=raw',
         type: 'post',
-       // processData: false,  // tell jQuery not to process the data
-        //contentType: false,   // tell jQuery not to set contentType
         data: {id_remitente: id_remitente},
         success: function(data){
+            console.log(data);
             $("#boton_anulacion").hide();
             $("#conjunto_botones").html("<h3>Nota aprobada</h3>");
         }

@@ -332,9 +332,9 @@ class NotaControllerCarga extends JControllerForm
         $jinput = JFactory::getApplication()->input;
         $model = $this->getModel('nota');
         $id_remitente = $jinput->get('id_remitente',0,'int');
+        
         if ($user->authorise('gestion_naves','com_nota')){
             $model->actualizar_revision($id_remitente,1,1,1,0,0);
-            //tramitado($id_remitente, $terminado, $motivo, $generico, $id_user, $nombre)
             $model->tramitado($id_remitente,0,'',0,$user->id,'');
         }
     }

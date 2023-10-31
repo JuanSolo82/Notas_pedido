@@ -409,3 +409,18 @@ a {
 	color:#fff!important;
 	background-color:#2196F3!important
 }
+
+.sugerencias {
+    position: absolute;
+    background-color: #AED6F1;
+    z-index: 100;
+}
+.sugerencia-item {
+    border: 1px solid silver;
+    margin-top: 2px;
+    cursor: pointer;
+}
+
+.sugerencia-item:hover {
+    background-color: turquoise;
+}
